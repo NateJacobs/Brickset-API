@@ -6,15 +6,15 @@ This plugin is in beta, only version 0.1.
 ###How to Use###
 This example shows how to get the data about a specific set
 1. Instantiate the class.
-```php 
+```
 <?php $brickset_api = new BricksetAPIFunctions; ?>
 ```
 2. Pass a set number to the get_set_number method.
-```php
+```
 <?php $set_data = $brickset_api->get_by_number( '8014' ); ?>
 ```
 3. Display the results how you like. This will display the set's theme.
-```php
+```
 <?php echo $set_data->theme.'<br>'; ?>
 ```
 
