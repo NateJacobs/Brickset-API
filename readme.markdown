@@ -24,6 +24,8 @@ This example shows how to get the data about a specific set.
 ###Future Development###
 1. Create a settings page to allow for front-end addition of api key.
 2. Allow users to authenticate with Brickset.com and store the user_hash.
+3. Create methods to display sets specific to a user.
+4. Create methods to allow users to update owned or wanted sets.
 
 ###Changelog###
 0.1
