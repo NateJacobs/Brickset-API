@@ -1,7 +1,5 @@
 <?php
 
-//$brickset_display = new BricksetAPIDisplay();
-
 class BricksetAPIDisplay extends BricksetAPIFunctions
 {
 	/** 
@@ -88,9 +86,9 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 */
-	public function list_years( $theme )
+	public function list_theme_years( $theme )
 	{
-		parent::get_years( $theme );
+		parent::get_theme_years( $theme );
 		
 		try
 		{
@@ -125,9 +123,9 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 */
-	public function list_searches()
+	public function list_popular_searches()
 	{
-		parent::get_searches();
+		parent::get_popular_searches();
 		
 		try
 		{
@@ -174,9 +172,9 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 */	
-	public function updated_since( $date )
+	public function list_updated_since( $date )
 	{
-		parent::get_updated( $date );
+		parent::get_updated_since( $date );
 		
 		try
 		{

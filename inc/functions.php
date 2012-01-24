@@ -115,7 +115,7 @@ class BricksetAPIFunctions
 	 *	@param		string	$theme
 	 *	@return		array	$years
 	 */
-	public function get_years( $theme )
+	public function get_theme_years( $theme )
 	{
 		$params = 'theme='.$theme;
 		$this->remote_request( 'listYears', $params );
@@ -145,7 +145,7 @@ class BricksetAPIFunctions
 	 *
 	 *	@return		array	$searches
 	 */
-	public function get_searches()
+	public function get_popular_searches()
 	{
 		$this->remote_request( 'popularSearches' );
 		
@@ -189,7 +189,7 @@ class BricksetAPIFunctions
 	 *	@param		string	$date (use format of 'mm/dd/yyyy')
 	 *	@return		array	$updated
 	 */
-	public function get_updated( $date )
+	public function get_updated_since( $date )
 	{
 		$params = 'apiKey='.$this->api_key.'&sinceDate='.$date;
 		$this->remote_request( 'updatedSince', $params );
