@@ -22,9 +22,9 @@ class BricksetAPIAdmin extends BricksetAPIFunctions
 	{
 		$user = get_userdata( $user_id );
 		
-		$body = array( 'u' => $username, 'p' => $password );
+		$params = 'u='.$username.'&p='.$password;
 	
-		parent::remote_request( 'login', $body );
+		parent::remote_request( 'login', $params );
 		$user_hash = $this->results;
 		
 		try
