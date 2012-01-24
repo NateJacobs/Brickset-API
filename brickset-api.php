@@ -61,6 +61,7 @@ class BricksetAPILoad
 		require_once( BRICKSET_API_INCLUDES . 'update.php' );
 		require_once( BRICKSET_API_INCLUDES . 'widgets.php' );
 		require_once( BRICKSET_API_INCLUDES . 'template_tags.php' );
+		require_once( BRICKSET_API_INCLUDES . 'shortcodes.php' );
 	}
 	
 	/** 
