@@ -16,20 +16,11 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	public function list_themes()
 	{
 		parent::get_themes();
-		try
+		
+		foreach ( $this->results as $theme )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-
-			foreach ( $this->results as $theme )
-			{
-				echo $theme->theme.'<br>';
-			}
+			echo $theme->theme.'<br>';
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}	
 	}
 	
 	/** 
@@ -50,28 +41,18 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	{
 		parent::get_subthemes( $theme );
 		
-		try
+		echo '<h2>'.$this->results->subthemeData->theme.'</h2>';
+		echo '<table><th>Subtheme</th><th>Set Count</th><th>Start Year</th><th>End Year</th>';		
+		foreach ( $this->results as $subtheme )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg ); 
-
-			echo '<h2>'.$this->results->subthemeData->theme.'</h2>';
-			echo '<table><th>Subtheme</th><th>Set Count</th><th>Start Year</th><th>End Year</th>';		
-			foreach ( $this->results as $subtheme )
-			{
-				echo '<tr>';
-					echo '<td>'.$subtheme->subtheme.'</td>'; 
-					echo '<td>'.$subtheme->setCount.'</td>';
-					echo '<td>'.$subtheme->yearFrom.'</td>';
-					echo '<td>'.$subtheme->yearTo.'</td>';
-				echo '</tr>';
-			}
-			echo '</table>';
+			echo '<tr>';
+				echo '<td>'.$subtheme->subtheme.'</td>'; 
+				echo '<td>'.$subtheme->setCount.'</td>';
+				echo '<td>'.$subtheme->yearFrom.'</td>';
+				echo '<td>'.$subtheme->yearTo.'</td>';
+			echo '</tr>';
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		echo '</table>';
 	}
 
 	/** 
@@ -90,26 +71,16 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	{
 		parent::get_theme_years( $theme );
 		
-		try
+		echo '<h2>'.$this->results->yearData->theme.'</h2>';
+		echo '<table><th>Year</th><th>Set Count</th>';			
+		foreach ( $this->results as $year )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-
-			echo '<h2>'.$this->results->yearData->theme.'</h2>';
-			echo '<table><th>Year</th><th>Set Count</th>';			
-			foreach ( $this->results as $year )
-			{
-					echo '<tr>';
-						echo '<td>'.$year->year.'</td>';
-						echo '<td>'.$year->setCount.'</td>';		
-					echo '</tr>';
-			}
-			echo '</table>';
+				echo '<tr>';
+					echo '<td>'.$year->year.'</td>';
+					echo '<td>'.$year->setCount.'</td>';		
+				echo '</tr>';
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		echo '</table>';
 	}
 	
 	/** 
@@ -127,25 +98,15 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	{
 		parent::get_popular_searches();
 		
-		try
+		echo '<table><th>Search Term</th><th>Weight of Search</th>';	
+		foreach ( $this->results as $search )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-			
-			echo '<table><th>Search Term</th><th>Weight of Search</th>';	
-			foreach ( $this->results as $search )
-			{
-				echo '<tr>';
-					echo '<td>'.$search->searchTerm.'</td>';
-					echo '<td>'.$search->count.'</td>';		
-				echo '</tr>';
-			}
-			echo '</table>';
+			echo '<tr>';
+				echo '<td>'.$search->searchTerm.'</td>';
+				echo '<td>'.$search->count.'</td>';		
+			echo '</tr>';
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		echo '</table>';
 	}
 	
 	/** 
@@ -176,25 +137,15 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	{
 		parent::get_updated_since( $date );
 		
-		try
+		echo '<table><th>Image</th><th>Set Name</th><th>Set Number</th>';	
+		foreach ( $this->results as $updated )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-			
-			echo '<table><th>Image</th><th>Set Name</th><th>Set Number</th>';	
-			foreach ( $this->results as $updated )
-			{
-				echo '<tr>';
-					echo '<td><img src="'.$updated->thumbnailURL.'"></td>';
-					echo '<td>'.$updated->setName.'</td>';
-					echo '<td>'.$updated->number.'</td>';
-				echo '</tr>';
-			}
-			echo '</table>';
+			echo '<tr>';
+				echo '<td><img src="'.$updated->thumbnailURL.'"></td>';
+				echo '<td>'.$updated->setName.'</td>';
+				echo '<td>'.$updated->number.'</td>';
+			echo '</tr>';
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		echo '</table>';
 	}
 }
