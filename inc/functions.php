@@ -232,16 +232,51 @@ class BricksetAPIFunctions
 	 *
 	 *	@param		int		$number (set number)
 	 *	@param		int 	$user_id (user_id)
+	 *	@param		int		$wanted (1 = return wanted)
+	 *	@param		int		$owned (1 = return owned)
 	 *	@return		array 	$setData
 	 */
 	public function get_by_number( $number = '', $user_id = '', $wanted = '', $owned = '' )
 	{
-		$setData = $this->brickset_search( array( 'number' => $number, 'user_id' => $user_id, 'wanted' => $wanted, 'owner' => $owned, 'single' => true ) );
+		$setData = $this->brickset_search( array( 'number' => $number, 'user_id' => $user_id, 'wanted' => $wanted, 'owned' => $owned, 'single' => true ) );
 		return $setData;
 	}
 	
 	/** 
-	 *	Get Set Info by Number
+	 *	Get Wanted Sets
+	 *
+	 *	Get all the wanted sets by the specified user
+	 *	setData
+	 *		setID			- int
+	 *		number			- string
+	 *		numberVariant 	- int
+	 *		setName			- string
+	 *		year			- string
+	 *		theme			- string
+	 *		subtheme		- string
+	 *		pieces			- string
+	 *		thumbnailURL	- string
+	 *		imageUrl		- string
+	 *		bricksetURL		- string
+	 *		own				- boolean
+	 *		want			- boolean
+	 *		qtyOwned		- int
+	 *		lastUpdated		- dateTime
+	 *
+	 *	@author		Nate Jacobs
+	 *	@since		0.2
+	 *
+	 *	@param		int 	$user_id (user_id)
+	 *	@return		array 	$setData
+	 */
+	public function get_wanted( $user_id = '' )
+	{
+		$setData = $this->brickset_search( array( 'user_id' => $user_id, 'wanted' => '1', 'single' => true ) );
+		return $setData;
+	}
+	
+	/** 
+	 *	Get Set Info by Theme
 	 *
 	 *	Pass a theme and get all the information about the sets in that theme.
 	 *	setData
