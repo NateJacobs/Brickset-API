@@ -1,5 +1,7 @@
 <?php
 
+//$brickset_display = new BricksetAPIDisplay();
+
 class BricksetAPIDisplay extends BricksetAPIFunctions
 {
 	/** 
@@ -15,7 +17,7 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	 */
 	public function list_themes()
 	{
-		parent::remote_request( 'listThemes' );
+		parent::get_themes();
 		try
 		{
 			if ( $this->httpcode != 200 )
@@ -48,8 +50,7 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	 */
 	public function list_subthemes( $theme )
 	{
-		$body = array( 'theme' => $theme );
-		parent::remote_request( 'listSubthemes', $body );
+		parent::get_subthemes( $theme );
 		
 		try
 		{
@@ -89,8 +90,7 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	 */
 	public function list_years( $theme )
 	{
-		$body = array( 'theme' => $theme );
-		parent::remote_request( 'listYears', $body );
+		parent::get_years( $theme );
 		
 		try
 		{
@@ -125,16 +125,16 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 */
-	public function popular_searches()
+	public function list_searches()
 	{
-		parent::remote_request( 'popularSearches' );
+		parent::get_searches();
 		
 		try
 		{
 			if ( $this->httpcode != 200 )
 				throw new Exception ( $this->error_msg );
 			
-			echo '<table><th>Search Term</th><th>Number of Searches</th>';	
+			echo '<table><th>Search Term</th><th>Weight of Search</th>';	
 			foreach ( $this->results as $search )
 			{
 				echo '<tr>';
@@ -174,11 +174,9 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 */	
-	public function updated_since()
+	public function updated_since( $date )
 	{
-		$api_key = parent::get_apikey();
-		$body = array( 'apiKey' => $api_key, 'sinceDate' => '09/01/2011' );
-		parent::remote_request( 'updatedSince', $body );
+		parent::get_updated( $date );
 		
 		try
 		{
@@ -202,4 +200,3 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 		}
 	}
 }
-$brickset_display = new BricksetAPIDisplay();

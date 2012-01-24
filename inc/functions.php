@@ -1,17 +1,24 @@
 <?php
 
-include_once( ABSPATH . WPINC. '/class-http.php' );
-
 class BricksetAPIFunctions
 {
-	protected $api_key		= '';
-	protected $api_url 		= 'http://www.brickset.com/webservices/brickset.asmx/';
-	protected $error_msg	= "<strong>Don't Panic!</strong> Something went wrong, and Brickset didn't reply correctly.";
+	protected $api_key			= '';
+	protected $api_url 			= 'http://www.brickset.com/webservices/brickset.asmx/';
+	protected $error_msg		= "<strong>Don't Panic!</strong> Something went wrong, and Brickset didn't reply correctly.";
 	protected $no_results_error = "<strong>No results.</strong> Sorry, no sets were found for that query.";
 	
-	protected function remote_request( $extra_url, $body = '' )
+	/** 
+	 *	Remote Request
+	 *
+	 *	Send the api request to Brickset. Returns an XML formatted response.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@since		0.1
+	 */
+	protected function remote_request( $extra_url, $params = '' )
 	{
-		$result = wp_remote_post( $this->api_url.'/'.$extra_url, array( 'method' => 'POST', 'body' => $body ) );
+		//$result = wp_remote_post( $this->api_url.'/'.$extra_url, array( 'method' => 'POST', 'body' => $body ) );
+		$result = wp_remote_get( $this->api_url.'/'.$extra_url.'?'.$params );
 		$this->httpcode = $result['response']['code'];
 		$this->results = new SimpleXMLElement( $result['body'] );
 	}
@@ -78,7 +85,8 @@ class BricksetAPIFunctions
 	 */
 	public function get_subthemes( $theme )
 	{
-		$this->remote_request( 'listSubthemes' );
+		$params = 'theme='.$theme;
+		$this->remote_request( 'listSubthemes', $params );
 		try
 		{
 			if ( $this->httpcode != 200 )
@@ -109,8 +117,8 @@ class BricksetAPIFunctions
 	 */
 	public function get_years( $theme )
 	{
-		$body = array( 'theme' => $theme );
-		$this->remote_request( 'listYears', $body );
+		$params = 'theme='.$theme;
+		$this->remote_request( 'listYears', $params );
 		try
 		{
 			if ( $this->httpcode != 200 )
@@ -183,8 +191,8 @@ class BricksetAPIFunctions
 	 */
 	public function get_updated( $date )
 	{
-		$body = array( 'apiKey' => $this->api_key, 'sinceDate' => $date );
-		$this->remote_request( 'updatedSince', $body );
+		$params = 'apiKey='.$this->api_key.'&sinceDate='.$date;
+		$this->remote_request( 'updatedSince', $params );
 		
 		try
 		{
@@ -236,7 +244,7 @@ class BricksetAPIFunctions
 	/** 
 	 *	Get Set Info by Number
 	 *
-	 *	Pass a set number and get all the information about that set.
+	 *	Pass a theme and get all the information about the sets in that theme.
 	 *	setData
 	 *		setID			- int
 	 *		number			- string
@@ -375,19 +383,9 @@ class BricksetAPIFunctions
 		if ( !empty( $user_id ) )
 			$user_hash = get_user_meta( $user_id, 'brickset_hash', true );
 		
-		$body = array(
-			'apiKey' 	=> $this->api_key,
-			'userHash' 	=> $user_hash,
-			'query' 	=> $query,
-			'theme' 	=> $theme,
-			'subtheme' 	=> $subtheme,
-		   	'setNumber' => $number,
-		   	'year' 		=> $year,
-		   	'owned' 	=> $owned,
-		   	'wanted' 	=> $wanted 
-		);
+		$params = 'apiKey='.$this->api_key.'&userHash='.$user_hash.'&query='.$query.'&theme='.$theme.'&subtheme='.$subtheme.'&setNumber='.$number.'&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
 		
-		$this->remote_request( 'search', $body );
+		$this->remote_request( 'search', $params );
 		
 		try
 		{
