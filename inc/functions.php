@@ -17,7 +17,6 @@ class BricksetAPIFunctions
 	 */
 	protected function remote_request( $extra_url, $params = '' )
 	{
-		//$result = wp_remote_post( $this->api_url.'/'.$extra_url, array( 'method' => 'POST', 'body' => $body ) );
 		$result = wp_remote_get( $this->api_url.'/'.$extra_url.'?'.$params );
 		$this->httpcode = $result['response']['code'];
 		$this->results = new SimpleXMLElement( $result['body'] );
