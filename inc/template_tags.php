@@ -133,7 +133,7 @@ function brick_get_popular_searches()
 function brick_updated_since( $date )
 {
 	$brickset = new BricksetAPIDisplay();
-	return $brickset->list_updated_since();
+	return $brickset->list_updated_since( $date );
 }
 /** 
  *	Brick Get Updated Since
