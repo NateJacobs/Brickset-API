@@ -235,9 +235,9 @@ class BricksetAPIFunctions
 	 *	@param		int 	$user_id (user_id)
 	 *	@return		array 	$setData
 	 */
-	public function get_by_number( $number = '', $user_id = '' )
+	public function get_by_number( $number = '', $user_id = '', $wanted = '', $owned = '' )
 	{
-		$setData = $this->brickset_search( array( 'number' => $number, 'user_id' => $user_id, 'single' => true ) );
+		$setData = $this->brickset_search( array( 'number' => $number, 'user_id' => $user_id, 'wanted' => $wanted, 'owner' => $owned, 'single' => true ) );
 		return $setData;
 	}
 	
