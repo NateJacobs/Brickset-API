@@ -1,11 +1,21 @@
 ##Brickset API
 A WordPress plugin that implementats the Brickset Webservice. Includes methods to get set data from Brickset as well as pre-formated methods to display set data. This is not an official Brickset.com offering. For more information on the webservice please visit <a href="http://www.brickset.com/webservices/">Brickset.com</a>.
 
-This plugin is in beta, only version 0.1. 
+This plugin is in beta, only version 0.2. 
 
 ###Template Tags
 The plugin has numerous template tags you are able to use in your theme. They are listed below with a short description.
-*	```php brick_themes(); ``` outputs a list of all themes
+
+*	```brick_themes();``` outputs a list of all themes.
+*	```brick_subthemes( $theme );``` outputs a table of all subthemes of the theme specified, the number of sets, and years available.
+*	```brick_theme_years( $theme );``` outputs a table of all the years the specified theme was available and the number of sets each year.
+*	```brick_popular_searches();``` outputs a table of the most popular search terms on Brickset.com and the weights applied.
+*	```brick_updated_since( $date );``` outputs a table of the sets updated since the date specified. The table includes thumbnail, set name and set number.
+
+###Shortcodes
+The plugin has several shortcodes you may use in your posts and pages to display information.
+
+*	```[bs_set number='XXX']``` outputs information about a specific set. Thumbnail, set name, set number, pieces, theme, subtheme and year.
 
 ###How to Use
 This example shows how to get the data about a specific set.
@@ -33,4 +43,11 @@ This example shows how to get the data about a specific set.
 
 ###Changelog
 0.1
+
 *	Initial plugin
+
+0.2
+
+*	get_set and my_wanted shortcodes added
+*	BricksetAPIFunctions updated to use wp_remote_get
+*	added template tags for use in themes
