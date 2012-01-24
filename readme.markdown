@@ -1,9 +1,13 @@
-##Brickset API##
+##Brickset API
 A WordPress plugin that implementats the Brickset Webservice. Includes methods to get set data from Brickset as well as pre-formated methods to display set data. This is not an official Brickset.com offering. For more information on the webservice please visit <a href="http://www.brickset.com/webservices/">Brickset.com</a>.
 
 This plugin is in beta, only version 0.1. 
 
-###How to Use###
+###Template Tags
+The plugin has numerous template tags you are able to use in your theme. They are listed below with a short description.
+*	```php brick_themes(); ``` outputs a list of all themes
+
+###How to Use
 This example shows how to get the data about a specific set.
 
 1. Instantiate the class.
@@ -21,12 +25,12 @@ This example shows how to get the data about a specific set.
 <?php echo $set_data->theme.'<br>'; ?>
 ```
 
-###Future Development###
+###Future Development
 1. Create a settings page to allow for front-end addition of api key.
 2. Allow users to authenticate with Brickset.com and store the user_hash.
 3. Create methods to display sets specific to a user.
 4. Create methods to allow users to update owned or wanted sets.
 
-###Changelog###
+###Changelog
 0.1
-◊ Initial plugin
+*	Initial plugin
