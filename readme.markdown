@@ -1,7 +1,7 @@
 ##Brickset API
 A WordPress plugin that implementats the Brickset Webservice. Includes methods to get set data from Brickset as well as pre-formated methods to display set data. This is not an official Brickset.com offering. For more information on the webservice please visit <a href="http://www.brickset.com/webservices/">Brickset.com</a>.
 
-This plugin is in beta, only version 0.2. 
+This plugin is in beta. 
 
 ###Template Tags
 The plugin has numerous template tags you are able to use in your theme. They are listed below with a short description.
@@ -48,6 +48,10 @@ This example shows how to get the data about a specific set.
 
 0.2
 
-*	get_set and my_wanted shortcodes added
+*	Get_set and my_wanted shortcodes added
 *	BricksetAPIFunctions updated to use wp_remote_get
-*	added template tags for use in themes
+*	Added template tags for use in themes
+
+0.3
+
+*	Added get_owned function and shortcode
