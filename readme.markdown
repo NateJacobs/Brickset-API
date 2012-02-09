@@ -17,6 +17,10 @@ The plugin has several shortcodes you may use in your posts and pages to display
 
 *	```[bs_set number='XXX']``` outputs information about a specific set. Thumbnail, set name, set number, pieces, theme, subtheme and year.
 
+*	```[bs_my_wanted]``` outputs a table with the sets wanted by the post or page's author.
+
+*	```[bs_my_owned]``` outputs a table with the sets owned by the post or page's author.
+
 ###How to Use
 This example shows how to get the data about a specific set.
 
