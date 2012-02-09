@@ -276,6 +276,39 @@ class BricksetAPIFunctions
 	}
 	
 	/** 
+	 *	Get Owned Sets
+	 *
+	 *	Get all the sets owned by the specified user
+	 *	setData
+	 *		setID			- int
+	 *		number			- string
+	 *		numberVariant 	- int
+	 *		setName			- string
+	 *		year			- string
+	 *		theme			- string
+	 *		subtheme		- string
+	 *		pieces			- string
+	 *		thumbnailURL	- string
+	 *		imageUrl		- string
+	 *		bricksetURL		- string
+	 *		own				- boolean
+	 *		want			- boolean
+	 *		qtyOwned		- int
+	 *		lastUpdated		- dateTime
+	 *
+	 *	@author		Nate Jacobs
+	 *	@since		0.3
+	 *
+	 *	@param		int 	$user_id (user_id)
+	 *	@return		array 	$setData
+	 */
+	public function get_owned( $user_id = '' )
+	{
+		$setData = $this->brickset_search( array( 'user_id' => $user_id, 'owned' => '1', 'single' => true ) );
+		return $setData;
+	}
+	
+	/** 
 	 *	Get Set Info by Theme
 	 *
 	 *	Pass a theme and get all the information about the sets in that theme.
