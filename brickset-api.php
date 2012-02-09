@@ -4,7 +4,7 @@
  *	Plugin Name: Brickset API
  *	Plugin URI: http://natejacobs.org
  *	Description: Implementation of the Brickset Webservice. Includes methods to get set data from Brickset as well as pre-formated methods to display set data. This is not an official Brickset.com offering. For more information on the webservice please visit <a href="http://www.brickset.com/webservices/">Brickset.com</a>.
- *	Version: 0.2
+ *	Version: 0.3
  *	License: GPL V2
  *	Author: Nate Jacobs <nate@natejacobs.org>
  *	Author URI: http://natejacobs.org
@@ -38,7 +38,7 @@ class BricksetAPILoad
 	 */
 	public function constants() 
 	{
-		define( 'BRICKSET_API_VERSION', '0.2' );
+		define( 'BRICKSET_API_VERSION', '0.3' );
 		define( 'BRICKSET_API_DB_VERSION', 1 );
 		define( 'BRICKSET_API_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 		define( 'BRICKSET_API_URI', trailingslashit( plugin_dir_url( __FILE__ ) ) );
