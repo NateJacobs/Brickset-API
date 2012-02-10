@@ -82,6 +82,14 @@ class BricksetAPILoad
 		}
 	}
 	
+	/** 
+	 *	Localization
+	 *
+	 *	Declare text domain to use in translation.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@since		0.3
+	 */
 	public function localization() {
   		load_plugin_textdomain( 'bs_api', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' ); 
 	}
