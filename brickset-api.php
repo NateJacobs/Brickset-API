@@ -26,6 +26,9 @@ class BricksetAPILoad
 		add_action( 'plugins_loaded', array( $this, 'constants' ), 1 );
 		add_action( 'plugins_loaded', array( $this, 'includes' ), 2 );
 		add_action( 'plugins_loaded', array( $this, 'admin' ), 3 );
+		add_action('init', array( __CLASS__, 'localization' ), 1 );
+		add_action( 'plugins_loaded', array( __CLASS__, 'constants' ), 2 );
+		add_action( 'plugins_loaded', array( __CLASS__, 'includes' ), 3 );
 	}
 	
 	/** 
