@@ -23,12 +23,10 @@ class BricksetAPILoad
 	 */
 	public function __construct()
 	{
-		add_action( 'plugins_loaded', array( $this, 'constants' ), 1 );
-		add_action( 'plugins_loaded', array( $this, 'includes' ), 2 );
-		add_action( 'plugins_loaded', array( $this, 'admin' ), 3 );
 		add_action('init', array( __CLASS__, 'localization' ), 1 );
 		add_action( 'plugins_loaded', array( __CLASS__, 'constants' ), 2 );
 		add_action( 'plugins_loaded', array( __CLASS__, 'includes' ), 3 );
+		add_action( 'plugins_loaded', array( __CLASS__, 'admin' ), 4 );
 	}
 	
 	/** 
@@ -82,6 +80,10 @@ class BricksetAPILoad
 			require_once( BRICKSET_API_ADMIN . 'admin.php' );
 			//require_once( BRICKSET_API_ADMIN . 'help-text.php' );
 		}
+	}
+	
+	public function localization() {
+  		load_plugin_textdomain( 'bs_api', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' ); 
 	}
 }
 
