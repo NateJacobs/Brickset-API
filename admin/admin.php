@@ -72,8 +72,8 @@ class BricksetAPIAdmin extends BricksetAPIFunctions
 	{
 		add_submenu_page(
 			'options-general.php',
-			__( 'Brickset API' ),
-			__( 'Brickset API' ),
+			__( 'Brickset API', 'bs_api' ),
+			__( 'Brickset API', 'bs_api' ),
 			'manage_options',
 			'bs_api_options',
 			array( __CLASS__, 'bs_api_options_page' )
