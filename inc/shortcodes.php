@@ -21,12 +21,12 @@ class BricksetAPIShortcode
 		$result = $brickset->get_by_number( $number );
 		
 		$return = '<img src="'.$result->thumbnailURL.'"><br>';
-		$return .= '<strong>'.__( 'Set Name:', 'bs_api' ).'</strong>'.$result->setName.'<br>';
-		$return .= '<strong>'.__( 'Set Number:', 'bs_api' ).'</strong>'.$result->number.'<br>';
-		$return .= '<strong>'.__( 'Year:', 'bs_api' ).'</strong>'.$result->year.'<br>';
-		$return .= '<strong>'.__( 'Theme:', 'bs_api' ).'</strong>'.$result->theme.'<br>';
-		$return .= '<strong>'.__( 'Subtheme:', 'bs_api' ).'</strong>'.$result->subtheme.'<br>';
-		$return .= '<strong>'.__( 'Pieces:', 'bs_api' ).'</strong>'.$result->pieces.'<br>';
+		$return .= '<strong>Set Name: </strong>'.$result->setName.'<br>';
+		$return .= '<strong>Set Number: </strong>'.$result->number.'<br>';
+		$return .= '<strong>Year: </strong>'.$result->year.'<br>';
+		$return .= '<strong>Theme: </strong>'.$result->theme.'<br>';
+		$return .= '<strong>Subtheme: </strong>'.$result->subtheme.'<br>';
+		$return .= '<strong>Pieces: </strong>'.$result->pieces.'<br>';
 		
 		return $return;
 	}
@@ -39,8 +39,8 @@ class BricksetAPIShortcode
 		$brickset = new BricksetAPIFunctions();
 		$results = $brickset->get_wanted( $user_id );
 		
-		$return = '<h2>'.__( 'My Wanted List', 'bs_api' ).'</h2>';
-		$return .= '<table><th>'.__( 'Image', 'bs_api' ).'</th><th>'.__( 'Set Name', 'bs_api' ).'</th><th>'.__( 'Set Number', 'bs_api').'</th><th>'.__( 'Pieces', 'bs_api' ).'</th>';	
+		$return = '<h2>My Wanted List</h2>';
+		$return .= '<table><th>Image</th><th>Set Name</th><th>Set Number</th><th>Pieces</th>';	
 		foreach ( $results as $result )
 		{
 			$return .= '<tr>';
@@ -63,8 +63,8 @@ class BricksetAPIShortcode
 		$brickset = new BricksetAPIFunctions();
 		$results = $brickset->get_owned( $user_id );
 		
-		$return = '<h2>'.__( 'My Set List', 'bs_api' ).'</h2>';
-		$return .= '<table><th>'.__( 'Image', 'bs_api' ).'</th><th>'.__( 'Set Name', 'bs_api' ).'</th><th>'.__( 'Set Number', 'bs_api').'</th><th>'.__( 'Pieces', 'bs_api' ).'</th>';		
+		$return = '<h2>My Set List</h2>';
+		$return .= '<table><th>Image</th><th>Set Name</th><th>Set Number</th><th>Pieces</th>';	
 		foreach ( $results as $result )
 		{
 			$return .= '<tr>';
