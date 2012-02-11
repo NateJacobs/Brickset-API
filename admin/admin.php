@@ -72,8 +72,8 @@ class BricksetAPIAdmin extends BricksetAPIFunctions
 	{
 		add_submenu_page(
 			'options-general.php',
-			__( 'Brickset API' ),
-			__( 'Brickset API' ),
+			__( 'Brickset API', 'bs_api' ),
+			__( 'Brickset API', 'bs_api' ),
 			'manage_options',
 			'bs_api_options',
 			array( __CLASS__, 'bs_api_options_page' )
@@ -99,7 +99,7 @@ class BricksetAPIAdmin extends BricksetAPIFunctions
 				<?php settings_fields( 'user_access_expire_options' ); ?>
 				<?php do_settings_sections( __FILE__ ); ?>
 				<p class="submit">
-				<input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ) ?>" />
+				<input type="submit" class="button-primary" value="<?php _e( 'Save API Key', 'bs_api' ) ?>" />
 				</p>
 			</form>
 		</div>
