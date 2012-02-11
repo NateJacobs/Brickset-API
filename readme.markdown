@@ -46,12 +46,15 @@ This example shows how to get the data about a specific set.
 ###Changelog
 0.1
 *	Initial plugin
+
 0.2
 *	Get_set and my_wanted shortcodes added
 *	BricksetAPIFunctions updated to use wp_remote_get
 *	Added template tags for use in themes
+
 0.3
 *	Added get_owned function and shortcode
+
 1.0
 *	Enter your Brickset API from settings submenu
 *	Allow users to authenticate with Brickset from their profile page
