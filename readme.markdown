@@ -21,7 +21,7 @@ The plugin has several shortcodes you may use in your posts and pages to display
 
 *	```[bs_my_owned]``` outputs a table with the sets owned by the post or page's author.
 
-###How to Use
+###Advanced Use
 This example shows how to get the data about a specific set.
 
 1. Instantiate the class.
@@ -29,7 +29,7 @@ This example shows how to get the data about a specific set.
 <?php $brickset_api = new BricksetAPIFunctions; ?>
 ```
 
-2. Pass a set number to the get_set_number method.
+2. Pass a set number to the get_by_number method.
 ```
 <?php $set_data = $brickset_api->get_by_number( '8014' ); ?>
 ```
@@ -39,23 +39,19 @@ This example shows how to get the data about a specific set.
 <?php echo $set_data->theme.'<br>'; ?>
 ```
 
-###Future Development
-1. Create a settings page to allow for front-end addition of api key.
-2. Allow users to authenticate with Brickset.com and store the user_hash.
-3. Create methods to display sets specific to a user.
-4. Create methods to allow users to update owned or wanted sets.
+###Road Map
+1. Create methods to display sets specific to a user.
+2. Create methods to allow users to update owned or wanted sets.
 
 ###Changelog
 0.1
-
 *	Initial plugin
-
 0.2
-
 *	Get_set and my_wanted shortcodes added
 *	BricksetAPIFunctions updated to use wp_remote_get
 *	Added template tags for use in themes
-
 0.3
-
 *	Added get_owned function and shortcode
+1.0
+*	Enter your Brickset API from settings submenu
+*	Allow users to authenticate with Brickset from their profile page
