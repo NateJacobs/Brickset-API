@@ -2,10 +2,10 @@
 
 class BricksetAPIFunctions
 {
-	protected $api_key			= '';
-	protected $api_url 			= 'http://www.brickset.com/webservices/brickset.asmx/';
+	protected $api_key		= '';
+	protected $api_url 		= 'http://www.brickset.com/webservices/brickset.asmx/';
 	protected $error_msg		= "<strong>Don't Panic!</strong> Something went wrong, and Brickset didn't reply correctly.";
-	protected $no_results_error = "<strong>No results.</strong> Sorry, no sets were found for that query.";
+	protected $no_results_error 	= "<strong>No results.</strong> Sorry, no sets were found for that query.";
 	
 	/** 
 	 *	Remote Request
@@ -166,21 +166,21 @@ class BricksetAPIFunctions
 	 *
  	 *	Brickset returns the following fields in an array
 	 *	setData
-	 *		setID			- int
-	 *		number			- string
+	 *		setID		- int
+	 *		number		- string
 	 *		numberVariant 	- int
-	 *		setName			- string
-	 *		year			- string
-	 *		theme			- string
-	 *		subtheme		- string
-	 *		pieces			- string
+	 *		setName		- string
+	 *		year		- string
+	 *		theme		- string
+	 *		subtheme	- string
+	 *		pieces		- string
 	 *		thumbnailURL	- string
-	 *		imageUrl		- string
-	 *		bricksetURL		- string
-	 *		own				- boolean
-	 *		want			- boolean
-	 *		qtyOwned		- int
-	 *		lastUpdated		- dateTime
+	 *		imageUrl	- string
+	 *		bricksetURL	- string
+	 *		own		- boolean
+	 *		want		- boolean
+	 *		qtyOwned	- int
+	 *		lastUpdated	- dateTime
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
@@ -211,29 +211,29 @@ class BricksetAPIFunctions
 	 *
 	 *	Pass a set number and get all the information about that set.
 	 *	setData
-	 *		setID			- int
-	 *		number			- string
+	 *		setID		- int
+	 *		number		- string
 	 *		numberVariant 	- int
-	 *		setName			- string
-	 *		year			- string
-	 *		theme			- string
-	 *		subtheme		- string
-	 *		pieces			- string
+	 *		setName		- string
+	 *		year		- string
+	 *		theme		- string
+	 *		subtheme	- string
+	 *		pieces		- string
 	 *		thumbnailURL	- string
-	 *		imageUrl		- string
-	 *		bricksetURL		- string
-	 *		own				- boolean
-	 *		want			- boolean
-	 *		qtyOwned		- int
-	 *		lastUpdated		- dateTime
+	 *		imageUrl	- string
+	 *		bricksetURL	- string
+	 *		own		- boolean
+	 *		want		- boolean
+	 *		qtyOwned	- int
+	 *		lastUpdated	- dateTime
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 *
-	 *	@param		int		$number (set number)
+	 *	@param		int	$number (set number)
 	 *	@param		int 	$user_id (user_id)
-	 *	@param		int		$wanted (1 = return wanted)
-	 *	@param		int		$owned (1 = return owned)
+	 *	@param		int	$wanted (1 = return wanted)
+	 *	@param		int	$owned (1 = return owned)
 	 *	@return		array 	$setData
 	 */
 	public function get_by_number( $number = '', $user_id = '', $wanted = '', $owned = '' )
@@ -247,21 +247,21 @@ class BricksetAPIFunctions
 	 *
 	 *	Get all the wanted sets by the specified user
 	 *	setData
-	 *		setID			- int
-	 *		number			- string
+	 *		setID		- int
+	 *		number		- string
 	 *		numberVariant 	- int
-	 *		setName			- string
-	 *		year			- string
-	 *		theme			- string
-	 *		subtheme		- string
-	 *		pieces			- string
+	 *		setName		- string
+	 *		year		- string
+	 *		theme		- string
+	 *		subtheme	- string
+	 *		pieces		- string
 	 *		thumbnailURL	- string
-	 *		imageUrl		- string
-	 *		bricksetURL		- string
-	 *		own				- boolean
-	 *		want			- boolean
-	 *		qtyOwned		- int
-	 *		lastUpdated		- dateTime
+	 *		imageUrl	- string
+	 *		bricksetURL	- string
+	 *		own		- boolean
+	 *		want		- boolean
+	 *		qtyOwned	- int
+	 *		lastUpdated	- dateTime
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.2
@@ -280,21 +280,21 @@ class BricksetAPIFunctions
 	 *
 	 *	Get all the sets owned by the specified user
 	 *	setData
-	 *		setID			- int
-	 *		number			- string
+	 *		setID		- int
+	 *		number		- string
 	 *		numberVariant 	- int
-	 *		setName			- string
-	 *		year			- string
-	 *		theme			- string
-	 *		subtheme		- string
-	 *		pieces			- string
+	 *		setName		- string
+	 *		year		- string
+	 *		theme		- string
+	 *		subtheme	- string
+	 *		pieces		- string
 	 *		thumbnailURL	- string
-	 *		imageUrl		- string
-	 *		bricksetURL		- string
-	 *		own				- boolean
-	 *		want			- boolean
-	 *		qtyOwned		- int
-	 *		lastUpdated		- dateTime
+	 *		imageUrl	- string
+	 *		bricksetURL	- string
+	 *		own		- boolean
+	 *		want		- boolean
+	 *		qtyOwned	- int
+	 *		lastUpdated	- dateTime
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.3
@@ -313,26 +313,26 @@ class BricksetAPIFunctions
 	 *
 	 *	Pass a theme and get all the information about the sets in that theme.
 	 *	setData
-	 *		setID			- int
-	 *		number			- string
+	 *		setID		- int
+	 *		number		- string
 	 *		numberVariant 	- int
-	 *		setName			- string
-	 *		year			- string
-	 *		theme			- string
-	 *		subtheme		- string
-	 *		pieces			- string
+	 *		setName		- string
+	 *		year		- string
+	 *		theme		- string
+	 *		subtheme	- string
+	 *		pieces		- string
 	 *		thumbnailURL	- string
-	 *		imageUrl		- string
-	 *		bricksetURL		- string
-	 *		own				- boolean
-	 *		want			- boolean
-	 *		qtyOwned		- int
-	 *		lastUpdated		- dateTime
+	 *		imageUrl	- string
+	 *		bricksetURL	- string
+	 *		own		- boolean
+	 *		want		- boolean
+	 *		qtyOwned	- int
+	 *		lastUpdated	- dateTime
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 *
-	 *	@param		int		$number (set number)
+	 *	@param		int	$number (set number)
 	 *	@param		int 	$user_id (user_id)
 	 *	@return		array 	$setData
 	 */
@@ -347,26 +347,26 @@ class BricksetAPIFunctions
 	 *
 	 *	Pass a subtheme and get all the information about the sets in that subtheme
 	 *	setData
-	 *		setID			- int
-	 *		number			- string
+	 *		setID		- int
+	 *		number		- string
 	 *		numberVariant 	- int
-	 *		setName			- string
-	 *		year			- string
-	 *		theme			- string
-	 *		subtheme		- string
-	 *		pieces			- string
+	 *		setName		- string
+	 *		year		- string
+	 *		theme		- string
+	 *		subtheme	- string
+	 *		pieces		- string
 	 *		thumbnailURL	- string
-	 *		imageUrl		- string
-	 *		bricksetURL		- string
-	 *		own				- boolean
-	 *		want			- boolean
-	 *		qtyOwned		- int
-	 *		lastUpdated		- dateTime
+	 *		imageUrl	- string
+	 *		bricksetURL	- string
+	 *		own		- boolean
+	 *		want		- boolean
+	 *		qtyOwned	- int
+	 *		lastUpdated	- dateTime
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 *
-	 *	@param		int		$subtheme
+	 *	@param		int	$subtheme
 	 *	@param		int 	$user_id (user_id)
 	 *	@return		array 	$setData
 	 */
@@ -381,26 +381,26 @@ class BricksetAPIFunctions
 	 *
 	 *	Pass a year and get all the information about that set.
 	 *	setData
-	 *		setID			- int
-	 *		number			- string
+	 *		setID		- int
+	 *		number		- string
 	 *		numberVariant 	- int
-	 *		setName			- string
-	 *		year			- string
-	 *		theme			- string
-	 *		subtheme		- string
-	 *		pieces			- string
+	 *		setName		- string
+	 *		year		- string
+	 *		theme		- string
+	 *		subtheme	- string
+	 *		pieces		- string
 	 *		thumbnailURL	- string
-	 *		imageUrl		- string
-	 *		bricksetURL		- string
-	 *		own				- boolean
-	 *		want			- boolean
-	 *		qtyOwned		- int
-	 *		lastUpdated		- dateTime
+	 *		imageUrl	- string
+	 *		bricksetURL	- string
+	 *		own		- boolean
+	 *		want		- boolean
+	 *		qtyOwned	- int
+	 *		lastUpdated	- dateTime
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 *
-	 *	@param		int		$year
+	 *	@param		int	$year
 	 *	@param		int 	$user_id (user_id)
 	 *	@return		array 	$setData
 	 */
@@ -415,21 +415,21 @@ class BricksetAPIFunctions
 	 *
  	 *	Brickset returns the following fields in an array
 	 *	setData
-	 *		setID			- int
-	 *		number			- string
+	 *		setID		- int
+	 *		number		- string
 	 *		numberVariant 	- int
-	 *		setName			- string
-	 *		year			- string
-	 *		theme			- string
-	 *		subtheme		- string
-	 *		pieces			- string
+	 *		setName		- string
+	 *		year		- string
+	 *		theme		- string
+	 *		subtheme	- string
+	 *		pieces		- string
 	 *		thumbnailURL	- string
-	 *		imageUrl		- string
-	 *		bricksetURL		- string
-	 *		own				- boolean
-	 *		want			- boolean
-	 *		qtyOwned		- int
-	 *		lastUpdated		- dateTime
+	 *		imageUrl	- string
+	 *		bricksetURL	- string
+	 *		own		- boolean
+	 *		want		- boolean
+	 *		qtyOwned	- int
+	 *		lastUpdated	- dateTime
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
