@@ -447,6 +447,13 @@ class BricksetAPIFunctions
 		$user_id 	= isset( $args['user_id'] ) ? $args['user_id'] : '';
 		$user_hash 	= '';
 		
+		$number_check = explode( '-', $number );
+		
+		if( empty( $number_check[1] ) )
+		{
+			$number = $number_check[0].'-1';
+		}
+		
 		if ( !empty( $user_id ) )
 			$user_hash = get_user_meta( $user_id, 'brickset_hash', true );
 		
