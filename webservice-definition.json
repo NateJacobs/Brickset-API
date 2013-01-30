@@ -1,0 +1,671 @@
+{
+  "name": "Brickset Web Services",
+  "apiVersion": "2013-01-27",
+  "baseUrl": "http://www.brickset.com/webservices/brickset.asmx",
+  "xmlNamespace": "http://www.brickset.com/webServices/",
+  "description": "Brickset Web Services allow you to create applications that use the Brickset set database.",
+  "operations": {
+    "search": {
+      "httpMethod": "GET",
+      "uri": "/search",
+      "summary": "Search the database.",
+      "responseClass": "setData",
+      "parameters": {
+        "apiKey": {
+          "location": "query",
+          "type": "string",
+          "description": "Without providing a valid key a maximum of 20 results will be returned.",
+          "required": true,
+          "default": null
+        },
+        "userHash": {
+          "location": "query",
+          "type": "string",
+          "description": "If this is provided, the returned data will contain flags indicating whether the specified user owns and/or wants the set.",
+          "required": true,
+          "default": null
+        },
+        "query": {
+          "location": "query",
+          "type": "string",
+          "description": "A search string.",
+          "required": true,
+          "default": null
+        },
+        "theme": {
+          "location": "query",
+          "type": "string",
+          "description": "Valid name of a theme.",
+          "required": true,
+          "default": null
+        },
+        "subtheme": {
+          "location": "query",
+          "type": "string",
+          "description": "Valid name of a subtheme.",
+          "required": true,
+          "default": null
+        },
+        "setNumber": {
+          "location": "query",
+          "type": "string",
+          "description": "A set number. It must include a '-#' after the number. e.g. 8683-1",
+          "required": true,
+          "default": ""
+        },
+        "year": {
+          "location": "query",
+          "type": "string",
+          "description": "Release year of a set(s).",
+          "required": true,
+          "default": null
+        },
+        "Owned": {
+          "location": "query",
+          "type": "string",
+          "description": "Pass a '1' to get a list of set(s) the specified user owns.",
+          "required": true,
+          "default": null
+        },
+        "Wanted": {
+          "location": "query",
+          "type": "string",
+          "description": "Pass a '1' to get a list of set(s) the specified user wants.",
+          "required": true,
+          "default": null
+        }
+      }
+    },
+    "searchBySetID": {
+      "httpMethod": "GET",
+      "uri": "/searchBySetID",
+      "summary": "Search the database for a specific set using the Brickset interal set ID.",
+      "responseClass": "setData",
+      "parameters": {
+        "SetID": {
+          "location": "query",
+          "type": "string",
+          "description": "The internal Brickset setID",
+          "required": true
+        }
+      }
+    },
+    "updatedSince": {
+      "httpMethod": "GET",
+      "uri": "/updatedSince",
+      "summary": "Lists all set records changed since the date you specify (in mm/dd/yy format). This is useful if you are planning on caching the database for offline use. The data set returned will contain user ownership fields, but they will not be populated (since userHash is not passed as a parameter).",
+      "responseClass": "setData",
+      "parameters": {
+        "apiKey": {
+          "location": "query",
+          "type": "string",
+          "description": "Without providing a valid key a maximum of 20 results will be returned.",
+          "required": true,
+          "default": null
+        },
+        "sinceDate": {
+          "location": "query",
+          "type": "string",
+          "description": "A date in the format of mm/dd/yy."
+        }
+      }
+    },
+    "login": {
+      "httpMethod": "GET",
+      "uri": "/login",
+      "summary": "Provides a means of authenticating a user by username and password. If the credentials match a valid user a userHash is returned.",
+      "responseClass": "loginResponse",
+      "parameters": {
+        "u": {
+          "location": "query",
+          "type": "string",
+          "description": "Username",
+          "required": true
+        },
+        "p": {
+          "location": "query",
+          "type": "string",
+          "description": "Password",
+          "required": true
+        }
+      }
+    },
+    "updateOwn": {
+      "httpMethod": "POST",
+      "uri": "/updateOwn",
+      "summary": "Add or delete a set from a users collection.",
+      "responseClass": "updateOwnResponse",
+      "parameters": {
+        "userHash": {
+          "location": "body",
+          "type": "string",
+          "description": "The userHash of the user that wants to add or delete a set.",
+          "required": true
+        },
+        "setID": {
+          "location": "body",
+          "type": "int",
+          "description": "Brickset internal setID. ",
+          "required": true
+        },
+        "own": {
+          "location": "body",
+          "type": "int",
+          "description": "Pass a 1 to add the set or a 0 to remove the set.",
+          "required": true
+        }
+      }
+    },
+    "updateWant": {
+      "httpMethod": "POST",
+      "uri": "/updateWant",
+      "summary": "Add or delete a set from the users wanted list.",
+      "responseClass": "updateWantResponse",
+      "parameters": {
+        "userHash": {
+          "location": "body",
+          "type": "string",
+          "description": "The userHash of the user that wants to add or remove a wanted set.",
+          "required": true
+        },
+        "setID": {
+          "location": "body",
+          "type": "int",
+          "description": "Brickset internal setID",
+          "required": true
+        },
+        "want": {
+          "location": "body",
+          "type": "int",
+          "description": "Pass a 1 to add the set or a 0 to remove the set.",
+          "required": true
+        }
+      }
+    },
+    "updateUserNotes": {
+      "httpMethod": "POST",
+      "uri": "/updateUserNotes",
+      "summary": "Add text which will replace the user's notes for the specified set.",
+      "responseClass": "updateUserNotesResponse",
+      "parameters": {
+        "userHash": {
+          "location": "body",
+          "type": "string",
+          "description": "The userHash of the user that wants to add or replace a note on a set.",
+          "required": true
+        },
+        "setID": {
+          "location": "body",
+          "type": "int",
+          "description": "Brickset internal setID",
+          "required": true
+        },
+        "notes": {
+          "location": "body",
+          "type": "string",
+          "description": "String which will replace the user's notes for the set.",
+          "required": true
+        }
+      }
+    },
+    "updateQtyOwned": {
+      "httpMethod": "POST",
+      "uri": "/updateQtyOwned",
+      "summary": "Updates the quantity of a set the user owns.",
+      "responseClass": "updateQtyOwnedResponse",
+      "parameters": {
+        "userHash": {
+          "location": "body",
+          "type": "string",
+          "description": "The userHash of the user that wants to update the quantity owned of a set.",
+          "required": true
+        },
+        "setID": {
+          "location": "body",
+          "type": "int",
+          "description": "Brickset internal setID. ",
+          "required": true
+        },
+        "qty": {
+          "location": "body",
+          "type": "int",
+          "description": "An integer to specify how many of the set the user owns.",
+          "required": true
+        }
+      }
+    },
+    "listThemes": {
+      "httpMethod": "GET",
+      "uri": "/listThemes",
+      "summary": "Return a list of themes and the number of sets in each.",
+      "responseClass": "themeData"
+    },
+    "listSubthemes": {
+      "httpMethod": "GET",
+      "uri": "/listSubthemes",
+      "summary": "Return a list of subthemes for a given theme and the number of sets in each.",
+      "responseClass": "subThemedata",
+      "parameters": {
+        "theme": {
+          "location": "query",
+          "type": "string",
+          "description": "Theme name",
+          "required": true
+        }
+      }
+    },
+    "listYears": {
+      "httpMethod": "GET",
+      "uri": "/listYears",
+      "summary": "Return a list of years a given theme was available in and the number of sets released that year.",
+      "responseClass": "yearData",
+      "parameters": {
+        "theme": {
+          "location": "query",
+          "type": "string",
+          "description": "Theme name.",
+          "required": true
+        }
+      }
+    },
+    "popularSearches": {
+      "httpMethod": "GET",
+      "uri": "/popularSearches",
+      "summary": "Return a list of the most searched for terms as shown on the Brickset homepage.",
+      "responseClass": "setData"
+    },
+    "searchMinifigCollection": {
+      "httpMethod": "GET",
+      "uri": "/searchMinifigCollection",
+      "summary": "Return a list of all minifigs owned or wanted by a user that optionally match a query. Leave owned and wanted blank to retrieve those owned and wanted, or set one of them to '1' to get just owned or just wanted. query can be a complete minifig number (e.g. 'hp001'), or just a prefix (e.g. 'hp'). Leave blank to retrieve all.",
+      "responseClass": "minifigCollectionData",
+      "parameters": {
+        "userHash": {
+          "location": "query",
+          "type": "string",
+          "description": "The userHash of the user whose minifig collection is to be searched.",
+          "required": true
+        },
+        "query": {
+          "location": "query",
+          "type": "string",
+          "description": "A complete minifig number or a prefix, e.g. 'hp001' or just a prefix 'hp'.",
+          "required": true,
+          "default": null
+        },
+        "owned": {
+          "location": "query",
+          "type": "string",
+          "description": "Enter a 1 to retrieve all minifigs owned by the user that are returned from the query. Leave blank if want both owned and wanted.",
+          "required": true,
+          "default": null
+        },
+        "wanted": {
+          "location": "query",
+          "type": "string",
+          "description": "Enter a 1 to retrieve all minifigs wanted by the user that are returned from the query. Leave blank if want both owned and wanted.",
+          "required": true,
+          "default": null
+        }
+      }
+    },
+    "updateMinifigQtyOwned": {
+      "httpMethod": "POST",
+      "uri": "/updateMinifigQtyOwned",
+      "summary": "Update the quantity of loose minifigs a user has.",
+      "responseClass": "updateMinifigQtyOwnedResponse",
+      "parameters": {
+        "userHash": {
+          "location": "body",
+          "type": "string",
+          "description": "The userHash of the user to update the loose minifig count for.",
+          "required": true
+        },
+        "minifigNumber": {
+          "location": "body",
+          "type": "string",
+          "description": "The Brickset internal minifig number.",
+          "required": true
+        },
+        "qty": {
+          "location": "body",
+          "type": "int",
+          "description": "An integer specifiying how many loose minifigs of this type the user owns.",
+          "required": true
+        }
+      }
+    },
+    "updateMinifigWanted": {
+      "httpMethod": "POST",
+      "uri": "/updateMinifigWanted",
+      "summary": "Set the wanted status of a minifig for a user. Currently users can't simultaneously own and want the same minifig. Setting a minifig as wanted will clear the quantity owned.",
+      "responseClass": "updateMinifigWantedResponse",
+      "parameters": {
+        "userHash": {
+          "location": "body",
+          "type": "string",
+          "description": "The userHash of the user to update the wanted status.",
+          "required": true
+        },
+        "minifigNumber": {
+          "location": "body",
+          "type": "string",
+          "description": "The Brickset internal minifig number.",
+          "required": true
+        },
+        "want": {
+          "location": "body",
+          "type": "int",
+          "description": "Pass the integer 1 to add a minifig to a users wanted list.",
+          "required": true
+        }
+      }
+    },
+    "listInstructions": {
+      "httpMethod": "GET",
+      "uri": "/listInstructions",
+      "summary": "Returns the URL of the instructions available at LEGO Customer Services.",
+      "responseClass": "instructionsData",
+      "parameters": {
+        "setID": {
+          "location": "query",
+          "type": "int",
+          "description": "Brickset setID.",
+          "required": true
+        }
+      }
+    }
+  },
+  "models": {
+    "setData": {
+      "type": "object",
+      "properties": {
+        "setID": {
+          "location": "xml",
+          "type": "int",
+          "description": "Brickset internal set ID."
+        },
+        "number": {
+          "location": "xml",
+          "type": "string",
+          "description": "Set number."
+        },
+        "numberVariant": {
+          "location": "xml",
+          "type": "int",
+          "description": "Set number variant."
+        },
+        "setName": {
+          "location": "xml",
+          "type": "string",
+          "description": "Set name."
+        },
+        "year": {
+          "location": "xml",
+          "type": "string",
+          "description": "Release year."
+        },
+        "theme": {
+          "location": "xml",
+          "type": "string",
+          "description": "Set theme."
+        },
+        "subtheme": {
+          "location": "xml",
+          "type": "string",
+          "description": "Set subtheme."
+        },
+        "pieces": {
+          "location": "xml",
+          "type": "string",
+          "description": "Number of pieces in the set."
+        },
+        "minifigs": {
+          "location": "xml",
+          "type": "string",
+          "description": "Number of minifigs in the set."
+        },
+        "image": {
+          "location": "xml",
+          "type": "boolean",
+          "description": "Is an there an image?"
+        },
+        "imageFilename": {
+          "location": "xml",
+          "type": "string",
+          "description": "Filename of image."
+        },
+        "thumbailURL": {
+          "location": "xml",
+          "type": "string",
+          "description": "URL of the thumbnail image."
+        },
+        "imageURL": {
+          "location": "xml",
+          "type": "string",
+          "description": "URL of the image."
+        },
+        "bricksetURL": {
+          "location": "xml",
+          "type": "string",
+          "description": "URL of the set on Brickset"
+        },
+        "own": {
+          "location": "xml",
+          "type": "boolean",
+          "description": "Is the set owned by the user specified in userHash?"
+        },
+        "want": {
+          "location": "xml",
+          "type": "boolean",
+          "description": "Is the set wanted by the user specified in userHash?"
+        },
+        "qtyOwned": {
+          "location": "xml",
+          "type": "int",
+          "description": "Quantity of this set owned by the user specified in userHash."
+        },
+        "userNotes": {
+          "location": "xml",
+          "type": "string",
+          "description": "Notes about the set entered by the user specified in userHash."
+        },
+        "UKRetailPrice": {
+          "location": "xml",
+          "type": "string",
+          "description": "Retail price in the United Kingdom."
+        },
+        "USRetailPrice": {
+          "location": "xml",
+          "type": "string",
+          "description": "Retail price in the United States."
+        },
+        "CARetailPrice": {
+          "location": "xml",
+          "type": "string",
+          "description": "Retail price in Canada."
+        },
+        "instructionsAvailable": {
+          "location": "xml",
+          "type": "boolean",
+          "description": "Are instructions available?"
+        },
+        "EAN": {
+          "location": "xml",
+          "type": "string",
+          "description": "International Article Number."
+        },
+        "UPC": {
+          "location": "xml",
+          "type": "string",
+          "description": "Universal Product Code."
+        },
+        "lastUpdated": {
+          "location": "xml",
+          "type": "string",
+          "description": "Last updated, dateTime string."
+        }
+      }
+    },
+    "themeData": {
+      "type": "object",
+      "properties": {
+        "theme": {
+          "location": "xml",
+          "type": "string",
+          "description": "Theme name."
+        },
+        "setCount": {
+          "location": "xml",
+          "type": "int",
+          "description": "Number of sets in theme."
+        }
+      }
+    },
+    "subthemeData": {
+      "type": "object",
+      "properties": {
+        "theme": {
+          "location": "xml",
+          "type": "string",
+          "description": "Parent theme."
+        },
+        "subtheme": {
+          "location": "xml",
+          "type": "string",
+          "description": "Subtheme name."
+        },
+        "setCount": {
+          "location": "xml",
+          "type": "int",
+          "description": "Number of sets in subtheme."
+        },
+        "yearFrom": {
+          "location": "xml",
+          "type": "int",
+          "description": "First year the subtheme was released."
+        },
+        "yearTo": {
+          "location": "xml",
+          "type": "int",
+          "description": "Last year the subtheme was released."
+        }
+      }
+    },
+    "yearData": {
+      "type": "object",
+      "properties": {
+        "theme": {
+          "location": "xml",
+          "type": "string",
+          "description": "Theme name."
+        },
+        "year": {
+          "location": "xml",
+          "type": "string",
+          "description": "Release year."
+        },
+        "setCount": {
+          "location": "xml",
+          "type": "int",
+          "description": "Number of sets released that year."
+        }
+      }
+    },
+    "searchData": {
+      "type": "object",
+      "properties": {
+        "searchTerm": {
+          "location": "xml",
+          "type": "string",
+          "description": "The search query."
+        },
+        "count": {
+          "location": "xml",
+          "type": "int",
+          "description": "Relative weightings of the search query."
+        }
+      }
+    },
+    "minifigCollectionData": {
+      "type": "object",
+      "properties": {
+        "minifigNumber": {
+          "location": "xml",
+          "type": "string",
+          "description": "Brickset minifigID"
+        },
+        "ownedInSets": {
+          "location": "xml",
+          "type": "int",
+          "description": "Quantity of this minifig owned by the specified user as part of a set."
+        },
+        "ownedLoose": {
+          "location": "xml",
+          "type": "int",
+          "description": "Quantity of this minifig owned by the specified user not part of a set."
+        },
+        "ownedTotal": {
+          "location": "xml",
+          "type": "int",
+          "description": "Total quantity of this minifig owned by the specified user."
+        },
+        "wanted": {
+          "location": "xml",
+          "type": "boolean",
+          "description": "Is this minifig wanted by the specified user?"
+        }
+      }
+    },
+    "instructionsData": {
+      "type": "object",
+      "properties": {
+        "URL": {
+          "location": "xml",
+          "type": "string",
+          "description": "URL of the pdf of the instructions."
+        },
+        "description": {
+          "location": "xml",
+          "type": "string",
+          "description": "Description returned with the instructions."
+        }
+      }
+    },
+    "loginResponse": {
+      "location": "xml",
+      "type": "string",
+      "description": "If valid user credentials are passed the response will be the userHash. If the response string is empty the credentials were invalid or no user was found."
+    },
+    "updateOwnResponse": {
+      "location": "xml",
+      "type": "int",
+      "description": "If the update is successful a 1 is returned."
+    },
+    "updateWantResponse": {
+      "location": "xml",
+      "type": "int",
+      "description": "If the update is successful a 1 is returned."
+    },
+    "updateUserNotesResponse": {
+      "location": "xml",
+      "type": "int",
+      "description": "If the update is successful a 1 is returned."
+    },
+    "updateQtyOwnedResponse": {
+      "location": "xml",
+      "type": "int",
+      "description": "If the update is successful a 1 is returned."
+    },
+    "updateMinifigQtyOwnedResponse": {
+      "location": "xml",
+      "type": "int",
+      "description": "If the update is successful a 1 is returned."
+    },
+    "updateMinifigWantedResponse": {
+      "location": "xml",
+      "type": "int",
+      "description": "If the update is successful a 1 is returned."
+    }
+  }
+}
