@@ -5,10 +5,8 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	/** 
 	 *	Display a list of all themes
 	 *
-	 *	Brickset returns the following fields in an array
-	 *	themeData
-	 *		theme 		- string
-	 *		setCount 	- int
+	 *	Brickset returns the themeData response.
+	 *	See webservice-definition.json for all the fields returned.
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
@@ -26,13 +24,8 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	/** 
 	 *	Display a list of all subthemes for a given theme
 	 *
-	 *	Brickset returns the following fields in an array
-	 *	subthemeData
-	 *		theme		- string
-	 *		subtheme	- string
-	 *		setCount	- int
-	 *		yearFrom	- int
-	 *		yearTo		- int
+	 *	Brickset returns the subthemeData response.
+	 *	See webservice-definition.json for all the fields returned.
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
@@ -58,11 +51,8 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	/** 
 	 *	Display a list of years a theme was available
 	 *
-	 *	Brickset returns the following fields in an array
-	 *	yearData
-	 *		theme		- string
-	 *		year		- string
-	 *		setCount	- int
+	 *	Brickset returns the yearData response.
+	 *	See webservice-definition.json for all the fields returned.
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
@@ -86,10 +76,8 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	/** 
 	 *	Display a list of the most searched for terms
 	 *
-	 *	Brickset returns the following fields in an array
-	 *	searchData
-	 *		searchTerm	- string
-	 *		count		- int
+	 *	Brickset returns searchData response.
+	 *	See webservice-definition.json for all the fields returned.
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
@@ -112,23 +100,8 @@ class BricksetAPIDisplay extends BricksetAPIFunctions
 	/** 
 	 *	Display a list of all sets updated since a given date
 	 *
-	 *	Brickset returns the following fields in an array
-	 *	setData
-	 *		setID			- int
-	 *		number			- string
-	 *		numberVariant 	- int
-	 *		setName			- string
-	 *		year			- string
-	 *		theme			- string
-	 *		subtheme		- string
-	 *		pieces			- string
-	 *		thumbnailURL	- string
-	 *		imageUrl		- string
-	 *		bricksetURL		- string
-	 *		own				- boolean
-	 *		want			- boolean
-	 *		qtyOwned		- int
-	 *		lastUpdated		- dateTime
+	 *	Brickset returns the setData response.
+	 *	See webservice-definition.json for all the fields returned.
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
