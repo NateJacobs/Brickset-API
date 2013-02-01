@@ -20,13 +20,16 @@ class BricksetAPIShortcode
 		$brickset = new BricksetAPIFunctions();
 		$result = $brickset->get_by_number( $number );
 		
-		$return = '<img src="'.$result->thumbnailURL.'"><br>';
+		$return = '<img src="'.$result->imageURL.'"><br>';
 		$return .= '<strong>Set Name: </strong>'.$result->setName.'<br>';
-		$return .= '<strong>Set Number: </strong>'.$result->number.'<br>';
+		$return .= '<strong>Set Number: </strong>'.$result->number.'-'.$result->numberVariant.'<br>';
 		$return .= '<strong>Year: </strong>'.$result->year.'<br>';
 		$return .= '<strong>Theme: </strong>'.$result->theme.'<br>';
 		$return .= '<strong>Subtheme: </strong>'.$result->subtheme.'<br>';
+		$return .= '<strong>US Retail Price: </strong>$'.$result->USRetailPrice.'<br>';
 		$return .= '<strong>Pieces: </strong>'.$result->pieces.'<br>';
+		$return .= '<strong>Minifigs: </strong>'.$result->minifigs.'<br>';
+		$return .= '<strong>Set Guide: </strong><a href='.$result->bricksetURL.'>Brickset</a><br>';
 		
 		return $return;
 	}
