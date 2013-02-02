@@ -39,7 +39,7 @@ class BricksetAPIAdmin extends BricksetAPIFunctions
 		{
 			if ( $this->httpcode != 200 )
 				throw new Exception ( $this->error_msg );
-			update_user_meta( $user->ID, 'brickset_hash',  $user_hash );
+			update_user_meta( $user->ID, 'brickset_user_hash',  $user_hash );
 		}
 		catch ( Exception $e ) 
 		{
