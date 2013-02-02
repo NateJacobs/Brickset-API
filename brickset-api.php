@@ -77,8 +77,8 @@ class BricksetAPILoad
 	{
 		if ( is_admin() ) 
 		{
-			require_once( BRICKSET_API_ADMIN . 'admin.php' );
-			//require_once( BRICKSET_API_ADMIN . 'help-text.php' );
+			require_once( BRICKSET_API_ADMIN . 'class-settings-page.php' );
+			require_once( BRICKSET_API_ADMIN . 'class-users-profile.php' );
 		}
 	}
 	
