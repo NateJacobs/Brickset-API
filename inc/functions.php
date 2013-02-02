@@ -189,10 +189,10 @@ class BricksetAPIFunctions
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 *
-	 *	@param		int	$number (set number)
+	 *	@param		int		$number (set number)
 	 *	@param		int 	$user_id (user_id)
-	 *	@param		int	$wanted (1 = return wanted)
-	 *	@param		int	$owned (1 = return owned)
+	 *	@param		int		$wanted (1 = return wanted)
+	 *	@param		int		$owned (1 = return owned)
 	 *	@return		array 	$setData
 	 */
 	public function get_by_number( $number = '', $user_id = '', $wanted = '', $owned = '' )
@@ -328,7 +328,7 @@ class BricksetAPIFunctions
 		}
 		
 		if ( !empty( $user_id ) )
-			$user_hash = get_user_meta( $user_id, 'brickset_hash', true );
+			$user_hash = get_user_meta( $user_id, 'brickset_user_hash', true );
 		
 		$params = 'apiKey='.$this->api_key.'&userHash='.$user_hash.'&query='.$query.'&theme='.$theme.'&subtheme='.$subtheme.'&setNumber='.$number.'&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
 		
