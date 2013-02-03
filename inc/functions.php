@@ -32,7 +32,8 @@ class BricksetAPIFunctions
 	 */
 	protected function get_apikey()
 	{
-		$this->api_key = get_option( 'brickset_apikey' );
+		$settings = (array) get_option( 'brickset-api-settings' );
+		$this->api_key = $settings['api_key'];
 		return $this->api_key;
 	}
 	
@@ -163,6 +164,8 @@ class BricksetAPIFunctions
 	 */
 	public function get_updated_since( $date )
 	{
+		self::get_apikey();
+		
 		$params = 'apiKey='.$this->api_key.'&sinceDate='.$date;
 		$this->remote_request( 'updatedSince', $params );
 		
@@ -358,4 +361,4 @@ class BricksetAPIFunctions
 		}
 	}
 }
-$brickset_functions = new BricksetAPIFunctions();
+//$brickset_functions = new BricksetAPIFunctions();
