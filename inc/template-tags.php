@@ -10,7 +10,7 @@
  *	@date		2/2/13
  *	@since		1.0
  */
-function brickset_display_themes()
+function brickset_themes()
 {
 	$brickset = new BricksetAPIFunctions();
 	$brickset = $brickset->get_themes();
@@ -31,7 +31,7 @@ function brickset_display_themes()
  *	@date		2/2/13
  *	@since		1.0
  */
-function brickset_display_subthemes( $theme )
+function brickset_subthemes( $theme )
 {
 	$brickset = new BricksetAPIFunctions();
 	$brickset = $brickset->get_subthemes( $theme );
@@ -60,7 +60,7 @@ function brickset_display_subthemes( $theme )
  *	@date		2/2/13
  *	@since		1.0
  */
-function brickset_display_theme_years( $theme )
+function brickset_theme_years( $theme )
 {
 	$brickset = new BricksetAPIFunctions();
 	$brickset = $brickset->get_theme_years( $theme );
@@ -87,7 +87,7 @@ function brickset_display_theme_years( $theme )
  *	@date		2/2/13
  *	@since		1.0
  */
-function brickset_display_popular_searches()
+function brickset_popular_searches()
 {
 	$brickset = new BricksetAPIFunctions();
 	$brickset = $brickset->get_popular_searches();
@@ -113,7 +113,7 @@ function brickset_display_popular_searches()
  *	@date		2/2/13
  *	@since		1.0
  */	
-function brickset_display_updated_since( $date )
+function brickset_updated_since( $date )
 {
 	$brickset = new BricksetAPIFunctions();
 	$brickset = $brickset->get_updated_since( $date );
