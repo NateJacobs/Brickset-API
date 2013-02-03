@@ -58,7 +58,6 @@ class BricksetAPILoad
 	public function includes()
 	{
 		require_once( BRICKSET_API_INCLUDES . 'functions.php' );
-		require_once( BRICKSET_API_INCLUDES . 'display.php' );
 		require_once( BRICKSET_API_INCLUDES . 'update.php' );
 		require_once( BRICKSET_API_INCLUDES . 'widgets.php' );
 		require_once( BRICKSET_API_INCLUDES . 'template-tags.php' );
