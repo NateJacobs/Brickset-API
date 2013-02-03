@@ -1,82 +1,131 @@
 <?php
 
 /** 
- *	Brick Get Themes
+ *	Display a list of all themes
  *
- *	Returns the themeData response.
+ *	Brickset returns the themeData response.
  *	See webservice-definition.json for all the fields returned.
  *
  *	@author		Nate Jacobs
- *	@since		0.2
+ *	@date		2/2/13
+ *	@since		1.0
  */
-function brick_get_themes()
+function brickset_display_themes()
 {
 	$brickset = new BricksetAPIFunctions();
-	return $brickset->get_themes();
+	$brickset = $brickset->get_themes();
+
+	foreach ( $brickset->themeData as $theme )
+	{
+		echo '<p class="brickset-theme-list">'.$theme->theme.'</p>';
+	}
 }
 
 /** 
- *	Brick Get Subtheme
+ *	Display a table of all subthemes for a given theme
  *
- *	Returns the subThemeData response.
+ *	Brickset returns the subthemeData response.
  *	See webservice-definition.json for all the fields returned.
  *
  *	@author		Nate Jacobs
- *	@since		0.2
- *
- *	@param		string	$theme (a theme name)
+ *	@date		2/2/13
+ *	@since		1.0
  */
-function brick_get_subthemes( $theme)
+function brickset_display_subthemes( $theme )
 {
 	$brickset = new BricksetAPIFunctions();
-	return $brickset->get_subthemes();
+	$brickset = $brickset->get_subthemes( $theme );
+	
+	echo '<h2 class="brickset-theme-name">'.$brickset->subthemeData->theme.'</h2>';
+	echo '<table class="brickset-subtheme"><th>Subtheme</th><th>Set Count</th><th>First Year</th><th>Last Year</th>';		
+	foreach ( $brickset->subthemeData as $subtheme )
+	{
+		echo '<tr>';
+			echo '<td>'.$subtheme->subtheme.'</td>'; 
+			echo '<td>'.$subtheme->setCount.'</td>';
+			echo '<td>'.$subtheme->yearFrom.'</td>';
+			echo '<td>'.$subtheme->yearTo.'</td>';
+		echo '</tr>';
+	}
+	echo '</table>';
 }
 
 /** 
- *	Brick Get Theme Years
+ *	Display a table of years a theme was available
  *
- *	Returns yearData response.
+ *	Brickset returns the yearData response.
  *	See webservice-definition.json for all the fields returned.
  *
  *	@author		Nate Jacobs
- *	@since		0.2
- *
- *	@param		string	$theme (a theme name)
+ *	@date		2/2/13
+ *	@since		1.0
  */
-function brick_get_theme_years( $theme )
+function brickset_display_theme_years( $theme )
 {
 	$brickset = new BricksetAPIFunctions();
-	return $brickset->get_years( $theme );
+	$brickset = $brickset->get_theme_years( $theme );
+	
+	echo '<h2 class="brickset-theme-name">'.$brickset->yearData->theme.'</h2>';
+	echo '<table class="brickset-theme"><th>Year</th><th>Set Count</th>';			
+	foreach ( $brickset->yearData as $year )
+	{
+			echo '<tr>';
+				echo '<td>'.$year->year.'</td>';
+				echo '<td>'.$year->setCount.'</td>';		
+			echo '</tr>';
+	}
+	echo '</table>';
 }
 
 /** 
- *	Brick Get Popular Searches
+ *	Display a table of the most searched for terms
  *
- *	Returns searchData response.
+ *	Brickset returns searchData response.
  *	See webservice-definition.json for all the fields returned.
  *
  *	@author		Nate Jacobs
- *	@since		0.2
+ *	@date		2/2/13
+ *	@since		1.0
  */
-function brick_get_popular_searches()
+function brickset_display_popular_searches()
 {
 	$brickset = new BricksetAPIFunctions();
-	return $brickset->get_popular_searches();
+	$brickset = $brickset->get_popular_searches();
+	
+	echo '<table class="brickset-popular-searches"><th>Search Term</th><th>Weight of Search</th>';	
+	foreach ( $brickset->searchData as $search )
+	{
+		echo '<tr>';
+			echo '<td>'.$search->searchTerm.'</td>';
+			echo '<td>'.$search->count.'</td>';		
+		echo '</tr>';
+	}
+	echo '</table>';
 }
 
 /** 
- *	Brick Get Updated Since
+ *	Display a list of all sets updated since a given date
  *
- *	Returns the setData response.
+ *	Brickset returns the setData response.
  *	See webservice-definition.json for all the fields returned.
  *
  *	@author		Nate Jacobs
- *	@since		0.2
- *
- *	@param		string	$date (use format of 'mm/dd/yyyy')
- */
-function brick_get_updated_since( $date )
+ *	@date		2/2/13
+ *	@since		1.0
+ */	
+function brickset_display_updated_since( $date )
 {
 	$brickset = new BricksetAPIFunctions();
-	return $brickset->get_updated_since( $date );
+	$brickset = $brickset->get_updated_since( $date );
+
+	echo '<table class="brickset-updated-since"><th>Image</th><th>Set Name</th><th>Set Number</th>';	
+	foreach ( $brickset->setData as $updated )
+	{
+		echo '<tr>';
+			echo '<td><img src="'.$updated->thumbnailURL.'"></td>';
+			echo '<td>'.$updated->setName.'</td>';
+			echo '<td>'.$updated->number.'-'.$updated->numberVariant.'</td>';
+		echo '</tr>';
+	}
+	echo '</table>';
 }
