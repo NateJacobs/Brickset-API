@@ -390,8 +390,10 @@ class BricksetAPIFunctions
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 *
-	 *	@param		int	$number (set number)
-	 *	@param		int 	$user_id (user_id)
+	 *	@param		int	$theme 
+	 *	@param		int $user_id
+	 *	@param		int	$owned
+	 *	@param		int	$wanted
 	 *	@return		array 	$setData
 	 */
 	public function get_by_themes( $theme = '', $user_id = '', $owned = '', $wanted = '' )
@@ -417,9 +419,6 @@ class BricksetAPIFunctions
 		{
 			echo $e->getMessage();
 		}
-		
-		$theme = $this->brickset_search( array( 'theme' => $theme, 'user_id' => $user_id ) );
-		return $theme->setData;
 	}
 	
 	/** 
@@ -433,13 +432,34 @@ class BricksetAPIFunctions
 	 *	@since		0.1
 	 *
 	 *	@param		int	$subtheme
-	 *	@param		int 	$user_id (user_id)
-	 *	@return		array 	$setData
+	 *	@param		int $user_id (user_id)
+	 *	@param		int	$owned
+	 *	@param		int	$wanted
+	 *	@return		array	$setData
 	 */
-	public function get_by_subtheme( $subtheme = '', $user_id = '' )
+	public function get_by_subtheme( $subtheme = '', $user_id = '', $owned = '', $wanted = '' )
 	{
-		$subtheme = $this->brickset_search( array( 'subtheme' => $subtheme, 'user_id' => $user_id ) );
-		return $subtheme->setData;
+		$this->get_user_hash( $user_id );
+		$this->get_api_key();
+		
+		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme='.$subtheme.'&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
+
+		$this->remote_request( 'search', $params );
+		
+		try
+		{
+			if ( $this->httpcode != 200 )
+				throw new Exception ( $this->error_msg );
+				
+			if ( empty( $this->results ) )
+				throw new Exception( $this->no_results_error );
+				
+			return $this->results;
+		}
+		catch ( Exception $e ) 
+		{
+			echo $e->getMessage();
+		}
 	}
 	
 	/** 
