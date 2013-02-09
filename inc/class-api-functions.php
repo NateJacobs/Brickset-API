@@ -286,7 +286,7 @@ class BricksetAPIFunctions
 		
 		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber='.$number.'&year=&owned='.$owned.'&wanted='.$wanted;
 
-		$setData = $this->remote_request( 'search', $params );
+		$this->remote_request( 'search', $params );
 		
 		try
 		{
@@ -324,7 +324,7 @@ class BricksetAPIFunctions
 		
 		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=&wanted=1';
 
-		$setData = $this->remote_request( 'search', $params );
+		$this->remote_request( 'search', $params );
 		
 		try
 		{
@@ -362,7 +362,7 @@ class BricksetAPIFunctions
 		
 		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=1&wanted=';
 
-		$setData = $this->remote_request( 'search', $params );
+		$this->remote_request( 'search', $params );
 		
 		try
 		{
@@ -394,8 +394,30 @@ class BricksetAPIFunctions
 	 *	@param		int 	$user_id (user_id)
 	 *	@return		array 	$setData
 	 */
-	public function get_by_themes( $theme = '', $user_id = '' )
+	public function get_by_themes( $theme = '', $user_id = '', $owned = '', $wanted = '' )
 	{
+		$this->get_user_hash( $user_id );
+		$this->get_api_key();
+		
+		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme='.$theme.'&subtheme=&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
+
+		$this->remote_request( 'search', $params );
+		
+		try
+		{
+			if ( $this->httpcode != 200 )
+				throw new Exception ( $this->error_msg );
+				
+			if ( empty( $this->results ) )
+				throw new Exception( $this->no_results_error );
+				
+			return $this->results;
+		}
+		catch ( Exception $e ) 
+		{
+			echo $e->getMessage();
+		}
+		
 		$theme = $this->brickset_search( array( 'theme' => $theme, 'user_id' => $user_id ) );
 		return $theme->setData;
 	}
