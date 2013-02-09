@@ -25,44 +25,63 @@ class BricksetAPIUserProfile extends BricksetAPIFunctions
 	*/
 	public function __construct()
 	{
-		add_action( 'show_user_profile', array( __CLASS__, 'add_user_profile_fields' ) );
-		add_action( 'edit_user_profile', array( __CLASS__, 'add_user_profile_fields' ) );
-		add_action( 'personal_options_update', array( __CLASS__, 'save_user_profile_fields' ) );
-		add_action( 'edit_user_profile_update', array( __CLASS__, 'save_user_profile_fields' ) );
+		add_action( 'show_user_profile', array( $this, 'add_user_profile_fields' ) );
+		add_action( 'edit_user_profile', array( $this, 'add_user_profile_fields' ) );
+		add_action( 'personal_options_update', array( $this, 'set_brickset_user_hash' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'set_brickset_user_hash' ) );
 	}
 
 	/** 
-	 *	Login Service Method
-	 *
-	 *	Authenticates a user with Brickset and returns a hash.
-	 *	The hash is then stored as a meta value with the key of 'brickset_user_hash'
-	 *	in the *_usersmeta table.
-	 *
-	 *	@author		Nate Jacobs
-	 *	@since		0.1
-	 *
-	 *	@param	int 	$user_id
-	 *	@param	string 	$username
-	 *	@param	string	$password
-	 */
-	private function brickset_login( $user_id, $username, $password )
+	*	Add Brickset Login Fields
+	*
+	*	Add Brickset username, password, and userHash fields to the profile page.
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/3/13
+	*	@since		1.0
+	*
+	*	@param		object	$user
+	*	@return		null
+	*/
+	public function add_user_profile_fields( $user)
 	{
-		$user = get_userdata( $user_id );
-		
-		$params = 'u='.$username.'&p='.$password;
+		$user_hash = parent::get_user_hash( $user->ID );
+		?>
+		<h3><?php _e( 'Brickset Login Information', 'bs_api' ); ?></h3>
+		<span><?php _e( 'If the Brickset Identifier is filled you do not need to add your username and password unless you have changed your password on Brickset.', 'bs_api' ); ?></span>
+		<table class="form-table">
+		<tr>
+			<th><label for="bs_user_name"><?php _e( 'Brickset Username', 'bs_api' ); ?></label></th>
+			<td><input type="text" name="bs_user_name" id="bs_user_name" value="" class="regular-text" /></td>
+		</tr>
+		<tr>
+			<th><label for="bs_password"><?php _e( 'Brickset Password', 'bs_api' ); ?></label></th>
+			<td><input type="password" name="bs_password" id="bs_password" value="" class="regular-text" /></td>
+		</tr>
+		<tr>
+			<th><label for="bs_user_hash"><?php _e( 'Brickset Identifier', 'bs_api' ); ?></label></th>
+			<td><input type="text" readonly name="bs_user_hash" id="bs_user_hash" value="<?php echo $user_hash; ?>" class="regular-text" /></td>
+		</tr>
+		</table>
+		<?php
+	}
 	
-		parent::remote_request( 'login', $params );
-		$user_hash = $this->results;
-		
-		try
-		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-			update_user_meta( $user->ID, 'brickset_user_hash',  $user_hash );
-		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+	/** 
+	*	Save User Profile Fields
+	*
+	*	Takes the entered Brickset username and password and gets the userHash.
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/6/13
+	*	@since		1.0
+	*
+	*	@param		int	$user_id
+	*	@return		null
+	*/
+	public function set_brickset_user_hash( $user_id )
+	{
+		parent::brickset_login( $user_id, $_POST['bs_user_name'], $_POST['bs_password'] );
 	}
 }
+
+new BricksetAPIUserProfile;
