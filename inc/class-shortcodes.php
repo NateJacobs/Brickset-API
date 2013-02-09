@@ -30,7 +30,7 @@ class BricksetAPIShortcode extends BricksetAPIFunctions
 			$return .= '<strong>Pieces: </strong>'.$result->pieces.'<br>';
 			$return .= '<strong>Minifigs: </strong>'.$result->minifigs.'<br>';
 			$return .= '<strong>Set Guide: </strong><a href='.$result->bricksetURL.'>Brickset</a><br>';
-
+			$return .= '<strong>BrickLink: </strong><a href=http://www.bricklink.com/catalogItem.asp?S='.$result->number.'-'.$result->numberVariant.'>BrickLink</a><br><hr>';
 		}
 		
 		return $return;
