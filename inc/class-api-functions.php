@@ -31,6 +31,9 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
+	 *
+	 *	@return		string	$this->api_key
 	 */
 	protected function get_api_key()
 	{
@@ -49,6 +52,8 @@ class BricksetAPIFunctions
 	*	@since		1.0
 	*
 	*	@param		int	$user_id
+	*
+	*	@return		string	$this->user_hash
 	*/
 	protected function get_user_hash( $user_id )
 	{
@@ -66,6 +71,8 @@ class BricksetAPIFunctions
 	*	@since		1.0
 	*
 	*	@param		string	$set_number
+	*
+	*	@return		string	$set_number
 	*/
 	protected function set_number_check( $set_number )
 	{
@@ -237,8 +244,10 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
 	 *
 	 *	@param		string	$date (use format of 'mm/dd/yyyy')
+	 *
 	 *	@return		array	$updated
 	 */
 	public function get_updated_since( $date )
@@ -270,11 +279,13 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
 	 *
 	 *	@param		int		$number (set number)
 	 *	@param		int 	$user_id (user_id)
 	 *	@param		int		$wanted (1 = return wanted)
 	 *	@param		int		$owned (1 = return owned)
+	 *
 	 *	@return		array 	$setData
 	 */
 	public function get_by_number( $number = '', $user_id = '', $wanted = '', $owned = '' )
@@ -313,8 +324,10 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.2
+	 *	@updated	1.0
 	 *
 	 *	@param		int 	$user_id (user_id)
+	 *
 	 *	@return		array 	$setData
 	 */
 	public function get_wanted( $user_id = '' )
@@ -351,8 +364,10 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.3
+	 *	@updated	1.0
 	 *
 	 *	@param		int 	$user_id (user_id)
+	 *
 	 *	@return		array 	$setData
 	 */
 	public function get_owned( $user_id = '' )
@@ -389,11 +404,13 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
 	 *
 	 *	@param		int	$theme 
 	 *	@param		int $user_id
 	 *	@param		int	$owned
 	 *	@param		int	$wanted
+	 *
 	 *	@return		array 	$setData
 	 */
 	public function get_by_themes( $theme = '', $user_id = '', $owned = '', $wanted = '' )
@@ -430,11 +447,13 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
 	 *
 	 *	@param		int	$subtheme
 	 *	@param		int $user_id (user_id)
 	 *	@param		int	$owned
 	 *	@param		int	$wanted
+	 *
 	 *	@return		array	$setData
 	 */
 	public function get_by_subtheme( $subtheme = '', $user_id = '', $owned = '', $wanted = '' )
@@ -471,6 +490,7 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
 	 *
 	 *	@param		int	$year
 	 *	@param		int	$user_id
@@ -505,7 +525,7 @@ class BricksetAPIFunctions
 	}
 	
 	/** 
-	 *	Search the Brickset DB with a give set of criteria
+	 *	Search the Brickset DB with a given set of criteria
 	 *
 	 *	Protected function only for use within this class to power the other functions.
 	 *
