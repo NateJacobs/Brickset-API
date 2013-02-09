@@ -26,7 +26,7 @@ class BricksetAPIShortcode extends BricksetAPIFunctions
 		$return .= '<strong>US Retail Price: </strong>$'.$this->results->setData->USRetailPrice.'<br>';
 		$return .= '<strong>Pieces: </strong>'.$this->results->setData->pieces.'<br>';
 		$return .= '<strong>Minifigs: </strong>'.$this->results->setData->minifigs.'<br>';
-		$return .= '<strong>Set Guide: </strong><a href='.$this->results->setData->bricksetURL.'>Brickset</a><br>';
+		$return .= '<strong>Set Guide: </strong><a href='.$this->results->setData->bricksetURL.'>Brickset</a><br><br>';
 		
 		return $return;
 	}
