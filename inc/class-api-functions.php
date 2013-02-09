@@ -76,16 +76,24 @@ class BricksetAPIFunctions
 	*/
 	protected function set_number_check( $set_number )
 	{
-		$number_check = explode( '-', $set_number );
+		$set_numbers = explode( ',', $set_number );
+
+		$sets = '';
 		
-		if( empty( $number_check[1] ) )
+		foreach( $set_numbers as $set )
 		{
-			return $number_check[0].'-1';
+			$number_check = explode( '-', $set );
+			
+			if( empty( $number_check[1] ) )
+			{
+				$sets .= $number_check[0].'-1,';
+			}
+			else
+			{
+				$sets .= $set.',';
+			}
 		}
-		else
-		{
-			return $set_number;
-		}
+		return substr(str_replace(' ','',$sets), 0, -1);
 	}
 	
 	/** 
@@ -588,4 +596,3 @@ class BricksetAPIFunctions
 		}
 	}
 }
-//$brickset_functions = new BricksetAPIFunctions();
