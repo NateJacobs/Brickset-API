@@ -2,7 +2,8 @@
 
 class BricksetAPIFunctions
 {
-	protected $api_key			= '';
+	protected $api_key;
+	protected $user_hash;
 	protected $api_url 			= 'http://www.brickset.com/webservices/brickset.asmx';
 	protected $error_msg		= "<strong>Don't Panic!</strong> Something went wrong, and Brickset didn't reply correctly.";
 	protected $no_results_error = "<strong>No results.</strong> Sorry, no sets were found for that query.";
@@ -17,6 +18,7 @@ class BricksetAPIFunctions
 	 */
 	protected function remote_request( $extra_url, $params = '' )
 	{
+//wp_die( $this->api_url.'/'.$extra_url.'?'.$params );	
 		$result = wp_remote_get( $this->api_url.'/'.$extra_url.'?'.$params );
 		$this->httpcode = $result['response']['code'];
 		$this->results = new SimpleXMLElement( $result['body'] );
@@ -30,11 +32,88 @@ class BricksetAPIFunctions
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 */
-	protected function get_apikey()
+	protected function get_api_key()
 	{
 		$settings = (array) get_option( 'brickset-api-settings' );
 		$this->api_key = $settings['api_key'];
 		return $this->api_key;
+	}
+	
+	/** 
+	*	Get UserHash
+	*
+	*	Returns the Brickset userHash from user_meta
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/9/13
+	*	@since		1.0
+	*
+	*	@param		int	$user_id
+	*/
+	protected function get_user_hash( $user_id )
+	{
+		$this->user_hash = get_user_meta( $user_id, 'brickset_user_hash', true );
+		return $this->user_hash;
+	}
+	
+	/** 
+	*	Set Number Check
+	*
+	*	Checks if the set number has a variant, if not one is added
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/9/13
+	*	@since		1.0
+	*
+	*	@param		string	$set_number
+	*/
+	protected function set_number_check( $set_number )
+	{
+		$number_check = explode( '-', $set_number );
+		
+		if( empty( $number_check[1] ) )
+		{
+			return $number_check[0].'-1';
+		}
+		else
+		{
+			return $set_number;
+		}
+	}
+	
+	/** 
+	 *	Login Service Method
+	 *
+	 *	Authenticates a user with Brickset and returns a hash.
+	 *	The hash is then stored as a meta value with the key of 'brickset_user_hash'
+	 *	in the *_usersmeta table.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@since		0.1
+	 *
+	 *	@param	int 	$user_id
+	 *	@param	string 	$username
+	 *	@param	string	$password
+	 */
+	public function brickset_login( $user_id, $username, $password )
+	{
+		$user = get_userdata( $user_id );
+		
+		$params = 'u='.$username.'&p='.$password;
+	
+		$this->remote_request( 'login', $params );
+		$user_hash = $this->results;
+		
+		try
+		{
+			if ( $this->httpcode != 200 )
+				throw new Exception ( $this->error_msg );
+			update_user_meta( $user->ID, 'brickset_user_hash',  (string) $user_hash[0] );
+		}
+		catch ( Exception $e ) 
+		{
+			echo $e->getMessage();
+		}
 	}
 	
 	/** 
@@ -164,7 +243,7 @@ class BricksetAPIFunctions
 	 */
 	public function get_updated_since( $date )
 	{
-		self::get_apikey();
+		$this->get_api_key();
 		
 		$params = 'apiKey='.$this->api_key.'&sinceDate='.$date;
 		$this->remote_request( 'updatedSince', $params );
@@ -200,8 +279,29 @@ class BricksetAPIFunctions
 	 */
 	public function get_by_number( $number = '', $user_id = '', $wanted = '', $owned = '' )
 	{
-		$setData = $this->brickset_search( array( 'number' => $number, 'user_id' => $user_id, 'wanted' => $wanted, 'owned' => $owned, 'single' => true ) );
-		return $setData;
+		$this->get_user_hash( $user_id );
+		$this->get_api_key();
+		
+		$number = $this->set_number_check( $number );
+		
+		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber='.$number.'&year=&owned='.$owned.'&wanted='.$wanted;
+
+		$setData = $this->remote_request( 'search', $params );
+		
+		try
+		{
+			if ( $this->httpcode != 200 )
+				throw new Exception ( $this->error_msg );
+				
+			if ( empty( $this->results ) )
+				throw new Exception( $this->no_results_error );
+				
+			return $this->results;
+		}
+		catch ( Exception $e ) 
+		{
+			echo $e->getMessage();
+		}
 	}
 	
 	/** 
@@ -322,19 +422,24 @@ class BricksetAPIFunctions
 		$single	 	= isset( $args['single'] ) ? $args['single'] : '';
 		$user_id 	= isset( $args['user_id'] ) ? $args['user_id'] : '';
 		$user_hash 	= '';
-		
-		$number_check = explode( '-', $number );
-		
-		if( empty( $number_check[1] ) )
+
+		if( !empty( $number ) )
 		{
-			$number = $number_check[0].'-1';
+			$number_check = explode( '-', $number );
+			
+			if( empty( $number_check[1] ) )
+			{
+				$number = $number_check[0].'-1';
+			}
 		}
 		
 		if ( !empty( $user_id ) )
 			$user_hash = get_user_meta( $user_id, 'brickset_user_hash', true );
 		
-		$params = 'apiKey='.$this->api_key.'&userHash='.$user_hash.'&query='.$query.'&theme='.$theme.'&subtheme='.$subtheme.'&setNumber='.$number.'&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
+		$this->get_api_key();
 		
+		$params = 'apiKey='.$this->api_key.'&userHash='.$user_hash.'&query='.$query.'&theme='.$theme.'&subtheme='.$subtheme.'&setNumber='.$number.'&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
+
 		$this->remote_request( 'search', $params );
 		
 		try
