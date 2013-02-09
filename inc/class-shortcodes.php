@@ -16,17 +16,22 @@ class BricksetAPIShortcode extends BricksetAPIFunctions
 		), $atts ) );
 
 		parent::get_by_number( $number );
-		
-		$return = '<img src="'.$this->results->setData->imageURL.'"><br>';
-		$return .= '<strong>Set Name: </strong>'.$this->results->setData->setName.'<br>';
-		$return .= '<strong>Set Number: </strong>'.$this->results->setData->number.'-'.$this->results->setData->numberVariant.'<br>';
-		$return .= '<strong>Year: </strong>'.$this->results->setData->year.'<br>';
-		$return .= '<strong>Theme: </strong>'.$this->results->setData->theme.'<br>';
-		$return .= '<strong>Subtheme: </strong>'.$this->results->setData->subtheme.'<br>';
-		$return .= '<strong>US Retail Price: </strong>$'.$this->results->setData->USRetailPrice.'<br>';
-		$return .= '<strong>Pieces: </strong>'.$this->results->setData->pieces.'<br>';
-		$return .= '<strong>Minifigs: </strong>'.$this->results->setData->minifigs.'<br>';
-		$return .= '<strong>Set Guide: </strong><a href='.$this->results->setData->bricksetURL.'>Brickset</a><br><br>';
+
+		$return = '';
+		foreach( $this->results as $result )
+		{
+			$return .= '<img src="'.$result->imageURL.'"><br>';
+			$return .= '<strong>Set Name: </strong>'.$result->setName.'<br>';
+			$return .= '<strong>Set Number: </strong>'.$result->number.'-'.$result->numberVariant.'<br>';
+			$return .= '<strong>Year: </strong>'.$result->year.'<br>';
+			$return .= '<strong>Theme: </strong>'.$result->theme.'<br>';
+			$return .= '<strong>Subtheme: </strong>'.$result->subtheme.'<br>';
+			$return .= '<strong>US Retail Price: </strong>$'.$result->USRetailPrice.'<br>';
+			$return .= '<strong>Pieces: </strong>'.$result->pieces.'<br>';
+			$return .= '<strong>Minifigs: </strong>'.$result->minifigs.'<br>';
+			$return .= '<strong>Set Guide: </strong><a href='.$result->bricksetURL.'>Brickset</a><br>';
+
+		}
 		
 		return $return;
 	}
