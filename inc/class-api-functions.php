@@ -473,13 +473,35 @@ class BricksetAPIFunctions
 	 *	@since		0.1
 	 *
 	 *	@param		int	$year
-	 *	@param		int 	$user_id (user_id)
+	 *	@param		int	$user_id
+	 *	@param		int	$owned
+	 *	@param		int	$wanted
+	 *
 	 *	@return		array 	$setData
 	 */
-	public function get_by_year( $year = '', $user_id = '' )
+	public function get_by_year( $year = '', $user_id = '', $owned = '', $wanted = '' )
 	{
-		$year = $this->brickset_search( array( 'year' => $year, 'user_id' => $user_id ) );
-		return $year->setData;
+		$this->get_user_hash( $user_id );
+		$this->get_api_key();
+		
+		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
+
+		$this->remote_request( 'search', $params );
+		
+		try
+		{
+			if ( $this->httpcode != 200 )
+				throw new Exception ( $this->error_msg );
+				
+			if ( empty( $this->results ) )
+				throw new Exception( $this->no_results_error );
+				
+			return $this->results;
+		}
+		catch ( Exception $e ) 
+		{
+			echo $e->getMessage();
+		}
 	}
 	
 	/** 
