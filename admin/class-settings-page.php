@@ -6,8 +6,8 @@ class BricksetAPISettingsPage
 {
 	public function __construct()
 	{
-		add_action( 'admin_menu', array( __CLASS__, 'add_brickset_submenu' ) );
-		add_action( 'admin_init', array( __CLASS__, 'settings_init' ) );
+		add_action( 'admin_menu', array( $this, 'add_brickset_submenu' ) );
+		add_action( 'admin_init', array( $this, 'settings_init' ) );
 	}
 	
 	/** 
@@ -28,7 +28,7 @@ class BricksetAPISettingsPage
 			__( 'Brickset API', 'bs_api' ), 
 			'manage_options', 
 			'brickset-api-options', 
-			array( __CLASS__, 'bs_api_options_callback' ) 
+			array( $this, 'bs_api_options_callback' ) 
 		);
 	}
 	
@@ -75,13 +75,13 @@ class BricksetAPISettingsPage
 		add_settings_section( 
 			'bs-webservice-settings', 
 			__( 'API Key', 'bs_api' ), 
-			array( __CLASS__, 'webservice_settings_callback' ), 
+			array( $this, 'webservice_settings_callback' ), 
 			'brickset-api-options'	 
 		);
 		add_settings_field( 
 			'bs-api-key', 
 			__( 'Enter your API Key', 'bs_api' ), 
-			array( __CLASS__, 'apikey_callback' ), 
+			array( $this, 'apikey_callback' ), 
 			'brickset-api-options', 
 			'bs-webservice-settings'
 		);
