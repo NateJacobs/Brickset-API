@@ -23,10 +23,10 @@ class BricksetAPILoad
 	 */
 	public function __construct()
 	{
-		add_action('init', array( __CLASS__, 'localization' ), 1 );
-		add_action( 'plugins_loaded', array( __CLASS__, 'constants' ), 2 );
-		add_action( 'plugins_loaded', array( __CLASS__, 'includes' ), 3 );
-		add_action( 'plugins_loaded', array( __CLASS__, 'admin' ), 4 );
+		add_action('init', array( $this, 'localization' ), 1 );
+		add_action( 'plugins_loaded', array( $this, 'constants' ), 2 );
+		add_action( 'plugins_loaded', array( $this, 'includes' ), 3 );
+		add_action( 'plugins_loaded', array( $this, 'admin' ), 4 );
 	}
 	
 	/** 
