@@ -319,8 +319,27 @@ class BricksetAPIFunctions
 	 */
 	public function get_wanted( $user_id = '' )
 	{
-		$setData = $this->brickset_search( array( 'user_id' => $user_id, 'wanted' => '1', 'single' => true ) );
-		return $setData;
+		$this->get_user_hash( $user_id );
+		$this->get_api_key();
+		
+		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=&wanted=1';
+
+		$setData = $this->remote_request( 'search', $params );
+		
+		try
+		{
+			if ( $this->httpcode != 200 )
+				throw new Exception ( $this->error_msg );
+				
+			if ( empty( $this->results ) )
+				throw new Exception( $this->no_results_error );
+				
+			return $this->results;
+		}
+		catch ( Exception $e ) 
+		{
+			echo $e->getMessage();
+		}
 	}
 	
 	/** 
