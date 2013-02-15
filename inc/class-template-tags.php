@@ -85,7 +85,7 @@ function brickset_theme_years( $theme )
 	}
 	else
 	{
-		echo '<h2 class="brickset-theme-name">'.$brickset->theme.'</h2>';
+		echo '<h2 class="brickset-theme-name">'.$brickset->yearData->theme.'</h2>';
 		echo '<table class="brickset-theme"><th>Year</th><th>Set Count</th>';			
 		foreach ( $brickset as $year )
 		{
@@ -119,15 +119,11 @@ function brickset_popular_searches()
 	}
 	else
 	{
-		echo '<table class="brickset-popular-searches"><th>Search Term</th><th>Weight of Search</th>';	
+		echo '<h2 class="brickset-popular-header">'.__( 'Popular Searches on Brickset', 'bs_api' ).'</h2>';
 		foreach ( $brickset as $search )
 		{
-			echo '<tr>';
-				echo '<td>'.$search->searchTerm.'</td>';
-				echo '<td>'.$search->count.'</td>';		
-			echo '</tr>';
+			echo '<p class="brickset-popular-searches">'.$search->searchTerm.'</p>';
 		}
-		echo '</table>';
 	}
 }
 
