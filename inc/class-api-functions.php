@@ -19,9 +19,28 @@ class BricksetAPIFunctions
 	protected function remote_request( $extra_url, $params = '' )
 	{
 //wp_die( $this->api_url.'/'.$extra_url.'?'.$params );	
-		$result = wp_remote_get( $this->api_url.'/'.$extra_url.'?'.$params );
-		$this->httpcode = $result['response']['code'];
-		$this->results = new SimpleXMLElement( $result['body'] );
+		$response = wp_remote_get( $this->api_url.'/'.$extra_url.'?'.$params );
+		
+		$response_code = wp_remote_retrieve_response_code( $response );
+		$response_message = wp_remote_retrieve_response_message( $response );
+		$response_body = wp_remote_retrieve_body( $response );
+
+		if( 200 != $response_code && ! empty( $response_message ) )
+		{
+			return new WP_Error( $response_code, __( 'Don\'t Panic! Something went wrong and Brickset didn\'t reply.', 'bs_api' ) );
+		}
+		elseif( 200 != $response_code )
+		{
+			return new WP_Error( $response_code, __( 'Unknown error occurred', 'bs_api') );
+		}
+		elseif( $extra_url != 'login' && 300 > strlen( $response_body ) )
+		{
+			return new WP_Error( 'brickset-no-data', __( 'Sorry, no sets were found for that query', 'bs_api' ) );
+		}
+		else
+		{
+			return $response_body;
+		}
 	}
 	
 	/** 
@@ -105,10 +124,13 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
 	 *
 	 *	@param	int 	$user_id
 	 *	@param	string 	$username
 	 *	@param	string	$password
+	 *
+	 *	@return	array	$response (if there is an error, an WP_Error array is returned)
 	 */
 	public function brickset_login( $user_id, $username, $password )
 	{
@@ -116,18 +138,17 @@ class BricksetAPIFunctions
 		
 		$params = 'u='.$username.'&p='.$password;
 	
-		$this->remote_request( 'login', $params );
-		$user_hash = $this->results;
+		$response = $this->remote_request( 'login', $params );
 		
-		try
+		if( is_wp_error( $response ) )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-			update_user_meta( $user->ID, 'brickset_user_hash',  (string) $user_hash[0] );
+			return $response;
 		}
-		catch ( Exception $e ) 
+		else
 		{
-			echo $e->getMessage();
+			$user_hash = new SimpleXMLElement( $response );
+
+			update_user_meta( $user->ID, 'brickset_user_hash',  (string) $user_hash[0] );
 		}
 	}
 	
@@ -139,25 +160,27 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
 	 *
-	 *	@return		array	$themes
+	 *	@return		object	$themes
 	 */
 	public function get_themes()
 	{
-		$this->remote_request( 'listThemes' );
-		try
+		if( false === get_transient( 'bs_theme_list' ) )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-			$themes = $this->results;
-			return $themes;
+			$response = $this->remote_request( 'listThemes' );
+			
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( 'bs_theme_list', $response, DAY_IN_SECONDS );
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		
+		return new SimpleXMLElement( get_transient( 'bs_theme_list' ) );		
+		
 	}
-	
+
 	/** 
 	 *	Get a list of all subthemes for a given theme
 	 *
@@ -166,25 +189,27 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
 	 *
 	 *	@param		string	$theme
-	 *	@return		array	$subthemes
+	 *
+	 *	@return		object	$subthemes
 	 */
 	public function get_subthemes( $theme )
 	{
-		$params = 'theme='.$theme;
-		$this->remote_request( 'listSubthemes', $params );
-		try
+		if( false === get_transient( 'bs_'.$theme.'_subthemes' ) )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-			$subthemes = $this->results;
-			return $subthemes;
+			$params = 'theme='.$theme;
+			$response = $this->remote_request( 'listSubthemes', $params );
+
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( 'bs_'.$theme.'_subthemes', $response, DAY_IN_SECONDS );
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		
+		return new SimpleXMLElement( get_transient( 'bs_'.$theme.'_subthemes' ) );
 	}
 	
 	/** 
@@ -195,25 +220,28 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
 	 *
 	 *	@param		string	$theme
+	 *
 	 *	@return		array	$years
 	 */
 	public function get_theme_years( $theme )
 	{
-		$params = 'theme='.$theme;
-		$this->remote_request( 'listYears', $params );
-		try
+		if( false === get_transient( 'bs_'.$theme.'_years' ) )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-			$years = $this->results;
-			return $years;
+			$params = 'theme='.$theme;
+			$response = $this->remote_request( 'listYears', $params );
+
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( 'bs_'.$theme.'_years', $response, DAY_IN_SECONDS );
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		
+		return new SimpleXMLElement( get_transient( 'bs_'.$theme.'_years' ) );
+		
 	}
 	
 	/** 
@@ -229,19 +257,18 @@ class BricksetAPIFunctions
 	 */
 	public function get_popular_searches()
 	{
-		$this->remote_request( 'popularSearches' );
+		if( false === get_transient( 'bs_popular_searches' ) )
+		{
+			$response = $this->remote_request( 'popularSearches' );
+
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( 'bs_popular_searches', $response, HOUR_IN_SECONDS );
+		}
 		
-		try
-		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-			$searches = $this->results;
-			return $searches;
-		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		return new SimpleXMLElement( get_transient( 'bs_popular_searches' ) );
 	}
 	
 	/** 
@@ -262,20 +289,21 @@ class BricksetAPIFunctions
 	{
 		$this->get_api_key();
 		
-		$params = 'apiKey='.$this->api_key.'&sinceDate='.$date;
-		$this->remote_request( 'updatedSince', $params );
+		$transient_date = str_replace( '/', '', $date );
 		
-		try
+		if( false === get_transient( 'bs_updated_since_'.$transient_date ) )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-			$updated = $this->results;
-			return $updated;
+			$params = 'apiKey='.$this->api_key.'&sinceDate='.$date;
+			$response = $this->remote_request( 'updatedSince', $params );
+
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( 'bs_updated_since_'.$transient_date, $response, DAY_IN_SECONDS );
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		
+		return new SimpleXMLElement( get_transient( 'bs_updated_since_'.$transient_date ) );
 	}
 	
 	/** 
