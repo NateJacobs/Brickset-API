@@ -80,7 +80,12 @@ class BricksetAPIUserProfile extends BricksetAPIFunctions
 	*/
 	public function set_brickset_user_hash( $user_id )
 	{
-		parent::brickset_login( $user_id, $_POST['bs_user_name'], $_POST['bs_password'] );
+		$response = parent::brickset_login( $user_id, $_POST['bs_user_name'], $_POST['bs_password'] );
+		
+		if( is_wp_error( $response ) )
+		{
+			wp_die( $response->get_error_message(), 'brickset-login-error', array( 'back_link' => true ) );
+		}
 	}
 }
 
