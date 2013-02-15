@@ -83,7 +83,7 @@ class BricksetAPIFunctions
 	/** 
 	*	Set Number Check
 	*
-	*	Checks if the set number has a variant, if not one is added
+	*	Checks if the set number has a variant, if not, one is added
 	*
 	*	@author		Nate Jacobs
 	*	@date		2/9/13
@@ -197,6 +197,8 @@ class BricksetAPIFunctions
 	 */
 	public function get_subthemes( $theme )
 	{
+		$theme = strtolower( $theme );
+		
 		if( false === get_transient( 'bs_'.$theme.'_subthemes' ) )
 		{
 			$params = 'theme='.$theme;
@@ -224,10 +226,12 @@ class BricksetAPIFunctions
 	 *
 	 *	@param		string	$theme
 	 *
-	 *	@return		array	$years
+	 *	@return		object	$years
 	 */
 	public function get_theme_years( $theme )
 	{
+		$theme = strtolower( $theme );
+		
 		if( false === get_transient( 'bs_'.$theme.'_years' ) )
 		{
 			$params = 'theme='.$theme;
@@ -252,8 +256,9 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
 	 *
-	 *	@return		array	$searches
+	 *	@return		object	$searches
 	 */
 	public function get_popular_searches()
 	{
@@ -283,7 +288,7 @@ class BricksetAPIFunctions
 	 *
 	 *	@param		string	$date (use format of 'mm/dd/yyyy')
 	 *
-	 *	@return		array	$updated
+	 *	@return		object	$updated
 	 */
 	public function get_updated_since( $date )
 	{
@@ -322,33 +327,29 @@ class BricksetAPIFunctions
 	 *	@param		int		$wanted (1 = return wanted)
 	 *	@param		int		$owned (1 = return owned)
 	 *
-	 *	@return		array 	$setData
+	 *	@return		object 	$setData
 	 */
 	public function get_by_number( $number = '', $user_id = '', $wanted = '', $owned = '' )
 	{
 		$this->get_user_hash( $user_id );
 		$this->get_api_key();
 		
-		$number = $this->set_number_check( $number );
+		$sets = $this->set_number_check( $number );
+		$transient_sets = str_replace( array( ',', '-' ), '', $sets );
 		
-		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber='.$number.'&year=&owned='.$owned.'&wanted='.$wanted;
+		if( false === get_transient( 'bs_'.$transient_sets.$user_id.$wanted.$owned ) )
+		{
+			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber='.$sets.'&year=&owned='.$owned.'&wanted='.$wanted;
+			$response = $this->remote_request( 'search', $params );
 
-		$this->remote_request( 'search', $params );
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( 'bs_'.$transient_sets.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
+		}
 		
-		try
-		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-				
-			if ( empty( $this->results ) )
-				throw new Exception( $this->no_results_error );
-				
-			return $this->results;
-		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		return new SimpleXMLElement( get_transient( 'bs_'.$transient_sets.$user_id.$wanted.$owned ) );
 	}
 	
 	/** 
@@ -364,31 +365,26 @@ class BricksetAPIFunctions
 	 *
 	 *	@param		int 	$user_id (user_id)
 	 *
-	 *	@return		array 	$setData
+	 *	@return		object 	$setData
 	 */
 	public function get_wanted( $user_id = '' )
 	{
 		$this->get_user_hash( $user_id );
 		$this->get_api_key();
 		
-		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=&wanted=1';
+		if( false === get_transient( 'bs_wanted'.$user_id ) )
+		{
+			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=&wanted=1';
+			$response = $this->remote_request( 'search', $params );
 
-		$this->remote_request( 'search', $params );
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( 'bs_wanted'.$user_id, $response, DAY_IN_SECONDS );
+		}
 		
-		try
-		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-				
-			if ( empty( $this->results ) )
-				throw new Exception( $this->no_results_error );
-				
-			return $this->results;
-		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		return new SimpleXMLElement( get_transient( 'bs_wanted'.$user_id ) );
 	}
 	
 	/** 
@@ -404,31 +400,26 @@ class BricksetAPIFunctions
 	 *
 	 *	@param		int 	$user_id (user_id)
 	 *
-	 *	@return		array 	$setData
+	 *	@return		object 	$setData
 	 */
 	public function get_owned( $user_id = '' )
 	{
 		$this->get_user_hash( $user_id );
 		$this->get_api_key();
 		
-		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=1&wanted=';
+		if( false === get_transient( 'bs_owned'.$user_id ) )
+		{
+			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=1&wanted=';
+			$response = $this->remote_request( 'search', $params );
 
-		$this->remote_request( 'search', $params );
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( 'bs_owned'.$user_id, $response, DAY_IN_SECONDS );
+		}
 		
-		try
-		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-				
-			if ( empty( $this->results ) )
-				throw new Exception( $this->no_results_error );
-				
-			return $this->results;
-		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		return new SimpleXMLElement( get_transient( 'bs_owned'.$user_id ) );
 	}
 	
 	/** 
@@ -447,31 +438,28 @@ class BricksetAPIFunctions
 	 *	@param		int	$owned
 	 *	@param		int	$wanted
 	 *
-	 *	@return		array 	$setData
+	 *	@return		object 	$setData
 	 */
-	public function get_by_themes( $theme = '', $user_id = '', $owned = '', $wanted = '' )
+	public function get_by_theme( $theme = '', $user_id = '', $wanted = '', $owned = '' )
 	{
 		$this->get_user_hash( $user_id );
 		$this->get_api_key();
 		
-		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme='.$theme.'&subtheme=&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
-
-		$this->remote_request( 'search', $params );
+		$theme = strtolower( $theme );
 		
-		try
+		if( false === get_transient( 'bs_sets_by_'.$theme.$user_id.$wanted.$owned ) )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-				
-			if ( empty( $this->results ) )
-				throw new Exception( $this->no_results_error );
-				
-			return $this->results;
+			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme='.$theme.'&subtheme=&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
+			$response = $this->remote_request( 'search', $params );
+
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( 'bs_sets_by_'.$theme.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		
+		return new SimpleXMLElement( get_transient( 'bs_sets_by_'.$theme.$user_id.$wanted.$owned ) );
 	}
 	
 	/** 
@@ -490,31 +478,28 @@ class BricksetAPIFunctions
 	 *	@param		int	$owned
 	 *	@param		int	$wanted
 	 *
-	 *	@return		array	$setData
+	 *	@return		object	$setData
 	 */
-	public function get_by_subtheme( $subtheme = '', $user_id = '', $owned = '', $wanted = '' )
+	public function get_by_subtheme( $subtheme = '', $user_id = '', $wanted = '', $owned = '' )
 	{
 		$this->get_user_hash( $user_id );
 		$this->get_api_key();
 		
-		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme='.$subtheme.'&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
-
-		$this->remote_request( 'search', $params );
+		$subtheme = strtolower( $subtheme );
 		
-		try
+		if( false === get_transient( 'bs_sets_by_'.$subtheme.$user_id.$wanted.$owned ) )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-				
-			if ( empty( $this->results ) )
-				throw new Exception( $this->no_results_error );
-				
-			return $this->results;
+			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme='.$subtheme.'&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
+			$response = $this->remote_request( 'search', $params );
+
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( 'bs_sets_by_'.$subtheme.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		
+		return new SimpleXMLElement( get_transient( 'bs_sets_by_'.$subtheme.$user_id.$wanted.$owned ) );
 	}
 	
 	/** 
@@ -533,31 +518,26 @@ class BricksetAPIFunctions
 	 *	@param		int	$owned
 	 *	@param		int	$wanted
 	 *
-	 *	@return		array 	$setData
+	 *	@return		object 	$setData
 	 */
 	public function get_by_year( $year = '', $user_id = '', $owned = '', $wanted = '' )
 	{
 		$this->get_user_hash( $user_id );
 		$this->get_api_key();
 		
-		$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
+		if( false === get_transient( 'bs_sets_by_year_'.$year.$user_id.$wanted.$owned ) )
+		{
+			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
+			$response = $this->remote_request( 'search', $params );
 
-		$this->remote_request( 'search', $params );
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( 'bs_sets_by_year_'.$year.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
+		}
 		
-		try
-		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-				
-			if ( empty( $this->results ) )
-				throw new Exception( $this->no_results_error );
-				
-			return $this->results;
-		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		return new SimpleXMLElement( get_transient( 'bs_sets_by_year_'.$year.$user_id.$wanted.$owned ) );
 	}
 	
 	/** 
