@@ -15,9 +15,16 @@ function brickset_themes()
 	$brickset = new BricksetAPIFunctions();
 	$brickset = $brickset->get_themes();
 
-	foreach ( $brickset->themeData as $theme )
+	if( is_wp_error( $brickset ) )
 	{
-		echo '<p class="brickset-theme-list">'.$theme->theme.'</p>';
+		echo $brickset->get_error_message();
+	}
+	else
+	{
+		foreach ( $brickset as $theme )
+		{
+			echo '<p class="brickset-theme-list">'.$theme->theme.'</p>';
+		}
 	}
 }
 
@@ -35,19 +42,26 @@ function brickset_subthemes( $theme )
 {
 	$brickset = new BricksetAPIFunctions();
 	$brickset = $brickset->get_subthemes( $theme );
-	
-	echo '<h2 class="brickset-theme-name">'.$brickset->subthemeData->theme.'</h2>';
-	echo '<table class="brickset-subtheme"><th>Subtheme</th><th>Set Count</th><th>First Year</th><th>Last Year</th>';		
-	foreach ( $brickset->subthemeData as $subtheme )
+
+	if( is_wp_error( $brickset ) )
 	{
-		echo '<tr>';
-			echo '<td>'.$subtheme->subtheme.'</td>'; 
-			echo '<td>'.$subtheme->setCount.'</td>';
-			echo '<td>'.$subtheme->yearFrom.'</td>';
-			echo '<td>'.$subtheme->yearTo.'</td>';
-		echo '</tr>';
+		echo $brickset->get_error_message();
 	}
-	echo '</table>';
+	else
+	{
+		echo '<h2 class="brickset-theme-name">'.$brickset->theme.'</h2>';
+		echo '<table class="brickset-subtheme"><th>Subtheme</th><th>Set Count</th><th>First Year</th><th>Last Year</th>';		
+		foreach ( $brickset as $subtheme )
+		{
+			echo '<tr>';
+				echo '<td>'.$subtheme->subtheme.'</td>'; 
+				echo '<td>'.$subtheme->setCount.'</td>';
+				echo '<td>'.$subtheme->yearFrom.'</td>';
+				echo '<td>'.$subtheme->yearTo.'</td>';
+			echo '</tr>';
+		}
+		echo '</table>';
+	}
 }
 
 /** 
@@ -65,16 +79,23 @@ function brickset_theme_years( $theme )
 	$brickset = new BricksetAPIFunctions();
 	$brickset = $brickset->get_theme_years( $theme );
 	
-	echo '<h2 class="brickset-theme-name">'.$brickset->yearData->theme.'</h2>';
-	echo '<table class="brickset-theme"><th>Year</th><th>Set Count</th>';			
-	foreach ( $brickset->yearData as $year )
+	if( is_wp_error( $brickset ) )
 	{
-			echo '<tr>';
-				echo '<td>'.$year->year.'</td>';
-				echo '<td>'.$year->setCount.'</td>';		
-			echo '</tr>';
+		echo $brickset->get_error_message();
 	}
-	echo '</table>';
+	else
+	{
+		echo '<h2 class="brickset-theme-name">'.$brickset->theme.'</h2>';
+		echo '<table class="brickset-theme"><th>Year</th><th>Set Count</th>';			
+		foreach ( $brickset as $year )
+		{
+				echo '<tr>';
+					echo '<td>'.$year->year.'</td>';
+					echo '<td>'.$year->setCount.'</td>';		
+				echo '</tr>';
+		}
+		echo '</table>';
+	}
 }
 
 /** 
@@ -92,15 +113,22 @@ function brickset_popular_searches()
 	$brickset = new BricksetAPIFunctions();
 	$brickset = $brickset->get_popular_searches();
 	
-	echo '<table class="brickset-popular-searches"><th>Search Term</th><th>Weight of Search</th>';	
-	foreach ( $brickset->searchData as $search )
+	if( is_wp_error( $brickset ) )
 	{
-		echo '<tr>';
-			echo '<td>'.$search->searchTerm.'</td>';
-			echo '<td>'.$search->count.'</td>';		
-		echo '</tr>';
+		echo $brickset->get_error_message();
 	}
-	echo '</table>';
+	else
+	{
+		echo '<table class="brickset-popular-searches"><th>Search Term</th><th>Weight of Search</th>';	
+		foreach ( $brickset as $search )
+		{
+			echo '<tr>';
+				echo '<td>'.$search->searchTerm.'</td>';
+				echo '<td>'.$search->count.'</td>';		
+			echo '</tr>';
+		}
+		echo '</table>';
+	}
 }
 
 /** 
@@ -118,14 +146,21 @@ function brickset_updated_since( $date )
 	$brickset = new BricksetAPIFunctions();
 	$brickset = $brickset->get_updated_since( $date );
 
-	echo '<table class="brickset-updated-since"><th>Image</th><th>Set Name</th><th>Set Number</th>';	
-	foreach ( $brickset->setData as $updated )
+	if( is_wp_error( $brickset ) )
 	{
-		echo '<tr>';
-			echo '<td><img src="'.$updated->thumbnailURL.'"></td>';
-			echo '<td>'.$updated->setName.'</td>';
-			echo '<td>'.$updated->number.'-'.$updated->numberVariant.'</td>';
-		echo '</tr>';
+		echo $brickset->get_error_message();
 	}
-	echo '</table>';
+	else
+	{
+		echo '<table class="brickset-updated-since"><th>Image</th><th>Set Name</th><th>Set Number</th>';	
+		foreach ( $brickset as $updated )
+		{
+			echo '<tr>';
+				echo '<td><img src="'.$updated->thumbnailURL.'"></td>';
+				echo '<td>'.$updated->setName.'</td>';
+				echo '<td>'.$updated->number.'-'.$updated->numberVariant.'</td>';
+			echo '</tr>';
+		}
+		echo '</table>';
+	}
 }
