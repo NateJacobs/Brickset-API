@@ -2,7 +2,6 @@
 
 class BricksetAPIFunctions
 {
-	protected $api_key;
 	protected $user_hash;
 	
 	/** 
@@ -61,8 +60,7 @@ class BricksetAPIFunctions
 	protected function get_api_key()
 	{
 		$settings = (array) get_option( 'brickset-api-settings' );
-		$this->api_key = $settings['api_key'];
-		return $this->api_key;
+		return $settings['api_key'];
 	}
 	
 	/** 
@@ -299,13 +297,13 @@ class BricksetAPIFunctions
 	 */
 	public function get_updated_since( $date )
 	{
-		$this->get_api_key();
+		$api_key = $this->get_api_key();
 		
 		$transient_date = str_replace( '/', '', $date );
 		
 		if( false === get_transient( 'bs_updated_since_'.$transient_date ) )
 		{
-			$params = 'apiKey='.$this->api_key.'&sinceDate='.$date;
+			$params = 'apiKey='.$api_key.'&sinceDate='.$date;
 			$response = $this->remote_request( 'updatedSince', $params );
 
 			if( is_wp_error( $response ) )
@@ -339,14 +337,14 @@ class BricksetAPIFunctions
 	public function get_by_number( $number = '', $user_id = '', $wanted = '', $owned = '' )
 	{
 		$this->get_user_hash( $user_id );
-		$this->get_api_key();
+		$api_key = $this->get_api_key();
 		
 		$sets = $this->set_number_check( $number );
 		$transient_sets = str_replace( array( ',', '-' ), '', $sets );
 		
 		if( false === get_transient( 'bs_'.$transient_sets.$user_id.$wanted.$owned ) )
 		{
-			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber='.$sets.'&year=&owned='.$owned.'&wanted='.$wanted;
+			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber='.$sets.'&year=&owned='.$owned.'&wanted='.$wanted;
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -377,11 +375,11 @@ class BricksetAPIFunctions
 	public function get_wanted( $user_id = '' )
 	{
 		$this->get_user_hash( $user_id );
-		$this->get_api_key();
+		$api_key = $this->get_api_key();
 		
 		if( false === get_transient( 'bs_wanted'.$user_id ) )
 		{
-			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=&wanted=1';
+			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=&wanted=1';
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -412,11 +410,11 @@ class BricksetAPIFunctions
 	public function get_owned( $user_id = '' )
 	{
 		$this->get_user_hash( $user_id );
-		$this->get_api_key();
+		$api_key = $this->get_api_key();
 		
 		if( false === get_transient( 'bs_owned'.$user_id ) )
 		{
-			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=1&wanted=';
+			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=1&wanted=';
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -450,13 +448,13 @@ class BricksetAPIFunctions
 	public function get_by_theme( $theme = '', $user_id = '', $wanted = '', $owned = '' )
 	{
 		$this->get_user_hash( $user_id );
-		$this->get_api_key();
+		$api_key = $this->get_api_key();
 		
 		$theme = strtolower( $theme );
 		
 		if( false === get_transient( 'bs_sets_by_'.$theme.$user_id.$wanted.$owned ) )
 		{
-			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme='.$theme.'&subtheme=&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
+			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme='.$theme.'&subtheme=&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -490,13 +488,13 @@ class BricksetAPIFunctions
 	public function get_by_subtheme( $subtheme = '', $user_id = '', $wanted = '', $owned = '' )
 	{
 		$this->get_user_hash( $user_id );
-		$this->get_api_key();
+		$api_key = $this->get_api_key();
 		
 		$subtheme = strtolower( $subtheme );
 		
 		if( false === get_transient( 'bs_sets_by_'.$subtheme.$user_id.$wanted.$owned ) )
 		{
-			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme='.$subtheme.'&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
+			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme='.$subtheme.'&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -530,11 +528,11 @@ class BricksetAPIFunctions
 	public function get_by_year( $year = '', $user_id = '', $owned = '', $wanted = '' )
 	{
 		$this->get_user_hash( $user_id );
-		$this->get_api_key();
+		$api_key = $this->get_api_key();
 		
 		if( false === get_transient( 'bs_sets_by_year_'.$year.$user_id.$wanted.$owned ) )
 		{
-			$params = 'apiKey='.$this->api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
+			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -575,7 +573,7 @@ class BricksetAPIFunctions
 		extract( $args, EXTR_SKIP );
 		
 		$user_hash = $this->get_user_hash( $user_id );
-		$this->get_api_key();
+		$api_key = $this->get_api_key();
 		
 		$sets = $this->set_number_check( $number );
 		$transient_sets = str_replace( array( ',', '-' ), '', $sets );
@@ -586,7 +584,7 @@ class BricksetAPIFunctions
 
 		if( false === get_transient( 'bs_search_'.$theme.$subtheme.$transient_sets.$year.$query.$user_id.$wanted.$owned ) )
 		{
-			$params = 'apiKey='.$this->api_key.'&userHash='.$user_hash.'&query='.$query.'&theme='.$theme.'&subtheme='.$subtheme.'&setNumber='.$sets.'&year='.$year.'&owned='.$owned.'&wanted='.$wanted; 
+			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query='.$query.'&theme='.$theme.'&subtheme='.$subtheme.'&setNumber='.$sets.'&year='.$year.'&owned='.$owned.'&wanted='.$wanted; 
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
