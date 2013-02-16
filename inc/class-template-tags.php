@@ -160,3 +160,42 @@ function brickset_updated_since( $date )
 		echo '</table>';
 	}
 }
+
+/** 
+*	Display a list of all sets specified
+*
+*	Brickset returns the setData response.
+*	See webservice-definition.json for all the fields returned.
+*
+*	@author		Nate Jacobs
+*	@date		2/15/13
+*	@since		1.0
+*
+*	@param		string	$set
+*/
+function brickset_set_number( $set )
+{
+	$brickset = new BricksetAPIFunctions();
+	$brickset = $brickset->get_by_number( $set );
+
+	if( is_wp_error( $brickset ) )
+	{
+		echo $brickset->get_error_message();
+	}
+	else
+	{
+		foreach( $brickset as $result )
+		{
+			echo '<img src="'.$result->imageURL.'"><br>';
+			echo '<strong>'.__( 'Set Name', 'bs_api' ).': </strong>'.$result->setName.'<br>';
+			echo '<strong>'.__( 'Set Number', 'bs_api' ).': </strong>'.$result->number.'-'.$result->numberVariant.'<br>';
+			echo '<strong>'.__( 'Year', 'bs_api' ).': </strong>'.$result->year.'<br>';
+			echo '<strong>'.__( 'Theme', 'bs_api' ).': </strong>'.$result->theme.'<br>';
+			echo '<strong>'.__( 'Subtheme', 'bs_api' ).': </strong>'.$result->subtheme.'<br>';
+			echo '<strong>'.__( 'US Retail Price', 'bs_api' ).': </strong>$'.$result->USRetailPrice.'<br>';
+			echo '<strong>'.__( 'Pieces', 'bs_api' ).': </strong>'.$result->pieces.'<br>';
+			echo '<strong>'.__( 'Minifigs', 'bs_api' ).': </strong>'.$result->minifigs.'<br>';
+			echo '<p><a href='.$result->bricksetURL.'>Brickset</a> <a href=http://www.bricklink.com/catalogItem.asp?S='.$result->number.'-'.$result->numberVariant.'>BrickLink</a></p><hr>';
+		}
+	}
+}
