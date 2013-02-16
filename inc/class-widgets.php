@@ -25,8 +25,8 @@ class BricksetThemeWidget extends WP_Widget
 	 */
 	public function __construct()
 	{
-		$options = array( 'description' => __( 'A listing of all themes from Brickset sorted alphabetically with links to the theme pages on brickset.com.' ), 'classname' => 'brickset_theme' );
-		parent::__construct('brickset_theme_widget', $name = __( 'Brickset Themes' ), $options );
+		$options = array( 'description' => __( 'A listing of all themes from Brickset sorted alphabetically with links to the theme pages on brickset.com.', 'bs_api' ), 'classname' => 'brickset_theme' );
+		parent::__construct('brickset_theme_widget', $name = __( 'Brickset Themes', 'bs_api' ), $options );
 	}
 	
 	/** 
@@ -41,11 +41,11 @@ class BricksetThemeWidget extends WP_Widget
 	 */
 	public function form( $instance )
 	{
-		$instance = wp_parse_args( ( array ) $instance, array( 'title' => __( 'Brickset Themes' ) ) );
+		$instance = wp_parse_args( ( array ) $instance, array( 'title' => __( 'Brickset Themes', 'bs_api' ) ) );
 		$title = esc_attr( $instance['title'] );
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>">Title:</label>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'bs_api' ); ?>:</label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>">
 		</p>
 		<?php
@@ -83,14 +83,23 @@ class BricksetThemeWidget extends WP_Widget
 		if ( $title )
 			echo $before_title . $title . $after_title;
 		//call functions class and use get method to retrieve list of themes
-		$brickset_functions = new BricksetAPIFunctions;
-		$themes = $brickset_functions->get_themes();
-		foreach ( $themes as $theme )
+		$brickset = new BricksetAPIFunctions;
+		$themes = $brickset->get_themes();
+		
+		// check for errors
+		if( is_wp_error( $brickset ) )
 		{
-			echo "<a href='http://www.brickset.com/browse/themes/?theme=$theme->theme'>".$theme->theme.'</a>';
-			echo '<br>';
+			echo $brickset->get_error_message();
 		}
-			
-		echo $after_widget;
+		else
+		{
+			foreach ( $themes as $theme )
+			{
+				echo "<a href='http://www.brickset.com/browse/themes/?theme=$theme->theme'>".$theme->theme.'</a>';
+				echo '<br>';
+			}
+				
+			echo $after_widget;
+		}
 	}
 }
