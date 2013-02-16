@@ -4,9 +4,6 @@ class BricksetAPIFunctions
 {
 	protected $api_key;
 	protected $user_hash;
-	protected $api_url 			= 'http://www.brickset.com/webservices/brickset.asmx';
-	protected $error_msg		= "<strong>Don't Panic!</strong> Something went wrong, and Brickset didn't reply correctly.";
-	protected $no_results_error = "<strong>No results.</strong> Sorry, no sets were found for that query.";
 	
 	/** 
 	 *	Remote Request
@@ -15,11 +12,18 @@ class BricksetAPIFunctions
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	1.0
+	 *
+	 *	@param		string	$extra_url (url needed after base url)
+	 *	@param		string	$params (query parameters)
+	 *
+	 *	@return		object	WP_Error
+	 *	@return		array	$response_body
 	 */
 	protected function remote_request( $extra_url, $params = '' )
 	{
-//wp_die( $this->api_url.'/'.$extra_url.'?'.$params );	
-		$response = wp_remote_get( $this->api_url.'/'.$extra_url.'?'.$params );
+		$api_url = 'http://www.brickset.com/webservices/brickset.asmx';
+		$response = wp_remote_get( $api_url.'/'.$extra_url.'?'.$params );
 		
 		$response_code = wp_remote_retrieve_response_code( $response );
 		$response_message = wp_remote_retrieve_response_message( $response );
