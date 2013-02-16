@@ -39,8 +39,7 @@ class BricksetAPILoad
 	 */
 	public function constants() 
 	{
-		define( 'BRICKSET_API_VERSION', '0.3' );
-		define( 'BRICKSET_API_DB_VERSION', 1 );
+		define( 'BRICKSET_API_VERSION', '1.0' );
 		define( 'BRICKSET_API_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 		define( 'BRICKSET_API_URI', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 		define( 'BRICKSET_API_INCLUDES', BRICKSET_API_DIR . trailingslashit( 'inc' ) );
@@ -58,7 +57,7 @@ class BricksetAPILoad
 	public function includes()
 	{
 		require_once( BRICKSET_API_INCLUDES . 'class-api-functions.php' );
-		require_once( BRICKSET_API_INCLUDES . 'class-update.php' );
+		//require_once( BRICKSET_API_INCLUDES . 'class-update.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-widgets.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-template-tags.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-shortcodes.php' );
