@@ -1,9 +1,7 @@
 <?php
 
 class BricksetAPIFunctions
-{
-	protected $user_hash;
-	
+{	
 	/** 
 	 *	Remote Request
 	 *
@@ -78,8 +76,7 @@ class BricksetAPIFunctions
 	*/
 	protected function get_user_hash( $user_id )
 	{
-		$this->user_hash = get_user_meta( $user_id, 'brickset_user_hash', true );
-		return $this->user_hash;
+		return get_user_meta( $user_id, 'brickset_user_hash', true );
 	}
 	
 	/** 
@@ -336,7 +333,7 @@ class BricksetAPIFunctions
 	 */
 	public function get_by_number( $number = '', $user_id = '', $wanted = '', $owned = '' )
 	{
-		$this->get_user_hash( $user_id );
+		$user_hash = $this->get_user_hash( $user_id );
 		$api_key = $this->get_api_key();
 		
 		$sets = $this->set_number_check( $number );
@@ -344,7 +341,7 @@ class BricksetAPIFunctions
 		
 		if( false === get_transient( 'bs_'.$transient_sets.$user_id.$wanted.$owned ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber='.$sets.'&year=&owned='.$owned.'&wanted='.$wanted;
+			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme=&setNumber='.$sets.'&year=&owned='.$owned.'&wanted='.$wanted;
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -374,12 +371,12 @@ class BricksetAPIFunctions
 	 */
 	public function get_wanted( $user_id = '' )
 	{
-		$this->get_user_hash( $user_id );
+		$user_hash = $this->get_user_hash( $user_id );
 		$api_key = $this->get_api_key();
 		
 		if( false === get_transient( 'bs_wanted'.$user_id ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=&wanted=1';
+			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=&wanted=1';
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -409,12 +406,12 @@ class BricksetAPIFunctions
 	 */
 	public function get_owned( $user_id = '' )
 	{
-		$this->get_user_hash( $user_id );
+		$user_hash = $this->get_user_hash( $user_id );
 		$api_key = $this->get_api_key();
 		
 		if( false === get_transient( 'bs_owned'.$user_id ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=1&wanted=';
+			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=1&wanted=';
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -447,14 +444,14 @@ class BricksetAPIFunctions
 	 */
 	public function get_by_theme( $theme = '', $user_id = '', $wanted = '', $owned = '' )
 	{
-		$this->get_user_hash( $user_id );
+		$user_hash = $this->get_user_hash( $user_id );
 		$api_key = $this->get_api_key();
 		
 		$theme = strtolower( $theme );
 		
 		if( false === get_transient( 'bs_sets_by_'.$theme.$user_id.$wanted.$owned ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme='.$theme.'&subtheme=&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
+			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme='.$theme.'&subtheme=&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -487,14 +484,14 @@ class BricksetAPIFunctions
 	 */
 	public function get_by_subtheme( $subtheme = '', $user_id = '', $wanted = '', $owned = '' )
 	{
-		$this->get_user_hash( $user_id );
+		$user_hash = $this->get_user_hash( $user_id );
 		$api_key = $this->get_api_key();
 		
 		$subtheme = strtolower( $subtheme );
 		
 		if( false === get_transient( 'bs_sets_by_'.$subtheme.$user_id.$wanted.$owned ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme='.$subtheme.'&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
+			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme='.$subtheme.'&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -527,12 +524,12 @@ class BricksetAPIFunctions
 	 */
 	public function get_by_year( $year = '', $user_id = '', $owned = '', $wanted = '' )
 	{
-		$this->get_user_hash( $user_id );
+		$user_hash = $this->get_user_hash( $user_id );
 		$api_key = $this->get_api_key();
 		
 		if( false === get_transient( 'bs_sets_by_year_'.$year.$user_id.$wanted.$owned ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$this->user_hash.'&query=&theme=&subtheme=&setNumber=&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
+			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme=&setNumber=&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
