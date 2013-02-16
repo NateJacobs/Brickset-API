@@ -9,6 +9,7 @@ The plugin has numerous template tags you are able to use in your theme. They ar
 *	```brickset_theme_years( $theme );``` outputs a table of all the years the specified theme was available and the number of sets each year.
 *	```brickset_popular_searches();``` outputs a table of the most popular search terms on Brickset.com and the weights applied.
 *	```brickset_updated_since( $date );``` outputs a table of the sets updated since the date specified. The table includes thumbnail, set name and set number.
+*	```brickset_set_number( $set );``` outputs a list of details about the sets specified. More than one set can be requested by separating the set numbers with a comma, e.g. '1380,10240'.
 
 ### Shortcodes
 The plugin has several shortcodes you may use in your posts and pages to display information.
