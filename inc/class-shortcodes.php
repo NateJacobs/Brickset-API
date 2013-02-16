@@ -5,8 +5,8 @@ class BricksetAPIShortcode extends BricksetAPIFunctions
 	public function __construct()
 	{
 		add_shortcode( 'bs_set', array( $this, 'get_set' ) );
-		add_shortcode( 'bs_my_wanted', array( $this, 'my_wanted' ) );
-		add_shortcode( 'bs_my_owned', array( $this, 'my_owned' ) );
+		//add_shortcode( 'bs_my_wanted', array( $this, 'my_wanted' ) );
+		//add_shortcode( 'bs_my_owned', array( $this, 'my_owned' ) );
 	}
 	
 	public function get_set( $atts )
@@ -15,25 +15,31 @@ class BricksetAPIShortcode extends BricksetAPIFunctions
 			'number' 		=> '',
 		), $atts ) );
 
-		parent::get_by_number( $number );
+		$brickset = parent::get_by_number( $number );
 
-		$return = '';
-		foreach( $this->results as $result )
+		if( is_wp_error( $brickset ) )
 		{
-			$return .= '<img src="'.$result->imageURL.'"><br>';
-			$return .= '<strong>Set Name: </strong>'.$result->setName.'<br>';
-			$return .= '<strong>Set Number: </strong>'.$result->number.'-'.$result->numberVariant.'<br>';
-			$return .= '<strong>Year: </strong>'.$result->year.'<br>';
-			$return .= '<strong>Theme: </strong>'.$result->theme.'<br>';
-			$return .= '<strong>Subtheme: </strong>'.$result->subtheme.'<br>';
-			$return .= '<strong>US Retail Price: </strong>$'.$result->USRetailPrice.'<br>';
-			$return .= '<strong>Pieces: </strong>'.$result->pieces.'<br>';
-			$return .= '<strong>Minifigs: </strong>'.$result->minifigs.'<br>';
-			$return .= '<strong>Set Guide: </strong><a href='.$result->bricksetURL.'>Brickset</a><br>';
-			$return .= '<strong>BrickLink: </strong><a href=http://www.bricklink.com/catalogItem.asp?S='.$result->number.'-'.$result->numberVariant.'>BrickLink</a><br><hr>';
+			return $brickset->get_error_message();
 		}
-		
-		return $return;
+		else
+		{
+			$return = '';
+			foreach( $brickset as $result )
+			{
+				$return .= '<img src="'.$result->imageURL.'"><br>';
+				$return .= '<strong>Set Name: </strong>'.$result->setName.'<br>';
+				$return .= '<strong>Set Number: </strong>'.$result->number.'-'.$result->numberVariant.'<br>';
+				$return .= '<strong>Year: </strong>'.$result->year.'<br>';
+				$return .= '<strong>Theme: </strong>'.$result->theme.'<br>';
+				$return .= '<strong>Subtheme: </strong>'.$result->subtheme.'<br>';
+				$return .= '<strong>US Retail Price: </strong>$'.$result->USRetailPrice.'<br>';
+				$return .= '<strong>Pieces: </strong>'.$result->pieces.'<br>';
+				$return .= '<strong>Minifigs: </strong>'.$result->minifigs.'<br>';
+				$return .= '<strong>Set Guide: </strong><a href='.$result->bricksetURL.'>Brickset</a><br>';
+				$return .= '<strong>BrickLink: </strong><a href=http://www.bricklink.com/catalogItem.asp?S='.$result->number.'-'.$result->numberVariant.'>BrickLink</a><br><hr>';
+			}
+			return $return;
+		}
 	}
 	
 	public function my_wanted()
