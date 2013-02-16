@@ -95,6 +95,9 @@ class BricksetAPIFunctions
 	*/
 	protected function set_number_check( $set_number )
 	{
+		if( empty( $set_number ) )
+			return '';
+		
 		$set_numbers = explode( ',', $set_number );
 
 		$sets = '';
@@ -543,64 +546,52 @@ class BricksetAPIFunctions
 	/** 
 	 *	Search the Brickset DB with a given set of criteria
 	 *
-	 *	Protected function only for use within this class to power the other functions.
+	 *	Provides method for searching Brickset's set database
+	 *	Returns the setData response
+	 *	See webservice-definition.json for all the fields returned.
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 */
-	protected function brickset_search( $args )
+	public function search( $args )
 	{
-		$theme		= isset( $args['theme'] ) ? $args['theme'] : '';
-		$subtheme 	= isset( $args['subtheme'] ) ? $args['subtheme'] : '';
-		$number 	= isset( $args['number'] ) ? $args['number'] : '';
-		$year		= isset( $args['year'] ) ? $args['year'] : '';
-		$owned	 	= isset( $args['owned'] ) ? $args['owned'] : '';
-		$wanted	 	= isset( $args['wanted'] ) ? $args['wanted'] : '';
-		$query	 	= isset( $args['query'] ) ? $args['query'] : '';
-		$single	 	= isset( $args['single'] ) ? $args['single'] : '';
-		$user_id 	= isset( $args['user_id'] ) ? $args['user_id'] : '';
-		$user_hash 	= '';
-
-		if( !empty( $number ) )
-		{
-			$number_check = explode( '-', $number );
-			
-			if( empty( $number_check[1] ) )
-			{
-				$number = $number_check[0].'-1';
-			}
-		}
+		$defaults = array(
+			'theme' 	=> '',
+			'subtheme' 	=> '',
+			'number' 	=> '',
+			'year' 		=> '',
+			'owned' 	=> '',
+			'wanted' 	=> '',
+			'query' 	=> '',
+			'user_id' 	=> ''
+		);
 		
-		if ( !empty( $user_id ) )
-			$user_hash = get_user_meta( $user_id, 'brickset_user_hash', true );
+		$args = wp_parse_args( $args, $defaults );
 		
+		extract( $args, EXTR_SKIP );
+		
+		$user_hash = $this->get_user_hash( $user_id );
 		$this->get_api_key();
 		
-		$params = 'apiKey='.$this->api_key.'&userHash='.$user_hash.'&query='.$query.'&theme='.$theme.'&subtheme='.$subtheme.'&setNumber='.$number.'&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
+		$sets = $this->set_number_check( $number );
+		$transient_sets = str_replace( array( ',', '-' ), '', $sets );
 
-		$this->remote_request( 'search', $params );
-		
-		try
+		$theme = strtolower( $theme );
+		$subtheme = strtolower( $subtheme );
+		$query = strtolower( $query );
+
+		if( false === get_transient( 'bs_search_'.$theme.$subtheme.$transient_sets.$year.$query.$user_id.$wanted.$owned ) )
 		{
-			if ( $this->httpcode != 200 )
-				throw new Exception ( $this->error_msg );
-			
-			if ( $single )
+			$params = 'apiKey='.$this->api_key.'&userHash='.$user_hash.'&query='.$query.'&theme='.$theme.'&subtheme='.$subtheme.'&setNumber='.$sets.'&year='.$year.'&owned='.$owned.'&wanted='.$wanted; 
+			$response = $this->remote_request( 'search', $params );
+
+			if( is_wp_error( $response ) )
 			{
-				$sets = $this->results->setData;
-				return $sets;
+				return $response;
 			}
-			else
-			{	
-				$sets = $this->results;
-				return $sets;
-			}
-			if ( empty( $this->results ) )
-				throw new Exception( $this->no_results_error );
+			set_transient( 'bs_search_'.$theme.$subtheme.$transient_sets.$year.$query.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
 		}
-		catch ( Exception $e ) 
-		{
-			echo $e->getMessage();
-		}
+		
+		return new SimpleXMLElement( get_transient( 'bs_search_'.$theme.$subtheme.$transient_sets.$year.$query.$user_id.$wanted.$owned ) );
 	}
 }
