@@ -435,7 +435,7 @@
           "type": "string",
           "description": "Filename of image."
         },
-        "thumbailURL": {
+        "thumbnailURL": {
           "location": "xml",
           "type": "string",
           "description": "URL of the thumbnail image."
