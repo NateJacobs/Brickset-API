@@ -2,6 +2,17 @@
 
 class BricksetAPIShortcode extends BricksetAPIFunctions
 {
+	/** 
+	*	Construct
+	*
+	*	Start things off right
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/15/13
+	*	@since		1.0
+	*
+	*	@param		
+	*/
 	public function __construct()
 	{
 		add_shortcode( 'bs_set', array( $this, 'get_set' ) );
@@ -9,6 +20,19 @@ class BricksetAPIShortcode extends BricksetAPIFunctions
 		//add_shortcode( 'bs_my_owned', array( $this, 'my_owned' ) );
 	}
 	
+	/** 
+	*	Get Set
+	*
+	*	Displays details for the sets specified.
+	*	More than one set can be specified by seperating set numbers by a comma.
+	*	e.g. 1380,10240
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/15/13
+	*	@since		1.0
+	*
+	*	@param		array	$atts
+	*/
 	public function get_set( $atts )
 	{
 		extract( shortcode_atts( array( 
@@ -27,21 +51,33 @@ class BricksetAPIShortcode extends BricksetAPIFunctions
 			foreach( $brickset as $result )
 			{
 				$return .= '<img src="'.$result->imageURL.'"><br>';
-				$return .= '<strong>Set Name: </strong>'.$result->setName.'<br>';
-				$return .= '<strong>Set Number: </strong>'.$result->number.'-'.$result->numberVariant.'<br>';
-				$return .= '<strong>Year: </strong>'.$result->year.'<br>';
-				$return .= '<strong>Theme: </strong>'.$result->theme.'<br>';
-				$return .= '<strong>Subtheme: </strong>'.$result->subtheme.'<br>';
-				$return .= '<strong>US Retail Price: </strong>$'.$result->USRetailPrice.'<br>';
-				$return .= '<strong>Pieces: </strong>'.$result->pieces.'<br>';
-				$return .= '<strong>Minifigs: </strong>'.$result->minifigs.'<br>';
-				$return .= '<strong>Set Guide: </strong><a href='.$result->bricksetURL.'>Brickset</a><br>';
-				$return .= '<strong>BrickLink: </strong><a href=http://www.bricklink.com/catalogItem.asp?S='.$result->number.'-'.$result->numberVariant.'>BrickLink</a><br><hr>';
+				$return .= '<strong>'.__( 'Set Name', 'bs_api' ).': </strong>'.$result->setName.'<br>';
+				$return .= '<strong>'.__( 'Set Number', 'bs_api' ).': </strong>'.$result->number.'-'.$result->numberVariant.'<br>';
+				$return .= '<strong>'.__( 'Year', 'bs_api' ).': </strong>'.$result->year.'<br>';
+				$return .= '<strong>'.__( 'Theme', 'bs_api' ).': </strong>'.$result->theme.'<br>';
+				$return .= '<strong>'.__( 'Subtheme', 'bs_api' ).': </strong>'.$result->subtheme.'<br>';
+				$return .= '<strong>'.__( 'US Retail Price', 'bs_api' ).': </strong>$'.$result->USRetailPrice.'<br>';
+				$return .= '<strong>'.__( 'Pieces', 'bs_api' ).': </strong>'.$result->pieces.'<br>';
+				$return .= '<strong>'.__( 'Minifigs', 'bs_api' ).': </strong>'.$result->minifigs.'<br>';
+				$return .= '<strong>'.__( 'Set Guide', 'bs_api' ).': </strong><a href='.$result->bricksetURL.'>Brickset</a><br>';
+				$return .= '<strong>'.__( 'BrickLink', 'bs_api' ).': </strong><a href=http://www.bricklink.com/catalogItem.asp?S='.$result->number.'-'.$result->numberVariant.'>BrickLink</a><br><hr>';
 			}
 			return $return;
 		}
 	}
 	
+	/** 
+	*	My Wanted
+	*
+	*	Returns a table with the post authors wanted sets
+	*	Not functional yet.
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/16/13
+	*	@since		1.0
+	*
+	*	@param		
+	*/
 	public function my_wanted()
 	{
 		global $post;
@@ -65,6 +101,18 @@ class BricksetAPIShortcode extends BricksetAPIFunctions
 		return $return;
 	}
 	
+	/** 
+	*	My Owned
+	*
+	*	Returns a table with the post authors owned sets
+	*	Not functional yet.
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/16/13
+	*	@since		1.0
+	*
+	*	@param		
+	*/
 	public function my_owned()
 	{
 		global $post;
