@@ -210,8 +210,14 @@ class BricksetAPIFunctions
 	 */
 	public function get_subthemes( $theme )
 	{
-		$theme = strtolower( $theme );
+		// Check if it is a string
+		if( false === is_string( $theme ) )
+			return new WP_Error( 'not-a-string', __( 'The theme entered is not a valid string.', 'bs_api' ) );
+
+		// Lower it
+		$theme = sanitize_text_field( strtolower( $theme ) );
 		
+		// Have we stored a transient?
 		if( false === get_transient( 'bs_'.$theme.'_subthemes' ) )
 		{
 			$params = 'theme='.$theme;
@@ -224,6 +230,7 @@ class BricksetAPIFunctions
 			set_transient( 'bs_'.$theme.'_subthemes', $response, DAY_IN_SECONDS );
 		}
 		
+		// Get it and return a SimpleXML object
 		return new SimpleXMLElement( get_transient( 'bs_'.$theme.'_subthemes' ) );
 	}
 	
@@ -242,9 +249,15 @@ class BricksetAPIFunctions
 	 *	@return		object	$years
 	 */
 	public function get_theme_years( $theme )
-	{
-		$theme = strtolower( $theme );
+	{	
+		// Check if it is a string
+		if( false === is_string( $theme ) )
+			return new WP_Error( 'not-a-string', __( 'The theme entered is not a valid string.', 'bs_api' ) );
+	
+		// Lower the string
+		$theme = sanitize_text_field( strtolower( $theme ) );
 		
+		// Have we stored a transient?
 		if( false === get_transient( 'bs_'.$theme.'_years' ) )
 		{
 			$params = 'theme='.$theme;
@@ -257,6 +270,7 @@ class BricksetAPIFunctions
 			set_transient( 'bs_'.$theme.'_years', $response, DAY_IN_SECONDS );
 		}
 		
+		// Get it and return a SimpleXML object
 		return new SimpleXMLElement( get_transient( 'bs_'.$theme.'_years' ) );
 		
 	}
@@ -275,6 +289,7 @@ class BricksetAPIFunctions
 	 */
 	public function get_popular_searches()
 	{
+		// Have we stored a transient?
 		if( false === get_transient( 'bs_popular_searches' ) )
 		{
 			$response = $this->remote_request( 'popularSearches' );
@@ -286,6 +301,7 @@ class BricksetAPIFunctions
 			set_transient( 'bs_popular_searches', $response, HOUR_IN_SECONDS );
 		}
 		
+		// Get it and return a SimpleXML object
 		return new SimpleXMLElement( get_transient( 'bs_popular_searches' ) );
 	}
 	
@@ -305,10 +321,17 @@ class BricksetAPIFunctions
 	 */
 	public function get_updated_since( $date )
 	{
+		$exploded_date = explode( '/', $date );
+
+		// Is this a date in the correct format?
+		if( false === checkdate( $exploded_date[0], $exploded_date[1], $exploded_date[2] ) )
+			return new WP_Error( 'not-a-date-format', __( 'The date is not formatted correctly.', 'bs_api' ) );
+		
 		$api_key = $this->get_api_key();
 		
 		$transient_date = str_replace( '/', '', $date );
 		
+		// Have we stored a transient?
 		if( false === get_transient( 'bs_updated_since_'.$transient_date ) )
 		{
 			$params = 'apiKey='.$api_key.'&sinceDate='.$date;
@@ -321,6 +344,7 @@ class BricksetAPIFunctions
 			set_transient( 'bs_updated_since_'.$transient_date, $response, DAY_IN_SECONDS );
 		}
 		
+		// Get it and return a SimpleXML object
 		return new SimpleXMLElement( get_transient( 'bs_updated_since_'.$transient_date ) );
 	}
 	
