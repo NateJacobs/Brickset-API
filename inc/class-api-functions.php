@@ -53,7 +53,7 @@ class BricksetAPIFunctions
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@return		string	$this->api_key
+	 *	@return		string	$api_key
 	 */
 	protected function get_api_key()
 	{
@@ -72,7 +72,7 @@ class BricksetAPIFunctions
 	*
 	*	@param		int	$user_id
 	*
-	*	@return		string	$this->user_hash
+	*	@return		string	$user_hash
 	*/
 	protected function get_user_hash( $user_id )
 	{
@@ -82,7 +82,8 @@ class BricksetAPIFunctions
 	/** 
 	*	Set Number Check
 	*
-	*	Checks if the set number has a variant, if not, one is added
+	*	Checks if the set number passed has a variant, if not, one is added
+	*	The search query requires sets in the format of 9999-9
 	*
 	*	@author		Nate Jacobs
 	*	@date		2/9/13
@@ -94,17 +95,21 @@ class BricksetAPIFunctions
 	*/
 	protected function set_number_check( $set_number )
 	{
+		// If no set is passed, get out
 		if( empty( $set_number ) )
 			return '';
 		
+		// Get set numbers into an array
 		$set_numbers = explode( ',', $set_number );
 
+		// Holding container
 		$sets = '';
 		
 		foreach( $set_numbers as $set )
 		{
 			$number_check = explode( '-', $set );
 			
+			// No variant present, add the -1	
 			if( empty( $number_check[1] ) )
 			{
 				$sets .= $number_check[0].'-1,';
@@ -114,6 +119,7 @@ class BricksetAPIFunctions
 				$sets .= $set.',';
 			}
 		}
+		// Get rid of the space between commas
 		return substr(str_replace(' ','',$sets), 0, -1);
 	}
 	
@@ -132,14 +138,17 @@ class BricksetAPIFunctions
 	 *	@param	string 	$username
 	 *	@param	string	$password
 	 *
-	 *	@return	array	$response (if there is an error, an WP_Error array is returned)
+	 *	@return	array	$response (if there is an error, a WP_Error array is returned)
 	 */
 	public function brickset_login( $user_id, $username, $password )
 	{
+		// Which user is this?
 		$user = get_userdata( $user_id );
 		
+		// Build the parameters
 		$params = 'u='.$username.'&p='.$password;
-	
+		
+		// Send it off
 		$response = $this->remote_request( 'login', $params );
 		
 		if( is_wp_error( $response ) )
@@ -168,6 +177,7 @@ class BricksetAPIFunctions
 	 */
 	public function get_themes()
 	{
+		// Have we stored a transient?
 		if( false === get_transient( 'bs_theme_list' ) )
 		{
 			$response = $this->remote_request( 'listThemes' );
@@ -179,6 +189,7 @@ class BricksetAPIFunctions
 			set_transient( 'bs_theme_list', $response, DAY_IN_SECONDS );
 		}
 		
+		// Return a SimpleXML object
 		return new SimpleXMLElement( get_transient( 'bs_theme_list' ) );		
 		
 	}
@@ -326,8 +337,8 @@ class BricksetAPIFunctions
 	 *
 	 *	@param		int		$number (set number)
 	 *	@param		int 	$user_id (user_id)
-	 *	@param		int		$wanted (1 = return wanted)
-	 *	@param		int		$owned (1 = return owned)
+	 *	@param		bool	$wanted (true = return wanted)
+	 *	@param		bool	$owned (true = return owned)
 	 *
 	 *	@return		object 	$setData
 	 */
