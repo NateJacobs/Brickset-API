@@ -137,4 +137,4 @@ class BricksetAPIShortcode extends BricksetAPIFunctions
 		return $return;
 	}
 }
-new BricksetAPIShortcode;
+$brickset_shortcodes = new BricksetAPIShortcode;

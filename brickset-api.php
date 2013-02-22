@@ -93,4 +93,4 @@ class BricksetAPILoad
 	}
 }
 
-new BricksetAPILoad();
+$brickset_load = new BricksetAPILoad();

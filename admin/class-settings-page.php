@@ -119,4 +119,4 @@ class BricksetAPISettingsPage
  	}
 }
 
-new BricksetAPISettingsPage();
+$brickset_settings = new BricksetAPISettingsPage();
