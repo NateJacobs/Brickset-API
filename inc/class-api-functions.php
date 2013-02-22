@@ -19,9 +19,10 @@ class BricksetAPIFunctions
 	 */
 	protected function remote_request( $extra_url, $params = '' )
 	{
-		$api_url = 'http://www.brickset.com/webservices/brickset.asmx';
+		$api_url = 'http://www.brickset.com/webservices/brickset.asmx';	
+wp_die( $params );
 		$response = wp_remote_get( $api_url.'/'.$extra_url.'?'.$params );
-		
+
 		$response_code = wp_remote_retrieve_response_code( $response );
 		$response_message = wp_remote_retrieve_response_message( $response );
 		$response_body = wp_remote_retrieve_body( $response );
@@ -255,7 +256,7 @@ class BricksetAPIFunctions
 			return new WP_Error( 'not-a-string', __( 'The theme entered is not a valid string.', 'bs_api' ) );
 	
 		// Lower the string
-		$theme = sanitize_text_field( strtolower( $theme ) );
+		$theme = urlencode( sanitize_text_field( strtolower( $theme ) ) );
 		
 		// Have we stored a transient?
 		if( false === get_transient( 'bs_'.$theme.'_years' ) )
@@ -426,9 +427,19 @@ class BricksetAPIFunctions
 	 */
 	public function get_wanted( $user_id = '' )
 	{
+		// Is it an integer?
+		if( !is_int( $user_id ) )
+			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
+	
+		// Does the user_id specified exist on this site?
+		if( !get_user_by( 'id', $user_id ) )
+			return new WP_Error( 'not-valid-user', __( 'The user ID passed is not a valid user.', 'bs_api' ) );
+		
+		// Get the stuff we need
 		$user_hash = $this->get_user_hash( $user_id );
 		$api_key = $this->get_api_key();
 		
+		// Have we stored a transient?
 		if( false === get_transient( 'bs_wanted'.$user_id ) )
 		{
 			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=&wanted=1';
@@ -441,6 +452,7 @@ class BricksetAPIFunctions
 			set_transient( 'bs_wanted'.$user_id, $response, DAY_IN_SECONDS );
 		}
 		
+		// Get it and return a SimpleXML object
 		return new SimpleXMLElement( get_transient( 'bs_wanted'.$user_id ) );
 	}
 	
@@ -461,9 +473,19 @@ class BricksetAPIFunctions
 	 */
 	public function get_owned( $user_id = '' )
 	{
+		// Is it an integer?
+		if( !is_int( $user_id ) )
+			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
+	
+		// Does the user_id specified exist on this site?
+		if( !get_user_by( 'id', $user_id ) )
+			return new WP_Error( 'not-valid-user', __( 'The user ID passed is not a valid user.', 'bs_api' ) );	
+	
+		// Get the stuff we need
 		$user_hash = $this->get_user_hash( $user_id );
 		$api_key = $this->get_api_key();
 		
+		// Have we stored a transient?
 		if( false === get_transient( 'bs_owned'.$user_id ) )
 		{
 			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=1&wanted=';
@@ -476,6 +498,7 @@ class BricksetAPIFunctions
 			set_transient( 'bs_owned'.$user_id, $response, DAY_IN_SECONDS );
 		}
 		
+		// Get it and return a SimpleXML object
 		return new SimpleXMLElement( get_transient( 'bs_owned'.$user_id ) );
 	}
 	
@@ -497,16 +520,47 @@ class BricksetAPIFunctions
 	 *
 	 *	@return		object 	$setData
 	 */
-	public function get_by_theme( $theme = '', $user_id = '', $wanted = '', $owned = '' )
+	public function get_by_theme( $theme = '', $args = '' )
 	{
+		$defaults = array(
+			'owned' 	=> false,
+			'wanted' 	=> false,
+			'user_id' 	=> ''
+		);
+		
+		// Is there a number?
+		if( empty( $theme ) || !is_string( $theme ) )
+			return new WP_Error( 'no-theme', __( 'No theme requested.', 'bs_api' ) );
+		
+		$args = wp_parse_args( $args, $defaults );
+		
+		extract( $args, EXTR_SKIP );
+		
+		// Get the stuff we need
 		$user_hash = $this->get_user_hash( $user_id );
 		$api_key = $this->get_api_key();
 		
-		$theme = strtolower( $theme );
+		$theme = sanitize_text_field( strtolower( $theme ) );
 		
-		if( false === get_transient( 'bs_sets_by_'.$theme.$user_id.$wanted.$owned ) )
+		// Have we stored a transient?
+		if( false === get_transient( 'bs_sets_by_'.str_replace( ' ', '', $theme ).$user_id.$wanted.$owned ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme='.$theme.'&subtheme=&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
+			$params = build_query( 
+				urlencode_deep( 
+					array( 
+						'apiKey' 	=> $api_key,
+						'userHash'	=> $user_hash,
+						'query'		=>	'',
+						'theme'		=>	$theme,
+						'subtheme'	=>	'',
+						'setNumber'	=>	'',
+						'year'		=>	'',
+						'owned'		=>	$owned,
+						'wanted'	=>	$wanted
+					) 
+				)
+			);
+			
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -516,6 +570,7 @@ class BricksetAPIFunctions
 			set_transient( 'bs_sets_by_'.$theme.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
 		}
 		
+		// Get it and return a SimpleXML object
 		return new SimpleXMLElement( get_transient( 'bs_sets_by_'.$theme.$user_id.$wanted.$owned ) );
 	}
 	
