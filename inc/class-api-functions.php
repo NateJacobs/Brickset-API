@@ -359,21 +359,40 @@ class BricksetAPIFunctions
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param		int		$number (set number)
+	 *	@param		string	$number (set number)
 	 *	@param		int 	$user_id (user_id)
 	 *	@param		bool	$wanted (true = return wanted)
 	 *	@param		bool	$owned (true = return owned)
 	 *
 	 *	@return		object 	$setData
 	 */
-	public function get_by_number( $number = '', $user_id = '', $wanted = '', $owned = '' )
+	public function get_by_number( $number = '', $args = '' )
 	{
+		$defaults = array(
+			'owned' 	=> false,
+			'wanted' 	=> false,
+			'user_id' 	=> ''
+		);
+		
+		// Is there a number?
+		if( empty( $number ) )
+			return new WP_Error( 'no-set-number', __( 'No set number requested.', 'bs_api' ) );
+		
+		$args = wp_parse_args( $args, $defaults );
+		
+		extract( $args, EXTR_SKIP );
+			
+		// Get the stuff we need	
 		$user_hash = $this->get_user_hash( $user_id );
 		$api_key = $this->get_api_key();
 		
+		// Check on the number for variants
 		$sets = $this->set_number_check( $number );
+		
+		// Get rid of all punctuation to store in db as part of transient name
 		$transient_sets = str_replace( array( ',', '-' ), '', $sets );
 		
+		// Have we stored a transient?
 		if( false === get_transient( 'bs_'.$transient_sets.$user_id.$wanted.$owned ) )
 		{
 			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme=&setNumber='.$sets.'&year=&owned='.$owned.'&wanted='.$wanted;
@@ -386,6 +405,7 @@ class BricksetAPIFunctions
 			set_transient( 'bs_'.$transient_sets.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
 		}
 		
+		// Get it and return a SimpleXML object
 		return new SimpleXMLElement( get_transient( 'bs_'.$transient_sets.$user_id.$wanted.$owned ) );
 	}
 	
