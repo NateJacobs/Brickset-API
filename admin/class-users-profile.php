@@ -89,4 +89,4 @@ class BricksetAPIUserProfile extends BricksetAPIFunctions
 	}
 }
 
-new BricksetAPIUserProfile;
+$brickset_user_profile = new BricksetAPIUserProfile;
