@@ -3,6 +3,23 @@
 class BricksetAPIFunctions
 {	
 	/** 
+	*	Construct
+	*
+	*	
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/22/13
+	*	@since		1.0
+	*
+	*	@param		
+	*/
+	public function __construct()
+	{
+		$settings = (array) get_option( 'brickset-api-settings' );
+		$this->api_key = $settings['api_key'];
+	}
+
+	/** 
 	 *	Remote Request
 	 *
 	 *	Send the api request to Brickset. Returns an XML formatted response.
@@ -46,23 +63,6 @@ class BricksetAPIFunctions
 	}
 	
 	/** 
-	 *	Get Brickset API Key
-	 *
-	 *	This method will retrieve the api key from the options table.
-	 *
-	 *	@author		Nate Jacobs
-	 *	@since		0.1
-	 *	@updated	1.0
-	 *
-	 *	@return		string	$api_key
-	 */
-	protected function get_api_key()
-	{
-		$settings = (array) get_option( 'brickset-api-settings' );
-		return $settings['api_key'];
-	}
-	
-	/** 
 	*	Get UserHash
 	*
 	*	Returns the Brickset userHash from user_meta
@@ -75,7 +75,7 @@ class BricksetAPIFunctions
 	*
 	*	@return		string	$user_hash
 	*/
-	protected function get_user_hash( $user_id )
+	private function get_user_hash( $user_id )
 	{
 		return get_user_meta( $user_id, 'brickset_user_hash', true );
 	}
@@ -155,7 +155,7 @@ class BricksetAPIFunctions
 		$params = build_query( 
 			urlencode_deep( 
 				array( 
-					'apiKey' 	=> $this->get_api_key(),
+					'apiKey' 	=> $this->api_key,
 					'userHash'	=> $this->get_user_hash( $user_id ),
 					'query'		=>	$query,
 					'theme'		=>	$theme,
