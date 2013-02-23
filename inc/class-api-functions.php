@@ -111,6 +111,9 @@ class BricksetAPIFunctions
 		{
 			$number_check = explode( '-', $set );
 			
+			if( !is_numeric( $number_check[0] ) )
+				return new WP_Error( 'invalid-set-number', __( 'One of the sets requested is not a number.', 'bs_api' ) );
+			
 			// No variant present, add the -1	
 			if( empty( $number_check[1] ) )
 			{
@@ -239,9 +242,9 @@ class BricksetAPIFunctions
 	*
 	*	@return		object	WP_Error
 	*/
-	private function validate_theme_subtheme( $string )
+	private function validate_theme_subtheme( $theme = '', $subtheme = '' )
 	{
-		if( !is_string( $string ) )
+		if( !is_string( $theme ) || !is_string( $subtheme ) )
 			return new WP_Error( 'invalid-string', __( 'The theme or subtheme requested is not a valid string.', 'bs_api' ) );
 	}
 	
@@ -853,45 +856,80 @@ class BricksetAPIFunctions
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 */
-	public function search( $args )
+	public function search( $args = '' )
 	{
 		$defaults = array(
 			'theme' 	=> '',
 			'subtheme' 	=> '',
-			'number' 	=> '',
+			'set_number'=> '',
 			'year' 		=> '',
-			'owned' 	=> '',
-			'wanted' 	=> '',
+			'owned' 	=> false,
+			'wanted' 	=> false,
 			'query' 	=> '',
 			'user_id' 	=> ''
 		);
 		
+		// Is there any criteria to search?
+		if( empty( $args ) )
+			return new WP_Error( 'no-search-criteria', __( 'No search criteria specified.', 'bs_api' ) );
+		
 		$args = wp_parse_args( $args, $defaults );
 		
-		extract( $args, EXTR_SKIP );
+		// Is it a valid year	
+		if( !empty( $args['year'] ) )
+		{
+			if( is_wp_error( $validate_year = $this->validate_year( $year ) ) )	
+				return $validate_year;
+		}
 		
-		$user_hash = $this->get_user_hash( $user_id );
-		$api_key = $this->get_api_key();
+		// Is it a valid user_id?
+		if( !empty( $args['user_id'] ) )
+		{
+			if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
+				return $validate_user;
+		}
 		
-		$sets = $this->set_number_check( $number );
+		// Is it a valid string
+		if( !empty( $args['theme'] ) || !empty( $args['subtheme'] ) )
+		{	
+			if( is_wp_error( $validate_string = $this->validate_theme_subtheme( $args['theme'], $args['subtheme'] ) ) )	
+				return $validate_string;
+		}
+		
+		// Is it a valid string?
+		if( !empty( $args['query'] ) )
+		{
+			if( !is_string( $args['query'] ) )
+				return new WP_Error( 'not-valid-query', __( 'The query requested is not a valid string.', 'bs_api' ) );
+		}
+		
+		// Was a true or false passed for owned and wanted?
+		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
+			return $validate_owned_wanted;
+		
+		if( is_wp_error( $sets = $this->set_number_check( $args['set_number'] ) ) )
+			return $sets;
+			
 		$transient_sets = str_replace( array( ',', '-' ), '', $sets );
 
-		$theme = strtolower( $theme );
-		$subtheme = strtolower( $subtheme );
-		$query = strtolower( $query );
+		$args['set_number'] = $sets;
 
-		if( false === get_transient( 'bs_search_'.$theme.$subtheme.$transient_sets.$year.$query.$user_id.$wanted.$owned ) )
+		$args['theme'] = strtolower( $args['theme'] );
+		$args['subtheme'] = strtolower( $args['subtheme'] );
+		$args['query'] = strtolower( $args['query'] );
+
+		if( false === get_transient( 'bs_search_'.$args['theme'].$args['subtheme'].$transient_sets.$args['year'].$args['query'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query='.$query.'&theme='.$theme.'&subtheme='.$subtheme.'&setNumber='.$sets.'&year='.$year.'&owned='.$owned.'&wanted='.$wanted; 
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
 			{
 				return $response;
 			}
-			set_transient( 'bs_search_'.$theme.$subtheme.$transient_sets.$year.$query.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
+			set_transient( 'bs_search_'.$args['theme'].$args['subtheme'].$transient_sets.$args['year'].$args['query'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
 		}
 		
-		return new SimpleXMLElement( get_transient( 'bs_search_'.$theme.$subtheme.$transient_sets.$year.$query.$user_id.$wanted.$owned ) );
+		return new SimpleXMLElement( get_transient( 'bs_search_'.$args['theme'].$args['subtheme'].$transient_sets.$args['year'].$args['query'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
 	}
 }
