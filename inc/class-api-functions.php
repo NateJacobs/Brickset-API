@@ -20,7 +20,7 @@ class BricksetAPIFunctions
 	protected function remote_request( $extra_url, $params = '' )
 	{
 		$api_url = 'http://www.brickset.com/webservices/brickset.asmx';	
-wp_die( $params );
+//wp_die( $params );
 		$response = wp_remote_get( $api_url.'/'.$extra_url.'?'.$params );
 
 		$response_code = wp_remote_retrieve_response_code( $response );
@@ -122,6 +122,99 @@ wp_die( $params );
 		}
 		// Get rid of the space between commas
 		return substr(str_replace(' ','',$sets), 0, -1);
+	}
+	
+	/** 
+	*	Build Brickset Query
+	*
+	*	
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/22/13
+	*	@since		1.0
+	*
+	*	@param		array	$args
+	*/
+	private function build_bs_query( $args = '' )
+	{
+		$defaults = array(
+			'user_id'	=>	'',
+			'query'		=>	'',
+			'theme'		=>	'',
+			'subtheme'	=>	'',
+			'set_number'=>	'',
+			'year'		=>	'',
+			'owned'		=>	'',
+			'wanted'	=>	''
+		);
+				
+		$args = wp_parse_args( $args, $defaults );
+		
+		extract( $args, EXTR_SKIP );
+		
+		$params = build_query( 
+			urlencode_deep( 
+				array( 
+					'apiKey' 	=> $this->get_api_key(),
+					'userHash'	=> $this->get_user_hash( $user_id ),
+					'query'		=>	$query,
+					'theme'		=>	$theme,
+					'subtheme'	=>	$subtheme,
+					'setNumber'	=>	$set_number,
+					'year'		=>	$year,
+					'owned'		=>	$owned,
+					'wanted'	=>	$wanted
+				) 
+			)
+		);
+		
+		return $params;
+	}
+	
+	/** 
+	*	Validate User ID
+	*
+	*	
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/22/13
+	*	@since		1.0
+	*
+	*	@param		
+	*/
+	private function validate_user( $user_id )
+	{
+		// Is it an integer?
+		if( !is_int( $user_id ) )
+		{
+			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
+		}
+		// Does the user_id specified exist on this site?
+		elseif( !get_user_by( 'id', $user_id ) )
+		{
+			return new WP_Error( 'not-valid-user', __( 'The user ID passed is not a valid user.', 'bs_api' ) );
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	/** 
+	*	Check Owned and Wanted
+	*
+	*	
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/22/13
+	*	@since		1.0
+	*
+	*	@param		
+	*/
+	private function validate_owned_wanted( $owned, $wanted )
+	{
+		if( !is_bool( $owned ) || !is_bool( $wanted ) )
+			return new WP_Error( 'no-boolean', __( 'Owned or wanted is not a true or false value.', 'bs_api' ) );
 	}
 	
 	/** 
@@ -513,10 +606,11 @@ wp_die( $params );
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param		int	$theme 
-	 *	@param		int $user_id
-	 *	@param		int	$owned
-	 *	@param		int	$wanted
+	 *	@param		string	$theme
+	 *	@param		array	$args (user_id, owned, wanted)
+	 *	@param		int 	$user_id
+	 *	@param		bool	$owned
+	 *	@param		bool	$wanted
 	 *
 	 *	@return		object 	$setData
 	 */
@@ -528,50 +622,41 @@ wp_die( $params );
 			'user_id' 	=> ''
 		);
 		
-		// Is there a number?
+		// Is there a theme and is it a string?
 		if( empty( $theme ) || !is_string( $theme ) )
 			return new WP_Error( 'no-theme', __( 'No theme requested.', 'bs_api' ) );
 		
 		$args = wp_parse_args( $args, $defaults );
 		
-		extract( $args, EXTR_SKIP );
+		// Is it a valid user_id?
+		if( !empty( $args['user_id'] ) )
+		{
+			if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
+				return $validate_user;
+		}
 		
-		// Get the stuff we need
-		$user_hash = $this->get_user_hash( $user_id );
-		$api_key = $this->get_api_key();
+		// Was a true or false passed for owned and wanted?
+		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
+			return $validate_owned_wanted;
 		
-		$theme = sanitize_text_field( strtolower( $theme ) );
+		$args['theme'] = sanitize_text_field( strtolower( $theme ) );
+		$transient_theme = str_replace( " ", "", $args['theme'] );
 		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_sets_by_'.str_replace( ' ', '', $theme ).$user_id.$wanted.$owned ) )
+		if( false === get_transient( 'bs_sets_by_'.$transient_theme.$args['user_id'].$args['wanted'].$args['owned'] ) )
 		{
-			$params = build_query( 
-				urlencode_deep( 
-					array( 
-						'apiKey' 	=> $api_key,
-						'userHash'	=> $user_hash,
-						'query'		=>	'',
-						'theme'		=>	$theme,
-						'subtheme'	=>	'',
-						'setNumber'	=>	'',
-						'year'		=>	'',
-						'owned'		=>	$owned,
-						'wanted'	=>	$wanted
-					) 
-				)
-			);
-			
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
 			{
 				return $response;
 			}
-			set_transient( 'bs_sets_by_'.$theme.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
+			set_transient( 'bs_sets_by_'.$transient_theme.$args['user_id'].$args['wanted'].$args['owned'], $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_sets_by_'.$theme.$user_id.$wanted.$owned ) );
+		return new SimpleXMLElement( get_transient( 'bs_sets_by_'.$transient_theme.$args['user_id'].$args['wanted'].$args['owned'] ) );
 	}
 	
 	/** 
@@ -601,6 +686,22 @@ wp_die( $params );
 		
 		if( false === get_transient( 'bs_sets_by_'.$subtheme.$user_id.$wanted.$owned ) )
 		{
+			$params = build_query( 
+				urlencode_deep( 
+					array( 
+						'apiKey' 	=> $api_key,
+						'userHash'	=> $user_hash,
+						'query'		=>	'',
+						'theme'		=>	$theme,
+						'subtheme'	=>	'',
+						'setNumber'	=>	'',
+						'year'		=>	'',
+						'owned'		=>	$owned,
+						'wanted'	=>	$wanted
+					) 
+				)
+			);
+			
 			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme='.$subtheme.'&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
 			$response = $this->remote_request( 'search', $params );
 
