@@ -5,13 +5,14 @@ class BricksetAPIFunctions
 	/** 
 	*	Construct
 	*
-	*	
+	*	Start things off when class is instantiated
+	*	Get the API Key from the options table
 	*
 	*	@author		Nate Jacobs
 	*	@date		2/22/13
 	*	@since		1.0
 	*
-	*	@param		
+	*	@param		null
 	*/
 	public function __construct()
 	{
@@ -127,13 +128,15 @@ class BricksetAPIFunctions
 	/** 
 	*	Build Brickset Query
 	*
-	*	
+	*	Takes an array of search criteria and returns a urlencoded query string
 	*
 	*	@author		Nate Jacobs
 	*	@date		2/22/13
 	*	@since		1.0
 	*
 	*	@param		array	$args
+	*
+	*	@return		array	$params
 	*/
 	private function build_bs_query( $args = '' )
 	{
@@ -174,13 +177,16 @@ class BricksetAPIFunctions
 	/** 
 	*	Validate User ID
 	*
-	*	
+	*	Takes a user ID and determines if it is an integer and is a valid user in the site
 	*
 	*	@author		Nate Jacobs
 	*	@date		2/22/13
 	*	@since		1.0
 	*
-	*	@param		
+	*	@param		int	$user_id
+	*
+	*	@return		object	WP_Error (if not a user or an int)
+	*	@return		bool	true (if a valid user and an int)
 	*/
 	private function validate_user( $user_id )
 	{
@@ -203,13 +209,16 @@ class BricksetAPIFunctions
 	/** 
 	*	Check Owned and Wanted
 	*
-	*	
+	*	Determines if the owned and wanted passed values are true or false
 	*
 	*	@author		Nate Jacobs
 	*	@date		2/22/13
 	*	@since		1.0
 	*
-	*	@param		
+	*	@param		bool	$owned
+	*	@param		bool	$wanted
+	*
+	*	@return		WP_Error
 	*/
 	private function validate_owned_wanted( $owned, $wanted )
 	{
