@@ -522,33 +522,38 @@ class BricksetAPIFunctions
 		
 		$args = wp_parse_args( $args, $defaults );
 		
-		extract( $args, EXTR_SKIP );
-			
-		// Get the stuff we need	
-		$user_hash = $this->get_user_hash( $user_id );
-		$api_key = $this->get_api_key();
+		// Is it a valid user_id?
+		if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
+			return $validate_user;
+		
+		// Was a true or false passed for owned and wanted?
+		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
+			return $validate_owned_wanted;
 		
 		// Check on the number for variants
-		$sets = $this->set_number_check( $number );
+		if( is_wp_error( $sets = $this->set_number_check( $number ) ) )
+			return $sets;
 		
-		// Get rid of all punctuation to store in db as part of transient name
+		// Get rid of all punctuation to store in db as part of transient name	
 		$transient_sets = str_replace( array( ',', '-' ), '', $sets );
+
+		$args['set_number'] = $sets;
 		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_'.$transient_sets.$user_id.$wanted.$owned ) )
+		if( false === get_transient( 'bs_'.$transient_sets.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme=&setNumber='.$sets.'&year=&owned='.$owned.'&wanted='.$wanted;
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
 			{
 				return $response;
 			}
-			set_transient( 'bs_'.$transient_sets.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
+			set_transient( 'bs_'.$transient_sets.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_'.$transient_sets.$user_id.$wanted.$owned ) );
+		return new SimpleXMLElement( get_transient( 'bs_'.$transient_sets.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
 	}
 	
 	/** 
