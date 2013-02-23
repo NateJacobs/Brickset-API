@@ -207,7 +207,7 @@ class BricksetAPIFunctions
 	}
 	
 	/** 
-	*	Check Owned and Wanted
+	*	Validate Owned and Wanted
 	*
 	*	Determines if the owned and wanted passed values are true or false
 	*
@@ -218,12 +218,31 @@ class BricksetAPIFunctions
 	*	@param		bool	$owned
 	*	@param		bool	$wanted
 	*
-	*	@return		WP_Error
+	*	@return		object	WP_Error
 	*/
 	private function validate_owned_wanted( $owned, $wanted )
 	{
 		if( !is_bool( $owned ) || !is_bool( $wanted ) )
 			return new WP_Error( 'no-boolean', __( 'Owned or wanted is not a true or false value.', 'bs_api' ) );
+	}
+	
+	/** 
+	*	Validate Theme or Subtheme
+	*
+	*	Checks and ensures the theme or subtheme passed is a valid string
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/22/13
+	*	@since		1.0
+	*
+	*	@param		string	$string
+	*
+	*	@return		object	WP_Error
+	*/
+	private function validate_theme_subtheme( $string )
+	{
+		if( !is_string( $string ) )
+			return new WP_Error( 'invalid-string', __( 'The theme or subtheme requested is not a valid string.', 'bs_api' ) );
 	}
 	
 	/** 
@@ -631,10 +650,14 @@ class BricksetAPIFunctions
 			'user_id' 	=> ''
 		);
 		
-		// Is there a theme and is it a string?
-		if( empty( $theme ) || !is_string( $theme ) )
+		// Is there a theme?
+		if( empty( $theme ) )
 			return new WP_Error( 'no-theme', __( 'No theme requested.', 'bs_api' ) );
 		
+		// Is it a valid string	
+		if( is_wp_error( $validate_theme = $this->validate_theme_subtheme( $theme ) ) )	
+			return $validate_theme;
+			
 		$args = wp_parse_args( $args, $defaults );
 		
 		// Is it a valid user_id?
