@@ -173,10 +173,10 @@ function brickset_updated_since( $date )
 *
 *	@param		string	$set
 */
-function brickset_set_number( $set )
+function brickset_set_number( $set, $args = '' )
 {
 	$brickset = new BricksetAPIFunctions();
-	$brickset = $brickset->get_by_number( $set );
+	$brickset = $brickset->get_by_number( $set, $args );
 
 	if( is_wp_error( $brickset ) )
 	{
