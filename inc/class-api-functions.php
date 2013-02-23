@@ -38,7 +38,7 @@ class BricksetAPIFunctions
 	protected function remote_request( $extra_url, $params = '' )
 	{
 		$api_url = 'http://www.brickset.com/webservices/brickset.asmx';	
-//wp_die( $params );
+//wp_die( $api_url.'/'.$extra_url.'?'.$params );
 		$response = wp_remote_get( $api_url.'/'.$extra_url.'?'.$params );
 
 		$response_code = wp_remote_retrieve_response_code( $response );
@@ -352,28 +352,28 @@ class BricksetAPIFunctions
 	 */
 	public function get_subthemes( $theme )
 	{
-		// Check if it is a string
-		if( false === is_string( $theme ) )
-			return new WP_Error( 'not-a-string', __( 'The theme entered is not a valid string.', 'bs_api' ) );
-
-		// Lower it
+		// Is it a valid string	
+		if( is_wp_error( $validate_theme = $this->validate_theme_subtheme( $theme ) ) )	
+			return $validate_theme;
+		
 		$theme = sanitize_text_field( strtolower( $theme ) );
+		$transient_theme = str_replace( " ", "", $theme );
 		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_'.$theme.'_subthemes' ) )
+		if( false === get_transient( 'bs_'.$transient_theme.'_subthemes' ) )
 		{
-			$params = 'theme='.$theme;
+			$params = 'theme='.urlencode( $theme );
 			$response = $this->remote_request( 'listSubthemes', $params );
 
 			if( is_wp_error( $response ) )
 			{
 				return $response;
 			}
-			set_transient( 'bs_'.$theme.'_subthemes', $response, DAY_IN_SECONDS );
+			set_transient( 'bs_'.$transient_theme.'_subthemes', $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_'.$theme.'_subthemes' ) );
+		return new SimpleXMLElement( get_transient( 'bs_'.$transient_theme.'_subthemes' ) );
 	}
 	
 	/** 
@@ -392,28 +392,28 @@ class BricksetAPIFunctions
 	 */
 	public function get_theme_years( $theme )
 	{	
-		// Check if it is a string
-		if( false === is_string( $theme ) )
-			return new WP_Error( 'not-a-string', __( 'The theme entered is not a valid string.', 'bs_api' ) );
-	
-		// Lower the string
-		$theme = urlencode( sanitize_text_field( strtolower( $theme ) ) );
+		// Is it a valid string	
+		if( is_wp_error( $validate_theme = $this->validate_theme_subtheme( $theme ) ) )	
+			return $validate_theme;
+		
+		$theme = sanitize_text_field( strtolower( $theme ) );
+		$transient_theme = str_replace( " ", "", $theme );
 		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_'.$theme.'_years' ) )
+		if( false === get_transient( 'bs_'.$transient_theme.'_years' ) )
 		{
-			$params = 'theme='.$theme;
+			$params = 'theme='.urlencode( $theme );
 			$response = $this->remote_request( 'listYears', $params );
 
 			if( is_wp_error( $response ) )
 			{
 				return $response;
 			}
-			set_transient( 'bs_'.$theme.'_years', $response, DAY_IN_SECONDS );
+			set_transient( 'bs_'.$transient_theme.'_years', $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_'.$theme.'_years' ) );
+		return new SimpleXMLElement( get_transient( 'bs_'.$transient_theme.'_years' ) );
 		
 	}
 	
@@ -469,14 +469,12 @@ class BricksetAPIFunctions
 		if( false === checkdate( $exploded_date[0], $exploded_date[1], $exploded_date[2] ) )
 			return new WP_Error( 'not-a-date-format', __( 'The date is not formatted correctly.', 'bs_api' ) );
 		
-		$api_key = $this->get_api_key();
-		
 		$transient_date = str_replace( '/', '', $date );
 		
 		// Have we stored a transient?
 		if( false === get_transient( 'bs_updated_since_'.$transient_date ) )
 		{
-			$params = 'apiKey='.$api_key.'&sinceDate='.$date;
+			$params = 'apiKey='.$this->api_key.'&sinceDate='.$date;
 			$response = $this->remote_request( 'updatedSince', $params );
 
 			if( is_wp_error( $response ) )
@@ -523,8 +521,11 @@ class BricksetAPIFunctions
 		$args = wp_parse_args( $args, $defaults );
 		
 		// Is it a valid user_id?
-		if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
-			return $validate_user;
+		if( !empty( $args['user_id'] ) )
+		{
+			if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
+				return $validate_user;
+		}
 		
 		// Was a true or false passed for owned and wanted?
 		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
