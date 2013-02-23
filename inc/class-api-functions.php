@@ -246,6 +246,23 @@ class BricksetAPIFunctions
 	}
 	
 	/** 
+	*	Validate Year
+	*
+	*	Checks if the year passed as a string is a valid year
+	*
+	*	@author		Nate Jacobs
+	*	@date		2/22/13
+	*	@since		1.0
+	*
+	*	@param		string|int	$year
+	*/
+	private function validate_year( $year )
+	{
+		if( !is_numeric( $year ) || strlen( $year )!=4 )
+			return new WP_Error( 'invalid-year', __( 'The year requested is not a valid year.', 'bs_api' ) );
+	}
+	
+	/** 
 	 *	Login Service Method
 	 *
 	 *	Authenticates a user with Brickset and returns a hash.
@@ -762,7 +779,7 @@ class BricksetAPIFunctions
 	/** 
 	 *	Get Set Info by Year
 	 *
-	 *	Pass a year and get all the information about that set.
+	 *	Pass a year and get all the information about the sets produced that year.
 	 *	Returns the setData response
 	 *	See webservice-definition.json for all the fields returned.
 	 *
@@ -771,30 +788,59 @@ class BricksetAPIFunctions
 	 *	@updated	1.0
 	 *
 	 *	@param		int	$year
-	 *	@param		int	$user_id
-	 *	@param		int	$owned
-	 *	@param		int	$wanted
+	 *	@param		array	$args (user_id, owned, wanted)
+	 *	@param		int 	$user_id
+	 *	@param		int		$owned
+	 *	@param		int		$wanted
 	 *
 	 *	@return		object 	$setData
 	 */
-	public function get_by_year( $year = '', $user_id = '', $owned = '', $wanted = '' )
+	public function get_by_year( $year = '', $args = '' )
 	{
-		$user_hash = $this->get_user_hash( $user_id );
-		$api_key = $this->get_api_key();
+		$defaults = array(
+			'owned' 	=> false,
+			'wanted' 	=> false,
+			'user_id' 	=> ''
+		);
 		
-		if( false === get_transient( 'bs_sets_by_year_'.$year.$user_id.$wanted.$owned ) )
+		// Is there a year?
+		if( empty( $year ) )
+			return new WP_Error( 'no-year', __( 'No year requested.', 'bs_api' ) );
+		
+		// Is it a valid year	
+		if( is_wp_error( $validate_year = $this->validate_year( $year ) ) )	
+			return $validate_year;
+		
+		$args = wp_parse_args( $args, $defaults );
+		
+		// Is it a valid user_id?
+		if( !empty( $args['user_id'] ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme=&setNumber=&year='.$year.'&owned='.$owned.'&wanted='.$wanted;
+			if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
+				return $validate_user;
+		}
+		
+		// Was a true or false passed for owned and wanted?
+		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
+			return $validate_owned_wanted;
+		
+		$args['year'] = $year;
+		
+		// Have we stored a transient?
+		if( false === get_transient( 'bs_sets_by_year_'.$args['year'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
+		{
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
 			{
 				return $response;
 			}
-			set_transient( 'bs_sets_by_year_'.$year.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
+			set_transient( 'bs_sets_by_year_'.$args['year'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
 		}
 		
-		return new SimpleXMLElement( get_transient( 'bs_sets_by_year_'.$year.$user_id.$wanted.$owned ) );
+		// Get it and return a SimpleXML object
+		return new SimpleXMLElement( get_transient( 'bs_sets_by_year_'.$args['year'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
 	}
 	
 	/** 
