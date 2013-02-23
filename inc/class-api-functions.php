@@ -568,22 +568,21 @@ class BricksetAPIFunctions
 	 */
 	public function get_wanted( $user_id = '' )
 	{
-		// Is it an integer?
-		if( !is_int( $user_id ) )
+		// Is there a user?
+		if( empty( $user_id ) )
 			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
-	
-		// Does the user_id specified exist on this site?
-		if( !get_user_by( 'id', $user_id ) )
-			return new WP_Error( 'not-valid-user', __( 'The user ID passed is not a valid user.', 'bs_api' ) );
+			
+		// Is it a valid user_id?
+		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )
+			return $validate_user;
 		
-		// Get the stuff we need
-		$user_hash = $this->get_user_hash( $user_id );
-		$api_key = $this->get_api_key();
+		$args['user_id'] = $user_id;
+		$args['wanted'] = true;
 		
 		// Have we stored a transient?
 		if( false === get_transient( 'bs_wanted'.$user_id ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=&wanted=1';
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -614,24 +613,23 @@ class BricksetAPIFunctions
 	 */
 	public function get_owned( $user_id = '' )
 	{
-		// Is it an integer?
-		if( !is_int( $user_id ) )
+		// Is there a user?
+		if( empty( $user_id ) )
 			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
-	
-		// Does the user_id specified exist on this site?
-		if( !get_user_by( 'id', $user_id ) )
-			return new WP_Error( 'not-valid-user', __( 'The user ID passed is not a valid user.', 'bs_api' ) );	
-	
-		// Get the stuff we need
-		$user_hash = $this->get_user_hash( $user_id );
-		$api_key = $this->get_api_key();
+			
+		// Is it a valid user_id?
+		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )
+			return $validate_user;
+		
+		$args['user_id'] = $user_id;
+		$args['owned'] = true;
 		
 		// Have we stored a transient?
 		if( false === get_transient( 'bs_owned'.$user_id ) )
 		{
-			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme=&setNumber=&year=&owned=1&wanted=';
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
-
+			
 			if( is_wp_error( $response ) )
 			{
 				return $response;
