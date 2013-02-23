@@ -675,7 +675,7 @@ class BricksetAPIFunctions
 		$transient_theme = str_replace( " ", "", $args['theme'] );
 		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_sets_by_'.$transient_theme.$args['user_id'].$args['wanted'].$args['owned'] ) )
+		if( false === get_transient( 'bs_sets_by_'.$transient_theme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
 		{
 			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
@@ -684,11 +684,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_sets_by_'.$transient_theme.$args['user_id'].$args['wanted'].$args['owned'], $response, DAY_IN_SECONDS );
+			set_transient( 'bs_sets_by_'.$transient_theme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_sets_by_'.$transient_theme.$args['user_id'].$args['wanted'].$args['owned'] ) );
+		return new SimpleXMLElement( get_transient( 'bs_sets_by_'.$transient_theme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
 	}
 	
 	/** 
@@ -702,49 +702,61 @@ class BricksetAPIFunctions
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param		int	$subtheme
-	 *	@param		int $user_id (user_id)
-	 *	@param		int	$owned
-	 *	@param		int	$wanted
+	 *	@param		int		$subtheme
+	 *	@param		array	$args (user_id, owned, wanted)
+	 *	@param		int 	$user_id
+	 *	@param		int		$owned
+	 *	@param		int		$wanted
 	 *
 	 *	@return		object	$setData
 	 */
-	public function get_by_subtheme( $subtheme = '', $user_id = '', $wanted = '', $owned = '' )
+	public function get_by_subtheme( $subtheme = '', $args = '' )
 	{
-		$user_hash = $this->get_user_hash( $user_id );
-		$api_key = $this->get_api_key();
+		$defaults = array(
+			'owned' 	=> false,
+			'wanted' 	=> false,
+			'user_id' 	=> ''
+		);
 		
-		$subtheme = strtolower( $subtheme );
+		// Is there a subtheme?
+		if( empty( $subtheme ) )
+			return new WP_Error( 'no-subtheme', __( 'No subtheme requested.', 'bs_api' ) );
 		
-		if( false === get_transient( 'bs_sets_by_'.$subtheme.$user_id.$wanted.$owned ) )
+		// Is it a valid string	
+		if( is_wp_error( $validate_subtheme = $this->validate_theme_subtheme( $subtheme ) ) )	
+			return $validate_subtheme;
+		
+		$args = wp_parse_args( $args, $defaults );
+		
+		// Is it a valid user_id?
+		if( !empty( $args['user_id'] ) )
 		{
-			$params = build_query( 
-				urlencode_deep( 
-					array( 
-						'apiKey' 	=> $api_key,
-						'userHash'	=> $user_hash,
-						'query'		=>	'',
-						'theme'		=>	$theme,
-						'subtheme'	=>	'',
-						'setNumber'	=>	'',
-						'year'		=>	'',
-						'owned'		=>	$owned,
-						'wanted'	=>	$wanted
-					) 
-				)
-			);
-			
-			$params = 'apiKey='.$api_key.'&userHash='.$user_hash.'&query=&theme=&subtheme='.$subtheme.'&setNumber=&year=&owned='.$owned.'&wanted='.$wanted;
+			if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
+				return $validate_user;
+		}
+		
+		// Was a true or false passed for owned and wanted?
+		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
+			return $validate_owned_wanted;
+		
+		$args['subtheme'] = sanitize_text_field( strtolower( $subtheme ) );
+		$transient_subtheme = str_replace( " ", "", $args['subtheme'] );
+		
+		// Have we stored a transient?
+		if( false === get_transient( 'bs_sets_by_'.$transient_subtheme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
+		{
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
 
 			if( is_wp_error( $response ) )
 			{
 				return $response;
 			}
-			set_transient( 'bs_sets_by_'.$subtheme.$user_id.$wanted.$owned, $response, DAY_IN_SECONDS );
+			set_transient( 'bs_sets_by_'.$transient_subtheme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
 		}
 		
-		return new SimpleXMLElement( get_transient( 'bs_sets_by_'.$subtheme.$user_id.$wanted.$owned ) );
+		// Get it and return a SimpleXML object
+		return new SimpleXMLElement( get_transient( 'bs_sets_by_'.$transient_subtheme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
 	}
 	
 	/** 
