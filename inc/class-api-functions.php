@@ -274,6 +274,10 @@ class BricksetAPIFunctions
 		{
 			if( !is_numeric( $year ) || strlen( $year )!=4 )
 				return new WP_Error( 'invalid-year', __( 'The year requested is not a valid year.', 'bs_api' ) );
+
+			// Check if year is between 1950 and current year +1
+			if( $year < '1950' || $year > date( 'Y', strtotime( '+1 year' ) ) )
+				return new WP_Error( 'year-out-range', __( 'The year is not in the accepted range, 1950 to year +1.', 'bs_api' ) );
 			
 			$total_years .= $year.',';
 		}
@@ -492,6 +496,10 @@ class BricksetAPIFunctions
 		// Is this a date in the correct format?
 		if( false === checkdate( $exploded_date[0], $exploded_date[1], $exploded_date[2] ) )
 			return new WP_Error( 'not-a-date-format', __( 'The date is not formatted correctly.', 'bs_api' ) );
+		
+		// Is it a valid year	
+		if( is_wp_error( $validate_year = $this->validate_year( $exploded_date[2] ) ) )	
+			return $validate_year;
 		
 		$transient_date = str_replace( '/', '', $date );
 		
