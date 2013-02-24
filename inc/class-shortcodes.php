@@ -15,6 +15,7 @@ class BricksetAPIShortcode extends BricksetAPIFunctions
 	*/
 	public function __construct()
 	{
+		parent::__construct();
 		add_shortcode( 'bs_set', array( $this, 'get_set' ) );
 		//add_shortcode( 'bs_my_wanted', array( $this, 'my_wanted' ) );
 		//add_shortcode( 'bs_my_owned', array( $this, 'my_owned' ) );
