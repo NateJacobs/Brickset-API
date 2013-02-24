@@ -50,7 +50,7 @@ function brickset_subthemes( $theme )
 	else
 	{
 		echo '<h2 class="brickset-theme-name">'.$brickset->theme.'</h2>';
-		echo '<table class="brickset-subtheme"><th>Subtheme</th><th>Set Count</th><th>First Year</th><th>Last Year</th>';		
+		echo '<table class="brickset-subtheme"><th>'. __( 'Subtheme', 'bs_api' ).'</th><th>'. __( 'Set Count', 'bs_api' ).'</th><th>'. __( 'First Year', 'bs_api' ).'</th><th>'. __( 'Last Year', 'bs_api' ).'</th>';		
 		foreach ( $brickset as $subtheme )
 		{
 			echo '<tr>';
@@ -86,7 +86,7 @@ function brickset_theme_years( $theme )
 	else
 	{
 		echo '<h2 class="brickset-theme-name">'.$brickset->yearData->theme.'</h2>';
-		echo '<table class="brickset-theme"><th>Year</th><th>Set Count</th>';			
+		echo '<table class="brickset-theme"><th>'. __( 'Year', 'bs_api' ).'</th><th>'. __( 'Set Count', 'bs_api' ).'</th>';			
 		foreach ( $brickset as $year )
 		{
 				echo '<tr>';
@@ -150,7 +150,7 @@ function brickset_updated_since( $date )
 	}
 	else
 	{
-		echo '<table class="brickset-updated-since"><th>Image</th><th>Set Name</th><th>Set Number</th>';	
+		echo '<table class="brickset-updated-since"><th>'. __( 'Image', 'bs_api' ).'</th><th>'. __( 'Set Name', 'bs_api' ).'</th><th>'. __( 'Set Number', 'bs_api' ).'</th>';	
 		foreach ( $brickset as $updated )
 		{
 			echo '<tr>';
