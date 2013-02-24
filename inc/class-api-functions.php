@@ -259,10 +259,26 @@ class BricksetAPIFunctions
 	*
 	*	@param		string|int	$year
 	*/
-	private function validate_year( $year )
+	private function validate_year( $years )
 	{
-		if( !is_numeric( $year ) || strlen( $year )!=4 )
-			return new WP_Error( 'invalid-year', __( 'The year requested is not a valid year.', 'bs_api' ) );
+		//if( !is_numeric( $year ) || strlen( $year )!=4 )
+		//	return new WP_Error( 'invalid-year', __( 'The year requested is not a valid year.', 'bs_api' ) );
+		
+		// Get set numbers into an array
+		$years = explode( ',', $years );
+
+		// Holding container
+		$total_years = '';
+		
+		foreach( $years as $year )
+		{
+			if( !is_numeric( $year ) || strlen( $year )!=4 )
+				return new WP_Error( 'invalid-year', __( 'The year requested is not a valid year.', 'bs_api' ) );
+			
+			$total_years .= $year.',';
+		}
+		// Get rid of the space between commas
+		return substr(str_replace(' ','',$total_years), 0, -1);	
 	}
 	
 	/** 
@@ -833,8 +849,10 @@ class BricksetAPIFunctions
 		
 		$args['year'] = $year;
 		
+		$transient_year = str_replace( ",", "", $args['year'] );
+		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_sets_by_year_'.$args['year'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
+		if( false === get_transient( 'bs_sets_by_year_'.$transient_year.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
 		{
 			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
@@ -843,11 +861,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_sets_by_year_'.$args['year'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
+			set_transient( 'bs_sets_by_year_'.$transient_year.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_sets_by_year_'.$args['year'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
+		return new SimpleXMLElement( get_transient( 'bs_sets_by_year_'.$transient_year.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
 	}
 	
 	/** 
@@ -882,7 +900,7 @@ class BricksetAPIFunctions
 		// Is it a valid year	
 		if( !empty( $args['year'] ) )
 		{
-			if( is_wp_error( $validate_year = $this->validate_year( $year ) ) )	
+			if( is_wp_error( $validate_year = $this->validate_year( $args['year'] ) ) )	
 				return $validate_year;
 		}
 		
@@ -914,15 +932,21 @@ class BricksetAPIFunctions
 		if( is_wp_error( $sets = $this->set_number_check( $args['set_number'] ) ) )
 			return $sets;
 			
-		$transient_sets = str_replace( array( ',', '-' ), '', $sets );
-
 		$args['set_number'] = $sets;
 
 		$args['theme'] = strtolower( $args['theme'] );
 		$args['subtheme'] = strtolower( $args['subtheme'] );
 		$args['query'] = strtolower( $args['query'] );
 
-		if( false === get_transient( 'bs_search_'.$args['theme'].$args['subtheme'].$transient_sets.$args['year'].$args['query'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
+		$transient_sets = str_replace( array( ',', '-' ), '', $args['set_number'] );
+		$transient_year = str_replace( ",", "", $args['year'] );
+		$transient_theme = str_replace( ",", "", $args['theme'] );
+		$transient_subtheme = str_replace( ",", "", $args['subtheme'] );
+		$transient_query = str_replace( array( ',', '-' ), '', $args['query'] );
+
+		$transient = 'bs_search_'.$transient_theme.$transient_subtheme.$transient_sets.$transient_year.$transient_query.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
+
+		if( false === get_transient( $transient ) )
 		{
 			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
@@ -931,9 +955,9 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_search_'.$args['theme'].$args['subtheme'].$transient_sets.$args['year'].$args['query'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, DAY_IN_SECONDS );
 		}
 		
-		return new SimpleXMLElement( get_transient( 'bs_search_'.$args['theme'].$args['subtheme'].$transient_sets.$args['year'].$args['query'].'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
+		return new SimpleXMLElement( get_transient( $transient ) );
 	}
 }
