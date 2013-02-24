@@ -335,8 +335,10 @@ class BricksetAPIFunctions
 	 */
 	public function get_themes()
 	{
+		$transient = 'bs_theme_list';
+	
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_theme_list' ) )
+		if( false === get_transient( $transient ) )
 		{
 			$response = $this->remote_request( 'listThemes' );
 			
@@ -344,11 +346,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_theme_list', $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, DAY_IN_SECONDS );
 		}
 		
 		// Return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_theme_list' ) );		
+		return new SimpleXMLElement( get_transient( $transient ) );		
 		
 	}
 
@@ -375,8 +377,10 @@ class BricksetAPIFunctions
 		$theme = sanitize_text_field( strtolower( $theme ) );
 		$transient_theme = str_replace( " ", "", $theme );
 		
+		$transient = 'bs_'.$transient_theme.'_subthemes';
+		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_'.$transient_theme.'_subthemes' ) )
+		if( false === get_transient( $transient ) )
 		{
 			$params = 'theme='.urlencode( $theme );
 			$response = $this->remote_request( 'listSubthemes', $params );
@@ -385,11 +389,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_'.$transient_theme.'_subthemes', $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_'.$transient_theme.'_subthemes' ) );
+		return new SimpleXMLElement( get_transient( $transient ) );
 	}
 	
 	/** 
@@ -415,8 +419,10 @@ class BricksetAPIFunctions
 		$theme = sanitize_text_field( strtolower( $theme ) );
 		$transient_theme = str_replace( " ", "", $theme );
 		
+		$transient = 'bs_'.$transient_theme.'_years';
+		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_'.$transient_theme.'_years' ) )
+		if( false === get_transient( $transient ) )
 		{
 			$params = 'theme='.urlencode( $theme );
 			$response = $this->remote_request( 'listYears', $params );
@@ -425,11 +431,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_'.$transient_theme.'_years', $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_'.$transient_theme.'_years' ) );
+		return new SimpleXMLElement( get_transient( $transient ) );
 		
 	}
 	
@@ -447,8 +453,10 @@ class BricksetAPIFunctions
 	 */
 	public function get_popular_searches()
 	{
+		$transient = 'bs_popular_searches';
+		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_popular_searches' ) )
+		if( false === get_transient( $transient ) )
 		{
 			$response = $this->remote_request( 'popularSearches' );
 
@@ -456,11 +464,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_popular_searches', $response, HOUR_IN_SECONDS );
+			set_transient( $transient, $response, HOUR_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_popular_searches' ) );
+		return new SimpleXMLElement( get_transient( $transient ) );
 	}
 	
 	/** 
@@ -487,8 +495,10 @@ class BricksetAPIFunctions
 		
 		$transient_date = str_replace( '/', '', $date );
 		
+		$transient = 'bs_updated_since_'.$transient_date;
+		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_updated_since_'.$transient_date ) )
+		if( false === get_transient( $transient ) )
 		{
 			$params = 'apiKey='.$this->api_key.'&sinceDate='.$date;
 			$response = $this->remote_request( 'updatedSince', $params );
@@ -497,11 +507,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_updated_since_'.$transient_date, $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_updated_since_'.$transient_date ) );
+		return new SimpleXMLElement( get_transient( $transient ) );
 	}
 	
 	/** 
@@ -556,8 +566,10 @@ class BricksetAPIFunctions
 
 		$args['set_number'] = $sets;
 		
+		$transient = 'bs_'.$transient_sets.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
+		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_'.$transient_sets.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
+		if( false === get_transient( $transient ) )
 		{
 			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
@@ -566,11 +578,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_'.$transient_sets.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_'.$transient_sets.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
+		return new SimpleXMLElement( get_transient( $transient ) );
 	}
 	
 	/** 
@@ -601,8 +613,10 @@ class BricksetAPIFunctions
 		$args['user_id'] = $user_id;
 		$args['wanted'] = true;
 		
+		$transient = 'bs_wanted'.$user_id;
+		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_wanted'.$user_id ) )
+		if( false === get_transient( $transient ) )
 		{
 			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
@@ -611,11 +625,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_wanted'.$user_id, $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_wanted'.$user_id ) );
+		return new SimpleXMLElement( get_transient( $transient ) );
 	}
 	
 	/** 
@@ -646,8 +660,10 @@ class BricksetAPIFunctions
 		$args['user_id'] = $user_id;
 		$args['owned'] = true;
 		
+		$transient = 'bs_owned'.$user_id;
+		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_owned'.$user_id ) )
+		if( false === get_transient( $transient ) )
 		{
 			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
@@ -656,11 +672,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_owned'.$user_id, $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_owned'.$user_id ) );
+		return new SimpleXMLElement( get_transient( $transient ) );
 	}
 	
 	/** 
@@ -714,8 +730,10 @@ class BricksetAPIFunctions
 		$args['theme'] = sanitize_text_field( strtolower( $theme ) );
 		$transient_theme = str_replace( " ", "", $args['theme'] );
 		
+		$transient = 'bs_sets_by_'.$transient_theme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
+		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_sets_by_'.$transient_theme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
+		if( false === get_transient( $transient ) )
 		{
 			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
@@ -724,11 +742,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_sets_by_'.$transient_theme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_sets_by_'.$transient_theme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
+		return new SimpleXMLElement( get_transient( $transient ) );
 	}
 	
 	/** 
@@ -782,8 +800,10 @@ class BricksetAPIFunctions
 		$args['subtheme'] = sanitize_text_field( strtolower( $subtheme ) );
 		$transient_subtheme = str_replace( " ", "", $args['subtheme'] );
 		
+		$transient = 'bs_sets_by_'.$transient_subtheme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
+		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_sets_by_'.$transient_subtheme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
+		if( false === get_transient( $transient ) )
 		{
 			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
@@ -792,11 +812,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_sets_by_'.$transient_subtheme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_sets_by_'.$transient_subtheme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
+		return new SimpleXMLElement( get_transient( $transient ) );
 	}
 	
 	/** 
@@ -851,8 +871,10 @@ class BricksetAPIFunctions
 		
 		$transient_year = str_replace( ",", "", $args['year'] );
 		
+		$transient = 'bs_sets_by_year_'.$transient_year.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
+		
 		// Have we stored a transient?
-		if( false === get_transient( 'bs_sets_by_year_'.$transient_year.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) )
+		if( false === get_transient( $transient ) )
 		{
 			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'search', $params );
@@ -861,11 +883,11 @@ class BricksetAPIFunctions
 			{
 				return $response;
 			}
-			set_transient( 'bs_sets_by_year_'.$transient_year.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'], $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, DAY_IN_SECONDS );
 		}
 		
 		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( 'bs_sets_by_year_'.$transient_year.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'] ) );
+		return new SimpleXMLElement( get_transient( $transient ) );
 	}
 	
 	/** 
