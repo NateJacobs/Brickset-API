@@ -133,6 +133,8 @@ function brickset_popular_searches()
  *	Brickset returns the setData response.
  *	See webservice-definition.json for all the fields returned.
  *
+ *	use format of 'mm/dd/yyyy'
+ *
  *	@author		Nate Jacobs
  *	@date		2/2/13
  *	@since		1.0
