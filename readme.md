@@ -51,8 +51,11 @@ else {
 
 ### Changelog
 #### Version 1.0
-*	Enter your Brickset API from settings submenu.
+*	Enter your Brickset API from the settings submenu.
 *	Allow users to authenticate with Brickset from their profile page.
+*	Refactor code base
+*	Add localization and translation .po
+*	Create webservice-definition.json to display details about the availble calls
 
 #### Version 0.3
 *	Added get_owned function and shortcode.
