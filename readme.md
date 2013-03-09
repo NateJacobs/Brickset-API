@@ -12,9 +12,9 @@ The plugin has numerous template tags you are able to use in your theme. They ar
 *	```brickset_set_number( $set );``` outputs a list of details about the sets specified. More than one set can be requested by separating the set numbers with a comma, e.g. '1380,10240'.
 
 ### Shortcodes
-The plugin has several shortcodes you may use in your posts and pages to display information.
+The plugin has a shortcode you may use in your posts and pages to display information about a set or sets.
 
-*	```[bs_set number='XXX']``` outputs information about a specific set. Thumbnail, set name, set number, pieces, theme, subtheme and year.
+*	```[bs_set number='XXX']``` outputs information about a specific set. Thumbnail, set name, set number, pieces, theme, subtheme and year. You can display multiple sets by seperating the set numbers with a comma.
 
 ### Widgets
 The plugin has one widget you can activate to display a list of all themes on Brickset with a link to browse each theme on Brickset.com
