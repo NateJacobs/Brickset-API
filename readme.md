@@ -46,8 +46,9 @@ else {
 ```
 
 ### Road Map
-1. Create methods to display sets specific to a user.
-2. Create methods to allow users to update owned or wanted sets.
+1. Display sets specific to a user.
+2. Allow users to update owned or wanted sets.
+3. Allow users to manage minifig collection.
 
 ### Changelog
 #### Version 1.0
