@@ -57,7 +57,7 @@ class BricksetAPILoad
 	public function includes()
 	{
 		require_once( BRICKSET_API_INCLUDES . 'class-api-functions.php' );
-		//require_once( BRICKSET_API_INCLUDES . 'class-update.php' );
+		require_once( BRICKSET_API_INCLUDES . 'class-oembed.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-widgets.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-template-tags.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-shortcodes.php' );
