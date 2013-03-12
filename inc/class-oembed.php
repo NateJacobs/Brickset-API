@@ -253,7 +253,7 @@ class BricksetOembed extends BricksetAPIFunctions
 		$response->version = '1.0';  
 		$response->title = 'Theme List';  
 		$response->html = '<div class="brickset-oembed-theme">';
-		
+
 		// Check for errors
 		if( is_wp_error( $brickset ) )
 		{
@@ -261,7 +261,7 @@ class BricksetOembed extends BricksetAPIFunctions
 		}
 		else
 		{
-			// Display the info about the sets in the theme
+			// Loop through and display the info about the sets in the theme
 			$response->html .= '<table class="brickset-theme-sets"><th>'. __( 'Image', 'bs_api' ).'</th><th>'. __( 'Set Name', 'bs_api' ).'</th><th>'. __( 'Set Number', 'bs_api' ).'</th><th>'. __( 'Year', 'bs_api' ).'</th><th>'. __( 'Pieces', 'bs_api' ).'</th>';	
 
 			foreach ( $brickset as $updated )
