@@ -57,6 +57,7 @@ else {
 *	Refactor code base
 *	Add localization and translation .po
 *	Create webservice-definition.json to display details about the availble calls
+*	Brickset oembed support for set and theme URLs
 
 #### Version 0.3
 *	Added get_owned function and shortcode.
