@@ -161,8 +161,8 @@ class BricksetAPIFunctions
 		$params = build_query( 
 			urlencode_deep( 
 				array( 
-					'apiKey' 	=> $this->api_key,
-					'userHash'	=> $this->get_user_hash( $user_id ),
+					'apiKey' 	=> 	$this->api_key,
+					'userHash'	=>	$this->get_user_hash( $user_id ),
 					'query'		=>	$query,
 					'theme'		=>	$theme,
 					'subtheme'	=>	$subtheme,
@@ -174,6 +174,7 @@ class BricksetAPIFunctions
 			)
 		);
 		
+		$params = str_replace( '%2C', ',', $params );
 		return $params;
 	}
 	
@@ -386,7 +387,9 @@ class BricksetAPIFunctions
 		// Have we stored a transient?
 		if( false === get_transient( $transient ) )
 		{
-			$params = 'theme='.urlencode( $theme );
+			$args = array( 'theme' => $theme );
+			
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'listSubthemes', $params );
 
 			if( is_wp_error( $response ) )
@@ -428,7 +431,9 @@ class BricksetAPIFunctions
 		// Have we stored a transient?
 		if( false === get_transient( $transient ) )
 		{
-			$params = 'theme='.urlencode( $theme );
+			$args = array( 'theme' => $theme );
+
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'listYears', $params );
 
 			if( is_wp_error( $response ) )
