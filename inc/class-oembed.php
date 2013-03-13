@@ -240,10 +240,10 @@ class BricksetOembed extends BricksetAPIFunctions
     *
     *	@param		string	$theme_name
     */
-    public function oembed_theme( $theme_name )
+    public function oembed_theme( $theme )
     {
 		// Call the API function
-		$brickset = parent::get_by_theme( $theme_name );   
+		$brickset = parent::get_by_theme( $theme );   
     
 		// Build the Oembed class
     	$response = new stdClass();  
@@ -276,8 +276,7 @@ class BricksetOembed extends BricksetAPIFunctions
 			}
 
 			$response->html .= '</table>';
-		}
-		
+		}		
 		$response->html .= '</div>';
 			  
 		header ( 'Content-Type: application/json' );  
