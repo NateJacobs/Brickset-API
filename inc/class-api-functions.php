@@ -18,6 +18,8 @@ class BricksetAPIFunctions
 	{
 		$settings = (array) get_option( 'brickset-api-settings' );
 		$this->api_key = $settings['api_key'];
+		
+		add_filter ( 'http_request_timeout', array ( $this, 'http_request_timeout' ) );
 	}
 
 	/** 
@@ -64,6 +66,22 @@ class BricksetAPIFunctions
 	}
 	
 	/** 
+	*	HTTP Request Timeout
+	*
+	*	Sometimes requests take longer than 5 seconds
+	*
+	*	@author		Nate Jacobs
+	*	@date		3/13/13
+	*	@since		1.0
+	*
+	*	@param		int	$seconds
+	*/
+	function http_request_timeout ( $seconds ) 
+	{
+		return $seconds < 10 ? 15 : $seconds;
+	}
+	
+	/** 
 	*	Get UserHash
 	*
 	*	Returns the Brickset userHash from user_meta
@@ -76,7 +94,7 @@ class BricksetAPIFunctions
 	*
 	*	@return		string	$user_hash
 	*/
-	private function get_user_hash( $user_id )
+	protected function get_user_hash( $user_id )
 	{
 		return get_user_meta( $user_id, 'brickset_user_hash', true );
 	}
@@ -158,11 +176,16 @@ class BricksetAPIFunctions
 		
 		extract( $args, EXTR_SKIP );
 		
+		if( !isset( $this->api_key ) )
+		{
+			$settings = (array) get_option( 'brickset-api-settings' );
+			$this->api_key = $settings['api_key'];
+		}
+		
 		$params = build_query( 
 			urlencode_deep( 
 				array( 
 					'apiKey' 	=> 	$this->api_key,
-					'userHash'	=>	$this->get_user_hash( $user_id ),
 					'query'		=>	$query,
 					'theme'		=>	$theme,
 					'subtheme'	=>	$subtheme,
@@ -175,7 +198,7 @@ class BricksetAPIFunctions
 		);
 		
 		$params = str_replace( '%2C', ',', $params );
-		return $params;
+		return $params.'&userHash='.$this->get_user_hash( $user_id );
 	}
 	
 	/** 
@@ -557,45 +580,15 @@ class BricksetAPIFunctions
 		if( empty( $number ) )
 			return new WP_Error( 'no-set-number', __( 'No set number requested.', 'bs_api' ) );
 		
-		$args = wp_parse_args( $args, $defaults );
-		
-		// Is it a valid user_id?
-		if( !empty( $args['user_id'] ) )
-		{
-			if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
-				return $validate_user;
-		}
-		
-		// Was a true or false passed for owned and wanted?
-		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
-			return $validate_owned_wanted;
-		
 		// Check on the number for variants
 		if( is_wp_error( $sets = $this->set_number_check( $number ) ) )
 			return $sets;
 		
-		// Get rid of all punctuation to store in db as part of transient name	
-		$transient_sets = str_replace( array( ',', '-' ), '', $sets );
-
 		$args['set_number'] = $sets;
 		
-		$transient = 'bs_'.$transient_sets.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
-		
-		// Have we stored a transient?
-		if( false === get_transient( $transient ) )
-		{
-			$params = $this->build_bs_query( $args );
-			$response = $this->remote_request( 'search', $params );
+		$args = wp_parse_args( $args, $defaults );
 
-			if( is_wp_error( $response ) )
-			{
-				return $response;
-			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
-		}
-		
-		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( $transient ) );
+		return $this->search( $args );
 	}
 	
 	/** 
@@ -618,31 +611,11 @@ class BricksetAPIFunctions
 		// Is there a user?
 		if( empty( $user_id ) )
 			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
-			
-		// Is it a valid user_id?
-		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )
-			return $validate_user;
 		
 		$args['user_id'] = $user_id;
 		$args['wanted'] = true;
 		
-		$transient = 'bs_wanted'.$user_id;
-		
-		// Have we stored a transient?
-		if( false === get_transient( $transient ) )
-		{
-			$params = $this->build_bs_query( $args );
-			$response = $this->remote_request( 'search', $params );
-
-			if( is_wp_error( $response ) )
-			{
-				return $response;
-			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
-		}
-		
-		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( $transient ) );
+		return $this->search( $args );
 	}
 	
 	/** 
@@ -665,32 +638,13 @@ class BricksetAPIFunctions
 		// Is there a user?
 		if( empty( $user_id ) )
 			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
-			
-		// Is it a valid user_id?
-		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )
-			return $validate_user;
 		
 		$args['user_id'] = $user_id;
 		$args['owned'] = true;
 		
-		$transient = 'bs_owned'.$user_id;
-		
-		// Have we stored a transient?
-		if( false === get_transient( $transient ) )
-		{
-			$params = $this->build_bs_query( $args );
-			$response = $this->remote_request( 'search', $params );
-			
-			if( is_wp_error( $response ) )
-			{
-				return $response;
-			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
-		}
-		
-		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( $transient ) );
+		return $this->search( $args );
 	}
+	
 	
 	/** 
 	 *	Get Set Info by Theme
@@ -723,43 +677,11 @@ class BricksetAPIFunctions
 		if( empty( $theme ) )
 			return new WP_Error( 'no-theme', __( 'No theme requested.', 'bs_api' ) );
 		
-		// Is it a valid string	
-		if( is_wp_error( $validate_theme = $this->validate_theme_subtheme( $theme ) ) )	
-			return $validate_theme;
-			
+		$args['theme'] = $theme;
+		
 		$args = wp_parse_args( $args, $defaults );
-		
-		// Is it a valid user_id?
-		if( !empty( $args['user_id'] ) )
-		{
-			if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
-				return $validate_user;
-		}
-		
-		// Was a true or false passed for owned and wanted?
-		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
-			return $validate_owned_wanted;
-		
-		$args['theme'] = sanitize_text_field( strtolower( $theme ) );
-		$transient_theme = str_replace( " ", "", $args['theme'] );
-		
-		$transient = 'bs_sets_by_'.$transient_theme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
-		
-		// Have we stored a transient?
-		if( false === get_transient( $transient ) )
-		{
-			$params = $this->build_bs_query( $args );
-			$response = $this->remote_request( 'search', $params );
 
-			if( is_wp_error( $response ) )
-			{
-				return $response;
-			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
-		}
-		
-		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( $transient ) );
+		return $this->search( $args );
 	}
 	
 	/** 
@@ -793,43 +715,11 @@ class BricksetAPIFunctions
 		if( empty( $subtheme ) )
 			return new WP_Error( 'no-subtheme', __( 'No subtheme requested.', 'bs_api' ) );
 		
-		// Is it a valid string	
-		if( is_wp_error( $validate_subtheme = $this->validate_theme_subtheme( $subtheme ) ) )	
-			return $validate_subtheme;
+		$args['subtheme'] = $subtheme;
 		
 		$args = wp_parse_args( $args, $defaults );
-		
-		// Is it a valid user_id?
-		if( !empty( $args['user_id'] ) )
-		{
-			if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
-				return $validate_user;
-		}
-		
-		// Was a true or false passed for owned and wanted?
-		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
-			return $validate_owned_wanted;
-		
-		$args['subtheme'] = sanitize_text_field( strtolower( $subtheme ) );
-		$transient_subtheme = str_replace( " ", "", $args['subtheme'] );
-		
-		$transient = 'bs_sets_by_'.$transient_subtheme.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
-		
-		// Have we stored a transient?
-		if( false === get_transient( $transient ) )
-		{
-			$params = $this->build_bs_query( $args );
-			$response = $this->remote_request( 'search', $params );
 
-			if( is_wp_error( $response ) )
-			{
-				return $response;
-			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
-		}
-		
-		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( $transient ) );
+		return $this->search( $args );
 	}
 	
 	/** 
@@ -863,44 +753,11 @@ class BricksetAPIFunctions
 		if( empty( $year ) )
 			return new WP_Error( 'no-year', __( 'No year requested.', 'bs_api' ) );
 		
-		// Is it a valid year	
-		if( is_wp_error( $validate_year = $this->validate_year( $year ) ) )	
-			return $validate_year;
-		
-		$args = wp_parse_args( $args, $defaults );
-		
-		// Is it a valid user_id?
-		if( !empty( $args['user_id'] ) )
-		{
-			if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
-				return $validate_user;
-		}
-		
-		// Was a true or false passed for owned and wanted?
-		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
-			return $validate_owned_wanted;
-		
 		$args['year'] = $year;
 		
-		$transient_year = str_replace( ",", "", $args['year'] );
-		
-		$transient = 'bs_sets_by_year_'.$transient_year.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
-		
-		// Have we stored a transient?
-		if( false === get_transient( $transient ) )
-		{
-			$params = $this->build_bs_query( $args );
-			$response = $this->remote_request( 'search', $params );
+		$args = wp_parse_args( $args, $defaults );
 
-			if( is_wp_error( $response ) )
-			{
-				return $response;
-			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
-		}
-		
-		// Get it and return a SimpleXML object
-		return new SimpleXMLElement( get_transient( $transient ) );
+		return $this->search( $args );	
 	}
 	
 	/** 
@@ -974,10 +831,10 @@ class BricksetAPIFunctions
 		$args['query'] = strtolower( $args['query'] );
 
 		$transient_sets = str_replace( array( ',', '-' ), '', $args['set_number'] );
-		$transient_year = str_replace( ",", "", $args['year'] );
-		$transient_theme = str_replace( ",", "", $args['theme'] );
-		$transient_subtheme = str_replace( ",", "", $args['subtheme'] );
-		$transient_query = str_replace( array( ',', '-' ), '', $args['query'] );
+		$transient_year = str_replace( ",", '', $args['year'] );
+		$transient_theme = str_replace( array( ',', '-', " " ), '', $args['theme'] );
+		$transient_subtheme = str_replace( array( ',', '-', " " ), '', $args['subtheme'] );
+		$transient_query = str_replace( array( ',', '-', " " ), '', $args['query'] );
 
 		$transient = 'bs_search_'.$transient_theme.$transient_subtheme.$transient_sets.$transient_year.$transient_query.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
 
