@@ -17,7 +17,15 @@ class BricksetAPIFunctions
 	public function __construct()
 	{
 		$settings = (array) get_option( 'brickset-api-settings' );
-		$this->api_key = $settings['api_key'];
+		
+		if( isset( $settings['api_key'] ) )
+		{
+			$this->api_key = $settings['api_key'];
+		}
+		else
+		{
+			$this->api_key = '';
+		}
 		
 		add_filter ( 'http_request_timeout', array ( $this, 'http_request_timeout' ) );
 	}
