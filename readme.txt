@@ -14,6 +14,8 @@ Implementation of the Brickset Webservice. Includes methods to get LEGO® set an
 
 You can obtain an API key from [Brickset](http://brickset.com/contact/).
 
+The main development is all happeninig on [GitHub](https://github.com/NateJacobs/Brickset-API).
+
 = Oembed =
 You can paste a Brickset set or theme url into your post or page. Once you publish the post or page information about the set or theme will be displayed. Two example URLs are below.
 
