@@ -2,7 +2,7 @@
 
 /**
  *	Plugin Name: Brickset API
- *	Plugin URI: http://natejacobs.org
+ *	Plugin URI: https://github.com/NateJacobs/Brickset-API
  *	Description: Implementation of the Brickset Webservice. Includes methods to get set data from Brickset as well as pre-formated methods to display set data. This is not an official Brickset.com offering. For more information on the webservice please visit <a href="http://www.brickset.com/webservices/">Brickset.com</a>.
  *	Version: 1.0
  *	License: GPL V2
