@@ -10,11 +10,11 @@ Display your favorite LEGO® set information on your website using the Brickset 
 
 ## Description ##
 
-Implementation of the Brickset Webservice. Includes methods to get LEGO® set and theme data from Brickset as well as pre-formated methods to display set data. This is not an official Brickset.com offering. For more information on the webservice please visit http://www.brickset.com/webservices. LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this site.
-
-You can obtain an API key from [Brickset](http://brickset.com/contact/).
+This plugin is an implementation of the Brickset Webservice. It includes methods to get LEGO® set and theme data from Brickset as well as pre-formated methods to display set data. The set data requested is cached daily to reduce HTTP requests and page load time. Please visit [Brickset](http://brickset.com/ for more information on the [webservice](http://www.brickset.com/webservices). You can obtain an API key from [Brickset](http://brickset.com/contact/).
 
 The main development is all happeninig on [GitHub](https://github.com/NateJacobs/Brickset-API).
+
+This is not an official Brickset.com plugin. LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this plugin.
 
 ## Oembed ##
 You can paste a Brickset set or theme url into your post or page. Once you publish the post or page information about the set or theme will be displayed. Two example URLs are below.
