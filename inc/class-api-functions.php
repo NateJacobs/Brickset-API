@@ -864,7 +864,9 @@ class BricksetAPIFunctions
 	/** 
 	*	List Instructions
 	*
-	*	Retrieve instructions link by Brickset set ID
+	*	Retrieve instructions link by Brickset set ID.
+	*	Returns the instructionsData response
+	*	See webservice-definition.json for all the fields returned.
 	*
 	*	@author		Nate Jacobs
 	*	@date		3/22/13
