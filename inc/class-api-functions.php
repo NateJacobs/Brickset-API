@@ -868,9 +868,11 @@ class BricksetAPIFunctions
 	*
 	*	@author		Nate Jacobs
 	*	@date		3/22/13
-	*	@since		1.0
+	*	@since		1.1
 	*
-	*	@param		int	$set_id
+	*	@param		string	$set_id
+	*
+	*	@return		object 	$instructionData
 	*/
 	public function list_instructions( $set_id = '' )
 	{
@@ -888,6 +890,47 @@ class BricksetAPIFunctions
 		{
 			$params = 'setID='.$set_id;
 			$response = $this->remote_request( 'listInstructions', $params );
+
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( $transient, $response, DAY_IN_SECONDS );
+		}
+		
+		// Get it and return a SimpleXML object
+		return new SimpleXMLElement( get_transient( $transient ) );
+	}
+	
+	/** 
+	*	Get by Set ID
+	*
+	*	Retrieves a single set by Brickset internal set ID
+	*
+	*	@author		Nate Jacobs
+	*	@date		3/24/13
+	*	@since		1.1
+	*
+	*	@param		string	$set_id
+	*	
+	*	@return		object 	$setData
+	*/
+	public function get_by_set_id( $set_id )
+	{
+		// Is there a setID?
+		if( empty( $set_id ) )
+			return new WP_Error( 'no-set-id', __( 'No set ID requested.', 'bs_api' ) );
+		
+		if( false === is_numeric( $set_id ) )
+			return new WP_Error( 'set-id-not-valid', __( 'The set ID requested is not numeric.', 'bs_api' ) );
+			
+		$transient = 'bs_set_id_search_'.$set_id;
+		
+		// Have we stored a transient?
+		if( false === get_transient( $transient ) )
+		{
+			$params = 'setID='.$set_id;
+			$response = $this->remote_request( 'searchBySetID', $params );
 
 			if( is_wp_error( $response ) )
 			{
