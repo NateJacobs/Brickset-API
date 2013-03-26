@@ -16,17 +16,6 @@ class BricksetAPIFunctions
 	*/
 	public function __construct()
 	{
-		$settings = (array) get_option( 'brickset-api-settings' );
-		
-		if( isset( $settings['api_key'] ) )
-		{
-			$this->api_key = $settings['api_key'];
-		}
-		else
-		{
-			$this->api_key = '';
-		}
-		
 		add_filter ( 'http_request_timeout', array ( $this, 'http_request_timeout' ) );
 	}
 
@@ -98,253 +87,6 @@ class BricksetAPIFunctions
 	function http_request_timeout ( $seconds ) 
 	{
 		return $seconds < 10 ? 15 : $seconds;
-	}
-	
-	/** 
-	*	Get UserHash
-	*
-	*	Returns the Brickset userHash from user_meta
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/9/13
-	*	@since		1.0
-	*
-	*	@param		int	$user_id
-	*
-	*	@return		string	$user_hash
-	*/
-	protected function get_user_hash( $user_id )
-	{
-		return get_user_meta( $user_id, 'brickset_user_hash', true );
-	}
-	
-	/** 
-	*	Set Number Check
-	*
-	*	Checks if the set number passed has a variant, if not, one is added
-	*	The search query requires sets in the format of 9999-9
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/9/13
-	*	@since		1.0
-	*
-	*	@param		string	$set_number
-	*
-	*	@return		string	$set_number
-	*/
-	protected function set_number_check( $set_number )
-	{
-		// If no set is passed, get out
-		if( empty( $set_number ) )
-			return '';
-		
-		// Get set numbers into an array
-		$set_numbers = explode( ',', $set_number );
-
-		// Holding container
-		$sets = '';
-		
-		foreach( $set_numbers as $set )
-		{
-			$number_check = explode( '-', $set );
-			
-			if( !is_numeric( $number_check[0] ) )
-				return new WP_Error( 'invalid-set-number', __( 'One of the sets requested is not a number.', 'bs_api' ) );
-			
-			// No variant present, add the -1	
-			if( empty( $number_check[1] ) )
-			{
-				$sets .= $number_check[0].'-1,';
-			}
-			else
-			{
-				$sets .= $set.',';
-			}
-		}
-		// Get rid of the space between commas
-		return substr(str_replace(' ','',$sets), 0, -1);
-	}
-	
-	/** 
-	*	Build Brickset Query
-	*
-	*	Takes an array of search criteria and returns a urlencoded query string
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/22/13
-	*	@since		1.0
-	*
-	*	@param		array	$args
-	*
-	*	@return		array	$params
-	*/
-	private function build_bs_query( $args = '' )
-	{
-		$defaults = array(
-			'user_id'	=>	'',
-			'query'		=>	'',
-			'theme'		=>	'',
-			'subtheme'	=>	'',
-			'set_number'=>	'',
-			'year'		=>	'',
-			'owned'		=>	'',
-			'wanted'	=>	''
-		);
-				
-		$args = wp_parse_args( $args, $defaults );
-		
-		extract( $args, EXTR_SKIP );
-		
-		if( !isset( $this->api_key ) )
-		{
-			$settings = (array) get_option( 'brickset-api-settings' );
-			$this->api_key = $settings['api_key'];
-		}
-		
-		$params = build_query( 
-			urlencode_deep( 
-				array( 
-					'apiKey' 	=> 	$this->api_key,
-					'query'		=>	$query,
-					'theme'		=>	$theme,
-					'subtheme'	=>	$subtheme,
-					'setNumber'	=>	$set_number,
-					'year'		=>	$year,
-					'owned'		=>	$owned,
-					'wanted'	=>	$wanted
-				) 
-			)
-		);
-		
-		$params = str_replace( '%2C', ',', $params );
-		return $params.'&userHash='.$this->get_user_hash( $user_id );
-	}
-	
-	/** 
-	*	Validate User ID
-	*
-	*	Takes a user ID and determines if it is an integer and is a valid user in the site
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/22/13
-	*	@since		1.0
-	*
-	*	@param		int	$user_id
-	*
-	*	@return		object	WP_Error (if not a user or an int)
-	*	@return		bool	true (if a valid user and an int)
-	*/
-	private function validate_user( $user_id )
-	{
-		// Is it an integer?
-		if( !is_int( $user_id ) )
-		{
-			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
-		}
-		// Does the user_id specified exist on this site?
-		elseif( !get_user_by( 'id', $user_id ) )
-		{
-			return new WP_Error( 'not-valid-user', __( 'The user ID passed is not a valid user.', 'bs_api' ) );
-		}
-		else
-		{
-			return true;
-		}
-	}
-	
-	/** 
-	*	Validate Owned and Wanted
-	*
-	*	Determines if the owned and wanted passed values are true or false
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/22/13
-	*	@since		1.0
-	*
-	*	@param		bool	$owned
-	*	@param		bool	$wanted
-	*
-	*	@return		object	WP_Error
-	*/
-	private function validate_owned_wanted( $owned, $wanted )
-	{
-		if( !is_bool( $owned ) || !is_bool( $wanted ) )
-			return new WP_Error( 'no-boolean', __( 'Owned or wanted is not a true or false value.', 'bs_api' ) );
-	}
-	
-	/** 
-	*	Validate Theme or Subtheme
-	*
-	*	Checks and ensures the theme or subtheme passed is a valid string
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/22/13
-	*	@since		1.0
-	*
-	*	@param		string	$string
-	*
-	*	@return		object	WP_Error
-	*/
-	private function validate_theme_subtheme( $theme = '', $subtheme = '' )
-	{
-		if( !is_string( $theme ) || !is_string( $subtheme ) )
-			return new WP_Error( 'invalid-string', __( 'The theme or subtheme requested is not a valid string.', 'bs_api' ) );
-	}
-	
-	/** 
-	*	Validate Set ID
-	*
-	*	Ensures the string passed is numeric
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/24/13
-	*	@since		1.1
-	*
-	*	@param		string	$set_id
-	*
-	*	@return		object	WP_Error
-	*/
-	private function validate_set_id( $set_id )
-	{
-		if( false === is_numeric( $set_id ) )
-			return new WP_Error( 'set-id-not-valid', __( 'The set ID requested is not numeric.', 'bs_api' ) );
-	}
-	
-	/** 
-	*	Validate Year
-	*
-	*	Checks if the year passed as a string is a valid year
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/22/13
-	*	@since		1.0
-	*
-	*	@param		string|int	$year
-	*/
-	private function validate_year( $years )
-	{
-		//if( !is_numeric( $year ) || strlen( $year )!=4 )
-		//	return new WP_Error( 'invalid-year', __( 'The year requested is not a valid year.', 'bs_api' ) );
-		
-		// Get set numbers into an array
-		$years = explode( ',', $years );
-
-		// Holding container
-		$total_years = '';
-		
-		foreach( $years as $year )
-		{
-			if( !is_numeric( $year ) || strlen( $year )!=4 )
-				return new WP_Error( 'invalid-year', __( 'The year requested is not a valid year.', 'bs_api' ) );
-
-			// Check if year is between 1950 and current year +1
-			if( $year < '1950' || $year > date( 'Y', strtotime( '+1 year' ) ) )
-				return new WP_Error( 'year-out-range', __( 'The year is not in the accepted range, 1950 to year +1.', 'bs_api' ) );
-			
-			$total_years .= $year.',';
-		}
-		// Get rid of the space between commas
-		return substr(str_replace(' ','',$total_years), 0, -1);	
 	}
 	
 	/** 
@@ -437,7 +179,7 @@ class BricksetAPIFunctions
 	public function get_subthemes( $theme )
 	{
 		// Is it a valid string	
-		if( is_wp_error( $validate_theme = $this->validate_theme_subtheme( $theme ) ) )	
+		if( is_wp_error( $validate_theme = BrickSetAPIUtilities::validate_theme_subtheme( $theme ) ) )	
 			return $validate_theme;
 		
 		$theme = sanitize_text_field( strtolower( $theme ) );
@@ -450,7 +192,7 @@ class BricksetAPIFunctions
 		{
 			$args = array( 'theme' => $theme );
 			
-			$params = $this->build_bs_query( $args );
+			$params = BrickSetAPIUtilities::build_bs_query( $args );
 			$response = $this->remote_request( 'get', 'listSubthemes', $params );
 
 			if( is_wp_error( $response ) )
@@ -481,7 +223,7 @@ class BricksetAPIFunctions
 	public function get_theme_years( $theme )
 	{	
 		// Is it a valid string	
-		if( is_wp_error( $validate_theme = $this->validate_theme_subtheme( $theme ) ) )	
+		if( is_wp_error( $validate_theme = BrickSetAPIUtilities::validate_theme_subtheme( $theme ) ) )	
 			return $validate_theme;
 		
 		$theme = sanitize_text_field( strtolower( $theme ) );
@@ -494,7 +236,7 @@ class BricksetAPIFunctions
 		{
 			$args = array( 'theme' => $theme );
 
-			$params = $this->build_bs_query( $args );
+			$params = BrickSetAPIUtilities::build_bs_query( $args );
 			$response = $this->remote_request( 'get', 'listYears', $params );
 
 			if( is_wp_error( $response ) )
@@ -564,7 +306,7 @@ class BricksetAPIFunctions
 			return new WP_Error( 'not-a-date-format', __( 'The date is not formatted correctly.', 'bs_api' ) );
 		
 		// Is it a valid year	
-		if( is_wp_error( $validate_year = $this->validate_year( $exploded_date[2] ) ) )	
+		if( is_wp_error( $validate_year = BrickSetAPIUtilities::validate_year( $exploded_date[2] ) ) )	
 			return $validate_year;
 		
 		$transient_date = str_replace( '/', '', $date );
@@ -574,7 +316,7 @@ class BricksetAPIFunctions
 		// Have we stored a transient?
 		if( false === get_transient( $transient ) )
 		{
-			$params = 'apiKey='.$this->api_key.'&sinceDate='.$date;
+			$params = 'apiKey='.BrickSetAPIUtilities::get_api_key().'&sinceDate='.$date;
 			$response = $this->remote_request( 'get', 'updatedSince', $params );
 
 			if( is_wp_error( $response ) )
@@ -619,7 +361,7 @@ class BricksetAPIFunctions
 			return new WP_Error( 'no-set-number', __( 'No set number requested.', 'bs_api' ) );
 		
 		// Check on the number for variants
-		if( is_wp_error( $sets = $this->set_number_check( $number ) ) )
+		if( is_wp_error( $sets = BrickSetAPIUtilities::validate_set_number( $number ) ) )
 			return $sets;
 		
 		$args['set_number'] = $sets;
@@ -799,100 +541,7 @@ class BricksetAPIFunctions
 	}
 	
 	/** 
-	 *	Search the Brickset DB with a given set of criteria
-	 *
-	 *	Provides method for searching Brickset's set database
-	 *	Returns the setData response
-	 *	See webservice-definition.json for all the fields returned.
-	 *
-	 *	@author		Nate Jacobs
-	 *	@since		0.1
-	 */
-	public function search( $args = '' )
-	{
-		$defaults = array(
-			'theme' 	=> '',
-			'subtheme' 	=> '',
-			'set_number'=> '',
-			'year' 		=> '',
-			'owned' 	=> false,
-			'wanted' 	=> false,
-			'query' 	=> '',
-			'user_id' 	=> ''
-		);
-		
-		// Is there any criteria to search?
-		if( empty( $args ) )
-			return new WP_Error( 'no-search-criteria', __( 'No search criteria specified.', 'bs_api' ) );
-		
-		$args = wp_parse_args( $args, $defaults );
-		
-		// Is it a valid year	
-		if( !empty( $args['year'] ) )
-		{
-			if( is_wp_error( $validate_year = $this->validate_year( $args['year'] ) ) )	
-				return $validate_year;
-		}
-		
-		// Is it a valid user_id?
-		if( !empty( $args['user_id'] ) )
-		{
-			if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
-				return $validate_user;
-		}
-		
-		// Is it a valid string
-		if( !empty( $args['theme'] ) || !empty( $args['subtheme'] ) )
-		{	
-			if( is_wp_error( $validate_string = $this->validate_theme_subtheme( $args['theme'], $args['subtheme'] ) ) )	
-				return $validate_string;
-		}
-		
-		// Is it a valid string?
-		if( !empty( $args['query'] ) )
-		{
-			if( !is_string( $args['query'] ) )
-				return new WP_Error( 'not-valid-query', __( 'The query requested is not a valid string.', 'bs_api' ) );
-		}
-		
-		// Was a true or false passed for owned and wanted?
-		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
-			return $validate_owned_wanted;
-		
-		if( is_wp_error( $sets = $this->set_number_check( $args['set_number'] ) ) )
-			return $sets;
-			
-		$args['set_number'] = $sets;
-
-		$args['theme'] = strtolower( $args['theme'] );
-		$args['subtheme'] = strtolower( $args['subtheme'] );
-		$args['query'] = strtolower( $args['query'] );
-
-		$transient_sets = str_replace( array( ',', '-' ), '', $args['set_number'] );
-		$transient_year = str_replace( ",", '', $args['year'] );
-		$transient_theme = str_replace( array( ',', '-', " " ), '', $args['theme'] );
-		$transient_subtheme = str_replace( array( ',', '-', " " ), '', $args['subtheme'] );
-		$transient_query = str_replace( array( ',', '-', " " ), '', $args['query'] );
-
-		$transient = 'bs_search_'.$transient_theme.$transient_subtheme.$transient_sets.$transient_year.$transient_query.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
-
-		if( false === get_transient( $transient ) )
-		{
-			$params = $this->build_bs_query( $args );
-			$response = $this->remote_request( 'get', 'search', $params );
-
-			if( is_wp_error( $response ) )
-			{
-				return $response;
-			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
-		}
-
-		return new SimpleXMLElement( get_transient( $transient ) );
-	}
-	
-	/** 
-	*	List Instructions
+	*	Get Instructions
 	*
 	*	Retrieve instructions link by Brickset set ID.
 	*	Returns the instructionsData response
@@ -906,14 +555,14 @@ class BricksetAPIFunctions
 	*
 	*	@return		object 	$instructionData
 	*/
-	public function list_instructions( $set_id = '' )
+	public function get_instructions( $set_id = '' )
 	{
 		// Is there a setID?
 		if( empty( $set_id ) )
 			return new WP_Error( 'no-set-id', __( 'No set ID requested.', 'bs_api' ) );
 		
 		// Is the string numeric
-		if( is_wp_error( $validate_set_id = $this->validate_set_id( $set_id ) ) )	
+		if( is_wp_error( $validate_set_id = BrickSetAPIUtilities::validate_set_id( $set_id ) ) )	
 			return $validate_set_id;
 		
 		$transient = 'bs_instructions'.$set_id;
@@ -957,7 +606,7 @@ class BricksetAPIFunctions
 			return new WP_Error( 'no-set-id', __( 'No set ID requested.', 'bs_api' ) );
 		
 		// Is the string numeric
-		if( is_wp_error( $validate_set_id = $this->validate_set_id( $set_id ) ) )	
+		if( is_wp_error( $validate_set_id = BrickSetAPIUtilities::validate_set_id( $set_id ) ) )	
 			return $validate_set_id;
 			
 		$transient = 'bs_set_id_search_'.$set_id;
@@ -976,6 +625,99 @@ class BricksetAPIFunctions
 		}
 		
 		// Get it and return a SimpleXML object
+		return new SimpleXMLElement( get_transient( $transient ) );
+	}
+	
+	/** 
+	 *	Search the Brickset DB with a given set of criteria
+	 *
+	 *	Provides method for searching Brickset's set database
+	 *	Returns the setData response
+	 *	See webservice-definition.json for all the fields returned.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@since		0.1
+	 */
+	public function search( $args = '' )
+	{
+		$defaults = array(
+			'theme' 	=> '',
+			'subtheme' 	=> '',
+			'set_number'=> '',
+			'year' 		=> '',
+			'owned' 	=> false,
+			'wanted' 	=> false,
+			'query' 	=> '',
+			'user_id' 	=> ''
+		);
+		
+		// Is there any criteria to search?
+		if( empty( $args ) )
+			return new WP_Error( 'no-search-criteria', __( 'No search criteria specified.', 'bs_api' ) );
+		
+		$args = wp_parse_args( $args, $defaults );
+		
+		// Is it a valid year	
+		if( !empty( $args['year'] ) )
+		{
+			if( is_wp_error( $validate_year = BrickSetAPIUtilities::validate_year( $args['year'] ) ) )	
+				return $validate_year;
+		}
+		
+		// Is it a valid user_id?
+		if( !empty( $args['user_id'] ) )
+		{
+			if( is_wp_error( $validate_user = BrickSetAPIUtilities::validate_user( $args['user_id'] ) ) )
+				return $validate_user;
+		}
+		
+		// Is it a valid string
+		if( !empty( $args['theme'] ) || !empty( $args['subtheme'] ) )
+		{	
+			if( is_wp_error( $validate_string = BrickSetAPIUtilities::validate_theme_subtheme( $args['theme'], $args['subtheme'] ) ) )	
+				return $validate_string;
+		}
+		
+		// Is it a valid string?
+		if( !empty( $args['query'] ) )
+		{
+			if( !is_string( $args['query'] ) )
+				return new WP_Error( 'not-valid-query', __( 'The query requested is not a valid string.', 'bs_api' ) );
+		}
+		
+		// Was a true or false passed for owned and wanted?
+		if( is_wp_error( $validate_owned_wanted = BrickSetAPIUtilities::validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
+			return $validate_owned_wanted;
+		
+		if( is_wp_error( $sets = BrickSetAPIUtilities::validate_set_number( $args['set_number'] ) ) )
+			return $sets;
+			
+		$args['set_number'] = $sets;
+
+		$args['theme'] = strtolower( $args['theme'] );
+		$args['subtheme'] = strtolower( $args['subtheme'] );
+		$args['query'] = strtolower( $args['query'] );
+
+		$transient_sets = str_replace( array( ',', '-' ), '', $args['set_number'] );
+		$transient_year = str_replace( ",", '', $args['year'] );
+		$transient_theme = str_replace( array( ',', '-', " " ), '', $args['theme'] );
+		$transient_subtheme = str_replace( array( ',', '-', " " ), '', $args['subtheme'] );
+		$transient_query = str_replace( array( ',', '-', " " ), '', $args['query'] );
+
+		$transient = 'bs_search_'.$transient_theme.$transient_subtheme.$transient_sets.$transient_year.$transient_query.'_user-'.$args['user_id'].'_want-'.$args['wanted'].'_own-'.$args['owned'];
+
+		if( false === get_transient( $transient ) )
+		{
+			$params = BrickSetAPIUtilities::build_bs_query( $args );
+			$response = $this->remote_request( 'get', 'search', $params );
+
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( $transient, $response, DAY_IN_SECONDS );
+		}
+
 		return new SimpleXMLElement( get_transient( $transient ) );
 	}
 }
