@@ -978,47 +978,4 @@ class BricksetAPIFunctions
 		// Get it and return a SimpleXML object
 		return new SimpleXMLElement( get_transient( $transient ) );
 	}
-	
-	/** 
-	*	Update Set Quantity Owned
-	*
-	*	
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/24/13
-	*	@since		1.1
-	*
-	*	@param		string	$set_id
-	*/
-	public function update_set_quantity_owned( $set_id, $user_id, $quantity = '' )
-	{
-		// Is there a setID?
-		if( empty( $set_id ) )
-			return new WP_Error( 'no-set-id', __( 'No set ID requested.', 'bs_api' ) );
-		
-		// Is the string numeric
-		if( is_wp_error( $validate_set_id = $this->validate_set_id( $set_id ) ) )	
-			return $validate_set_id;
-		
-		// Is there a user?
-		if( empty( $user_id ) )
-			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
-			
-		// Is it a valid user_id?
-		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )
-			return $validate_user;
-		
-		// Is there a user?
-		if( empty( $quantity ) )
-			return new WP_Error( 'no-quantity-specified', __( 'No quantity specified.', 'bs_api' ) );
-		
-		$params = array( 'body' => array( 'userHash' => $this->get_user_hash( $user_id ), 'setID' => $set_id, 'qty' => $quantity ) );
-		
-		$response = $this->remote_request( 'post', 'updateQtyOwned', $params );
-		
-		$response = (array) simplexml_load_string( $response );
-
-		if( $response[0] === '1' )
-			return "The set quantity was updated";
-	}
 }
