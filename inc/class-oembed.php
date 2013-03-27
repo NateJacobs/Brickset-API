@@ -11,7 +11,7 @@
 *	@date		3/9/13
 *	@since		1.0
 */
-class BricksetOembed extends BricksetAPIFunctions
+class BricksetOembed extends BricksetAPISearch
 {
 	/** 
 	*	Construct Method
