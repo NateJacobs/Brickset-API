@@ -27,6 +27,7 @@ class BricksetAPILoad
 		add_action( 'plugins_loaded', array( $this, 'constants' ), 2 );
 		add_action( 'plugins_loaded', array( $this, 'includes' ), 3 );
 		add_action( 'plugins_loaded', array( $this, 'admin' ), 4 );
+		add_filter ( 'http_request_timeout', array ( $this, 'http_request_timeout' ) );
 	}
 	
 	/** 
@@ -56,11 +57,13 @@ class BricksetAPILoad
 	 */
 	public function includes()
 	{
-		require_once( BRICKSET_API_INCLUDES . 'class-api-functions.php' );
+		require_once( BRICKSET_API_INCLUDES . 'class-search-functions.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-oembed.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-widgets.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-template-tags.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-shortcodes.php' );
+		require_once( BRICKSET_API_INCLUDES . 'class-update-functions.php' );
+		require_once( BRICKSET_API_INCLUDES . 'class-utilities.php' );
 	}
 	
 	/** 
@@ -90,6 +93,22 @@ class BricksetAPILoad
 	 */
 	public function localization() {
   		load_plugin_textdomain( 'bs_api', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' ); 
+	}
+	
+	/** 
+	*	HTTP Request Timeout
+	*
+	*	Sometimes requests take longer than 5 seconds
+	*
+	*	@author		Nate Jacobs
+	*	@date		3/13/13
+	*	@since		1.0
+	*
+	*	@param		int	$seconds
+	*/
+	function http_request_timeout ( $seconds ) 
+	{
+		return $seconds < 10 ? 15 : $seconds;
 	}
 }
 
