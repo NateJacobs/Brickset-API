@@ -39,7 +39,7 @@ This example shows how to get the data about a specific set.
 
 1. Instantiate the class.
 ```
-$brickset = new BricksetAPIFunctions;
+$brickset = new BricksetAPISearch();
 ```
 
 2. Pass a set number to the get_by_number method.
@@ -48,8 +48,8 @@ $set_data = $brickset->get_by_number( '8014' );
 ```
 3. Test for an error
 ```
-if( is_wp_error( $brickset ) {
-	echo $brickset->get_error_message;
+if( is_wp_error( $set_data ) {
+	echo $set_data->get_error_message;
 }
 ```
 
@@ -62,8 +62,7 @@ else {
 
 ## Road Map ##
 1. Template tags to display sets specific to a user.
-2. Allow users to update owned or wanted sets.
-3. Allow users to manage minifig collection.
+2. Allow admins to set which currency to show on set listing in template tags
 
 ## Installation ##
 
@@ -92,6 +91,13 @@ To display more than twenty sets from a search query an API key is required. You
 
 
 ## Changelog ##
+
+### Version 1.1 ###
+*	Add ability to update wanted and owned sets
+*	Add ability to update the quantity owned of a set
+*	Add ability to search a user's minifig collections
+*	Add ability to update wanted and owned minifigs
+*	Updated class name - BricksetAPIFunctions became BricksetAPISearch
 
 ### Version 1.0 ###
 *	Enter your Brickset API from the settings submenu.
