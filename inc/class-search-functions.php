@@ -1,12 +1,11 @@
 <?php
 
-class BricksetAPIFunctions
+class BricksetAPISearch
 {	
 	/** 
 	*	Construct
 	*
 	*	Start things off when class is instantiated
-	*	Get the API Key from the options table
 	*
 	*	@author		Nate Jacobs
 	*	@date		2/22/13
@@ -16,7 +15,7 @@ class BricksetAPIFunctions
 	*/
 	public function __construct()
 	{
-		add_filter ( 'http_request_timeout', array ( $this, 'http_request_timeout' ) );
+		
 	}
 
 	/** 
@@ -48,7 +47,7 @@ class BricksetAPIFunctions
 		}
 		else
 		{
-			// do nothing
+			return new WP_Error( 'no-type-specified', __( 'Specify a type of request: get or post', 'bs_api') );
 		}
 
 		$response_code = wp_remote_retrieve_response_code( $response );
@@ -71,22 +70,6 @@ class BricksetAPIFunctions
 		{
 			return $response_body;
 		}
-	}
-	
-	/** 
-	*	HTTP Request Timeout
-	*
-	*	Sometimes requests take longer than 5 seconds
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/13/13
-	*	@since		1.0
-	*
-	*	@param		int	$seconds
-	*/
-	function http_request_timeout ( $seconds ) 
-	{
-		return $seconds < 10 ? 15 : $seconds;
 	}
 	
 	/** 
