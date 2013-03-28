@@ -1,6 +1,6 @@
 <?php
 
-class BrickSetAPIUtilities
+class BricksetAPIUtilities
 {
 	public function get_api_key()
 	{
@@ -138,20 +138,17 @@ class BrickSetAPIUtilities
 	*/
 	public function validate_user( $user_id )
 	{
+		// Is there a user?
+		if( empty( $user_id ) )
+			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
+			
 		// Is it an integer?
 		if( !is_int( $user_id ) )
-		{
 			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
-		}
+		
 		// Does the user_id specified exist on this site?
-		elseif( !get_user_by( 'id', $user_id ) )
-		{
+		if( !get_user_by( 'id', $user_id ) )
 			return new WP_Error( 'not-valid-user', __( 'The user ID passed is not a valid user.', 'bs_api' ) );
-		}
-		else
-		{
-			return true;
-		}
 	}
 	
 	/** 
@@ -168,10 +165,13 @@ class BrickSetAPIUtilities
 	*
 	*	@return		object	WP_Error
 	*/
-	public function validate_owned_wanted( $owned = '', $wanted = '' )
+	public function validate_owned_wanted( $owned = false, $wanted = false )
 	{
-		if( !is_bool( $owned ) || !is_bool( $wanted ) )
-			return new WP_Error( 'no-boolean', __( 'Owned or wanted is not a true or false value.', 'bs_api' ) );
+		if( !is_bool( $owned ) )
+			return new WP_Error( 'no-boolean', __( 'Owned is not a true or false value.', 'bs_api' ) );
+			
+		if( !is_bool( $wanted ) )
+			return new WP_Error( 'no-boolean', __( 'Wanted is not a true or false value.', 'bs_api' ) );
 	}
 	
 	/** 
@@ -196,7 +196,7 @@ class BrickSetAPIUtilities
 	/** 
 	*	Validate Set ID
 	*
-	*	Ensures the string passed is numeric
+	*	Ensures the string passed is numeric and is not empty
 	*
 	*	@author		Nate Jacobs
 	*	@date		3/24/13
@@ -206,8 +206,13 @@ class BrickSetAPIUtilities
 	*
 	*	@return		object	WP_Error
 	*/
-	private function validate_set_id( $set_id )
+	public function validate_set_id( $set_id )
 	{
+		// Is there a setID?
+		if( empty( $set_id ) )
+			return new WP_Error( 'no-set-id', __( 'No set ID requested.', 'bs_api' ) );
+		
+		// Is the string numeric	
 		if( false === is_numeric( $set_id ) )
 			return new WP_Error( 'set-id-not-valid', __( 'The set ID requested is not numeric.', 'bs_api' ) );
 	}
