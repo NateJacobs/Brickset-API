@@ -117,3 +117,5 @@ To display more than twenty sets from a search query an API key is required. You
 
 ### Version 0.1 ###
 *	Initial plugin.
+
+License [GPLv2 or later]((http://www.gnu.org/licenses/gpl-2.0.html)
