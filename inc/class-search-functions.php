@@ -36,9 +36,10 @@ class BricksetAPISearch
 	protected function remote_request( $type, $extra_url, $params = '' )
 	{
 		$api_url = 'http://www.brickset.com/webservices/brickset.asmx';	
-//wp_die( $api_url.'/'.$extra_url.'?'.$params );
+
 		if( 'get' == $type )
 		{
+//wp_die( $api_url.'/'.$extra_url.'?'.$params );
 			$response = wp_remote_get( $api_url.'/'.$extra_url.'?'.$params );
 		}
 		elseif( 'post' == $type )
@@ -49,7 +50,11 @@ class BricksetAPISearch
 		{
 			return new WP_Error( 'no-type-specified', __( 'Specify a type of request: get or post', 'bs_api') );
 		}
-
+		
+		// Did the HTTP request fail?
+		if( is_wp_error( $response ) )
+			return $response;
+		
 		$response_code = wp_remote_retrieve_response_code( $response );
 		$response_message = wp_remote_retrieve_response_message( $response );
 		$response_body = wp_remote_retrieve_body( $response );
@@ -702,5 +707,87 @@ class BricksetAPISearch
 		}
 
 		return new SimpleXMLElement( get_transient( $transient ) );
+	}
+	
+	/** 
+	*	Get Minifig Collection
+	*
+	*	Retrieve a list of all minifigs owned or wanted by a user that optionally match a query. 
+	*	Leave owned and wanted blank to retrieve those owned and wanted, or set one of them to '1' to get just owned or just wanted. 
+	*	Query can be a complete minifig number (e.g. 'hp001'), or just a prefix (e.g. 'hp'). Leave blank to retrieve all.
+	*	Returns the minifigCollectionData response
+	*	See webservice-definition.json for all the fields returned.
+	*
+	*	@author		Nate Jacobs
+	*	@date		3/28/13
+	*	@since		1.1
+	*
+	*	@param		
+	*/
+	public function get_minifig_collection( $user_id, $args = '' )
+	{
+		$defaults = array(
+			'query' 	=> '',
+			'owned' 	=> '',
+			'wanted' 	=> ''
+		);
+		
+		if( empty( $args ) )
+			return new WP_Error( 'missing-arguments', __( 'You must include at least one of the following: query, owned, or wanted.', 'bs_api' ) );
+		
+		$args = wp_parse_args( $args, $defaults );
+		
+		// Is it a valid user?
+		if( is_wp_error( $validate_user = BricksetAPIUtilities::validate_user( $user_id ) ) )	
+			return $validate_user;
+		
+		// Is it a valid string?
+		if( !empty( $args['query'] ) )
+		{
+			if( !is_string( $args['query'] ) )
+				return new WP_Error( 'not-valid-query', __( 'The query requested is not a valid string.', 'bs_api' ) );
+		}
+		
+		// Was a true or false passed for owned?
+		if( !empty( $args['owned'] ) )
+		{
+			if( is_wp_error( $validate_owned = BrickSetAPIUtilities::validate_owned_wanted( $args['owned'] ) ) )
+				return $validate_owned;
+		}
+		
+		// Was a true or false passed for wanted?
+		if( !empty( $args['wanted'] ) )
+		{
+			if( is_wp_error( $validate_wanted = BrickSetAPIUtilities::validate_owned_wanted( $args['wanted'] ) ) )
+				return $validate_wanted;
+		}
+		
+		$args['query'] = strtolower( $args['query'] );
+			
+		$transient_query = str_replace( array( ',', '-', " " ), '', $args['query'] );
+
+		$transient = 'bs_minifig_'.$transient_query.'_user-'.$user_id.'_want-'.$args['wanted'].'_own-'.$args['owned'];
+
+		if( false === get_transient( $transient ) )
+		{
+			$params = array( 
+				'body' => array( 
+					'userHash' => BrickSetAPIUtilities::get_user_hash( $user_id ), 
+					'query' => sanitize_text_field( $args['query'] ), 
+					'owned' => $args['owned'], 
+					'wanted' => $args['wanted'] 
+				)
+			);
+			
+			$response = $this->remote_request( 'post', 'searchMinifigCollection', $params );
+
+			if( is_wp_error( $response ) )
+			{
+				return $response;
+			}
+			set_transient( $transient, $response, DAY_IN_SECONDS );
+		}
+
+		return new SimpleXMLElement( get_transient( $transient ) );		
 	}
 }
