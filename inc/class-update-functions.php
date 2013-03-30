@@ -136,7 +136,7 @@ class BricksetAPIUpdate extends BricksetAPIUtilities
 			return $validate_set_id;
 		
 		// Is a quantity value present?
-		if( empty( $quantity ) )
+		if( !isset( $quantity ) )
 			return new WP_Error( 'no-quantity-specified', __( 'No quantity specified.', 'bs_api' ) );
 		
 		// Is quantity an integer?
@@ -227,7 +227,7 @@ class BricksetAPIUpdate extends BricksetAPIUtilities
 			return $validate_user;
 		
 		// Is a quantity value present?
-		if( empty( $quantity ) )
+		if( !isset( $quantity ) )
 			return new WP_Error( 'no-quantity-specified', __( 'No quantity specified.', 'bs_api' ) );
 		
 		 // Is quantity an integer?
