@@ -83,7 +83,7 @@ class BricksetThemeWidget extends WP_Widget
 		if ( $title )
 			echo $before_title . $title . $after_title;
 		//call functions class and use get method to retrieve list of themes
-		$brickset = new BricksetAPIFunctions;
+		$brickset = new BricksetAPISearch;
 		$themes = $brickset->get_themes();
 		
 		// check for errors
