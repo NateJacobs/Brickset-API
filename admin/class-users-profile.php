@@ -10,7 +10,7 @@
 *	@date		2/2/13
 *	@since		1.0
 */
-class BricksetAPIUserProfile extends BricksetAPIFunctions
+class BricksetAPIUserProfile extends BricksetAPIUtilities
 {
 	/** 
 	*	Construct Method
@@ -45,7 +45,7 @@ class BricksetAPIUserProfile extends BricksetAPIFunctions
 	*/
 	public function add_user_profile_fields( $user)
 	{
-		$user_hash = parent::get_user_hash( $user->ID );
+		$user_hash = $this->get_user_hash( $user->ID );
 		?>
 		<h3><?php _e( 'Brickset Login Information', 'bs_api' ); ?></h3>
 		<span><?php _e( 'If the Brickset Identifier is filled you do not need to add your username and password unless you have changed your password on Brickset.', 'bs_api' ); ?></span>
@@ -80,7 +80,7 @@ class BricksetAPIUserProfile extends BricksetAPIFunctions
 	*/
 	public function set_brickset_user_hash( $user_id )
 	{
-		$response = parent::brickset_login( $user_id, $_POST['bs_user_name'], $_POST['bs_password'] );
+		$response = $this->brickset_login( $user_id, $_POST['bs_user_name'], $_POST['bs_password'] );
 		
 		if( is_wp_error( $response ) )
 		{

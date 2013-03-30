@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bs_api\n"
-"POT-Creation-Date: 2013-03-09 15:14-0700\n"
-"PO-Revision-Date: 2013-03-09 15:28-0700\n"
+"POT-Creation-Date: 2013-03-29 18:03-0700\n"
+"PO-Revision-Date: 2013-03-29 18:04-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -14,3 +14,237 @@ msgstr ""
 "X-Poedit-SearchPath-0: admin\n"
 "X-Poedit-SearchPath-1: inc\n"
 "X-Poedit-SearchPath-2: .\n"
+
+#: admin/class-settings-page.php:27 admin/class-settings-page.php:51
+msgid "Brickset API Settings"
+msgstr ""
+
+#: admin/class-settings-page.php:28
+msgid "Brickset API"
+msgstr ""
+
+#: admin/class-settings-page.php:77
+msgid "API Key"
+msgstr ""
+
+#: admin/class-settings-page.php:83
+msgid "Enter your API Key"
+msgstr ""
+
+#: admin/class-settings-page.php:108
+msgid "You may obtain a key at "
+msgstr ""
+
+#: admin/class-users-profile.php:50
+msgid "Brickset Login Information"
+msgstr ""
+
+#: admin/class-users-profile.php:51
+msgid ""
+"If the Brickset Identifier is filled you do not need to add your username "
+"and password unless you have changed your password on Brickset."
+msgstr ""
+
+#: admin/class-users-profile.php:54
+msgid "Brickset Username"
+msgstr ""
+
+#: admin/class-users-profile.php:58
+msgid "Brickset Password"
+msgstr ""
+
+#: admin/class-users-profile.php:62
+msgid "Brickset Identifier"
+msgstr ""
+
+#: inc/class-oembed.php:212 inc/class-oembed.php:265
+#: inc/class-shortcodes.php:54 inc/class-template-tags.php:153
+#: inc/class-template-tags.php:192
+msgid "Set Name"
+msgstr ""
+
+#: inc/class-oembed.php:213 inc/class-oembed.php:265
+#: inc/class-shortcodes.php:55 inc/class-template-tags.php:153
+#: inc/class-template-tags.php:193
+msgid "Set Number"
+msgstr ""
+
+#: inc/class-oembed.php:214 inc/class-oembed.php:265
+#: inc/class-shortcodes.php:56 inc/class-template-tags.php:89
+#: inc/class-template-tags.php:194
+msgid "Year"
+msgstr ""
+
+#: inc/class-oembed.php:215 inc/class-shortcodes.php:57
+#: inc/class-template-tags.php:195
+msgid "Theme"
+msgstr ""
+
+#: inc/class-oembed.php:216 inc/class-shortcodes.php:58
+#: inc/class-template-tags.php:53 inc/class-template-tags.php:196
+msgid "Subtheme"
+msgstr ""
+
+#: inc/class-oembed.php:217 inc/class-shortcodes.php:59
+#: inc/class-template-tags.php:197
+msgid "US Retail Price"
+msgstr ""
+
+#: inc/class-oembed.php:218 inc/class-oembed.php:265
+#: inc/class-shortcodes.php:60 inc/class-template-tags.php:198
+msgid "Pieces"
+msgstr ""
+
+#: inc/class-oembed.php:219 inc/class-shortcodes.php:61
+#: inc/class-template-tags.php:199
+msgid "Minifigs"
+msgstr ""
+
+#: inc/class-oembed.php:220 inc/class-shortcodes.php:62
+msgid "Set Guide"
+msgstr ""
+
+#: inc/class-oembed.php:221 inc/class-shortcodes.php:63
+msgid "BrickLink"
+msgstr ""
+
+#: inc/class-oembed.php:265 inc/class-template-tags.php:153
+msgid "Image"
+msgstr ""
+
+#: inc/class-search-functions.php:195
+msgid "The date is not formatted correctly."
+msgstr ""
+
+#: inc/class-search-functions.php:250
+msgid "No set number requested."
+msgstr ""
+
+#: inc/class-search-functions.php:282 inc/class-search-functions.php:309
+#: inc/class-utilities.php:243 inc/class-utilities.php:247
+msgid "No user specified."
+msgstr ""
+
+#: inc/class-search-functions.php:347
+msgid "No theme requested."
+msgstr ""
+
+#: inc/class-search-functions.php:385
+msgid "No subtheme requested."
+msgstr ""
+
+#: inc/class-search-functions.php:423
+msgid "No year requested."
+msgstr ""
+
+#: inc/class-search-functions.php:451 inc/class-search-functions.php:495
+#: inc/class-utilities.php:318
+msgid "No set ID requested."
+msgstr ""
+
+#: inc/class-search-functions.php:545
+msgid "No search criteria specified."
+msgstr ""
+
+#: inc/class-search-functions.php:574 inc/class-search-functions.php:649
+msgid "The query requested is not a valid string."
+msgstr ""
+
+#: inc/class-search-functions.php:637
+msgid ""
+"You must include at least one of the following: query, owned, or wanted."
+msgstr ""
+
+#: inc/class-template-tags.php:53 inc/class-template-tags.php:89
+msgid "Set Count"
+msgstr ""
+
+#: inc/class-template-tags.php:53
+msgid "First Year"
+msgstr ""
+
+#: inc/class-template-tags.php:53
+msgid "Last Year"
+msgstr ""
+
+#: inc/class-template-tags.php:122
+msgid "Popular Searches on Brickset"
+msgstr ""
+
+#: inc/class-update-functions.php:140 inc/class-update-functions.php:231
+msgid "No quantity specified."
+msgstr ""
+
+#: inc/class-update-functions.php:144 inc/class-update-functions.php:235
+msgid "The quantity is not an integer."
+msgstr ""
+
+#: inc/class-update-functions.php:223 inc/class-update-functions.php:273
+msgid "No minifig number specified."
+msgstr ""
+
+#: inc/class-utilities.php:35
+msgid "Specify a type of request: get or post"
+msgstr ""
+
+#: inc/class-utilities.php:48
+msgid "Don't Panic! Something went wrong and Brickset didn't reply."
+msgstr ""
+
+#: inc/class-utilities.php:52
+msgid "Unknown error occurred"
+msgstr ""
+
+#: inc/class-utilities.php:56
+msgid "Sorry, no sets were found for that query"
+msgstr ""
+
+#: inc/class-utilities.php:209
+msgid "One of the sets requested is not a number."
+msgstr ""
+
+#: inc/class-utilities.php:251
+msgid "The user ID passed is not a valid user."
+msgstr ""
+
+#: inc/class-utilities.php:256
+msgid "The user ID passed does not have a Brickset API identifier on file."
+msgstr ""
+
+#: inc/class-utilities.php:276
+msgid "Owned is not a true or false value."
+msgstr ""
+
+#: inc/class-utilities.php:279
+msgid "Wanted is not a true or false value."
+msgstr ""
+
+#: inc/class-utilities.php:298
+msgid "The theme or subtheme requested is not a valid string."
+msgstr ""
+
+#: inc/class-utilities.php:322
+msgid "The set ID requested is not numeric."
+msgstr ""
+
+#: inc/class-utilities.php:347
+msgid "The year requested is not a valid year."
+msgstr ""
+
+#: inc/class-utilities.php:351
+msgid "The year is not in the accepted range, 1950 to year +1."
+msgstr ""
+
+#: inc/class-widgets.php:28
+msgid ""
+"A listing of all themes from Brickset sorted alphabetically with links to "
+"the theme pages on brickset.com."
+msgstr ""
+
+#: inc/class-widgets.php:29 inc/class-widgets.php:44
+msgid "Brickset Themes"
+msgstr ""
+
+#: inc/class-widgets.php:48
+msgid "Title"
+msgstr ""

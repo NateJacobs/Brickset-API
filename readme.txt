@@ -4,17 +4,19 @@ Contributors: NateJacobs
 Tags: brickset, lego, brick
 Requires at least: 3.5
 Tested up to: 3.5.1
-Stable tag: 1.0
+Stable tag: 1.1
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Display your favorite LEGO® set information on your website using the Brickset API. 
 
 == Description ==
 
-Implementation of the Brickset Webservice. Includes methods to get LEGO® set and theme data from Brickset as well as pre-formated methods to display set data. This is not an official Brickset.com offering. For more information on the webservice please visit http://www.brickset.com/webservices. LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this site.
+This plugin is an implementation of the Brickset Webservice. It includes methods to get LEGO® set and theme data from Brickset as well as pre-formated methods to display set data. The set data requested is cached daily to reduce HTTP requests and page load time. Please visit [Brickset](http://brickset.com/ for more information on the [webservice](http://www.brickset.com/webservices). You can obtain an API key from [Brickset](http://brickset.com/contact/).
 
-You can obtain an API key from [Brickset](http://brickset.com/contact/).
+The main development is all happening on [GitHub](https://github.com/NateJacobs/Brickset-API).
 
-The main development is all happeninig on [GitHub](https://github.com/NateJacobs/Brickset-API).
+This is not an official Brickset.com plugin. LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this plugin.
 
 = Oembed =
 You can paste a Brickset set or theme url into your post or page. Once you publish the post or page information about the set or theme will be displayed. Two example URLs are below.
@@ -41,11 +43,11 @@ The plugin has a shortcode you may use in your posts and pages to display inform
 The plugin has one widget you can activate to display a list of all themes on Brickset with a link to browse each theme on Brickset.com
 
 = Advanced Use =
-This example shows how to get the data about a specific set.
+This example shows how to get the data about a specific set. You can find the developer docs [here](https://github.com/NateJacobs/Brickset-API/wiki).
 
 1. Instantiate the class.
 `
-$brickset = new BricksetAPIFunctions;
+$brickset = new BricksetAPISearch();
 `
 
 2. Pass a set number to the get_by_number method.
@@ -54,8 +56,8 @@ $set_data = $brickset->get_by_number( '8014' );
 `
 3. Test for an error
 `
-if( is_wp_error( $brickset ) {
-	echo $brickset->get_error_message;
+if( is_wp_error( $set_data ) {
+	echo $set_data->get_error_message;
 }
 `
 
@@ -67,12 +69,13 @@ else {
 `
 == Road Map ==
 1. Template tags to display sets specific to a user.
-2. Allow users to update owned or wanted sets.
-3. Allow users to manage minifig collection.
+2. Allow admins to set which currency to show on set listing in template tags
+
+You can follow all the open feature requests and enhancements on [GitHub](https://github.com/NateJacobs/Brickset-API/issues?milestone=&page=1&state=open).
 
 == Installation ==
 
-1. Upload the entire `bricset-api` folder to the `wp-content/plugins/` directory of your WordPress installation
+1. Upload the entire `brickset-api` folder to the `wp-content/plugins/` directory of your WordPress installation or download from the Plugin Repository
 2. Activate the plugin through the Plugins menu in WordPress
 3. Add your Brickset.com API key to the Brickset settings page which can be found as a submenu under the Settings menu
 3. Either add a Brickset link (url) to a set or theme in a post or page, or add a template tag to a theme file, or for advanced use instantiate the class and create your own display method.
@@ -80,7 +83,7 @@ else {
 == Frequently Asked Questions ==
 
 = Can I add sets to my set list on Brickset with this plugin? =
-Not yet, but functions like that are on the way.
+Yes you can, but it requires writing custom code using the API functions of the plugin.
 
 = Does this plugin require an API Key from Brickset = 
 To display more than twenty sets from a search query an API key is required. You can obtain one by contacting Brickset on this [page](http://brickset.com/contact/)
@@ -91,6 +94,13 @@ To display more than twenty sets from a search query an API key is required. You
 3. Sets in space theme
 
 == Changelog ==
+
+= Version 1.1 =
+*	Add ability to update wanted and owned sets
+*	Add ability to update the quantity owned of a set
+*	Add ability to search a user's minifig collections
+*	Add ability to update wanted and owned minifigs
+*	Updated class name - BricksetAPIFunctions became BricksetAPISearch
 
 = Version 1.0 =
 *	Enter your Brickset API from the settings submenu.

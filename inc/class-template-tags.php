@@ -12,7 +12,7 @@
  */
 function brickset_themes()
 {
-	$brickset = new BricksetAPIFunctions();
+	$brickset = new BricksetAPISearch();
 	$brickset = $brickset->get_themes();
 
 	if( is_wp_error( $brickset ) )
@@ -40,7 +40,7 @@ function brickset_themes()
  */
 function brickset_subthemes( $theme )
 {
-	$brickset = new BricksetAPIFunctions();
+	$brickset = new BricksetAPISearch();
 	$brickset = $brickset->get_subthemes( $theme );
 
 	if( is_wp_error( $brickset ) )
@@ -76,7 +76,7 @@ function brickset_subthemes( $theme )
  */
 function brickset_theme_years( $theme )
 {
-	$brickset = new BricksetAPIFunctions();
+	$brickset = new BricksetAPISearch();
 	$brickset = $brickset->get_theme_years( $theme );
 	
 	if( is_wp_error( $brickset ) )
@@ -110,7 +110,7 @@ function brickset_theme_years( $theme )
  */
 function brickset_popular_searches()
 {
-	$brickset = new BricksetAPIFunctions();
+	$brickset = new BricksetAPISearch();
 	$brickset = $brickset->get_popular_searches();
 	
 	if( is_wp_error( $brickset ) )
@@ -141,7 +141,7 @@ function brickset_popular_searches()
  */	
 function brickset_updated_since( $date )
 {
-	$brickset = new BricksetAPIFunctions();
+	$brickset = new BricksetAPISearch();
 	$brickset = $brickset->get_updated_since( $date );
 
 	if( is_wp_error( $brickset ) )
@@ -177,7 +177,7 @@ function brickset_updated_since( $date )
 */
 function brickset_set_number( $set, $args = '' )
 {
-	$brickset = new BricksetAPIFunctions();
+	$brickset = new BricksetAPISearch();
 	$brickset = $brickset->get_by_number( $set, $args );
 
 	if( is_wp_error( $brickset ) )
