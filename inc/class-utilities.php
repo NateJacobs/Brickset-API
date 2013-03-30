@@ -2,7 +2,107 @@
 
 class BricksetAPIUtilities
 {
-	public function get_api_key()
+	/** 
+	 *	Remote Request
+	 *
+	 *	Send the api request to Brickset. Returns an XML formatted response.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@since		0.1
+	 *	@updated	1.0
+	 *
+	 *	@param		string	$extra_url (url needed after base url)
+	 *	@param		string	$params (query parameters)
+	 *
+	 *	@return		object	WP_Error
+	 *	@return		array	$response_body
+	 */
+	protected function remote_request( $type, $extra_url, $params = '' )
+	{
+		$api_url = 'http://www.brickset.com/webservices/brickset.asmx';	
+
+		if( 'get' == $type )
+		{
+//wp_die( $api_url.'/'.$extra_url.'?'.$params );
+			$response = wp_remote_get( $api_url.'/'.$extra_url.'?'.$params );
+		}
+		elseif( 'post' == $type )
+		{
+			$response = wp_remote_post( $api_url.'/'.$extra_url, $params );
+		}
+		else
+		{
+			return new WP_Error( 'no-type-specified', __( 'Specify a type of request: get or post', 'bs_api') );
+		}
+		
+		// Did the HTTP request fail?
+		if( is_wp_error( $response ) )
+			return $response;
+		
+		$response_code = wp_remote_retrieve_response_code( $response );
+		$response_message = wp_remote_retrieve_response_message( $response );
+		$response_body = wp_remote_retrieve_body( $response );
+
+		if( 200 != $response_code && ! empty( $response_message ) )
+		{
+			return new WP_Error( $response_code, __( 'Don\'t Panic! Something went wrong and Brickset didn\'t reply.', 'bs_api' ) );
+		}
+		elseif( 200 != $response_code )
+		{
+			return new WP_Error( $response_code, __( 'Unknown error occurred', 'bs_api') );
+		}
+		elseif( $extra_url != 'login' && 300 > strlen( $response_body ) && $type == 'get' )
+		{
+				return new WP_Error( 'brickset-no-data', __( 'Sorry, no sets were found for that query', 'bs_api' ) );
+		}
+		else
+		{
+			return $response_body;
+		}
+	}
+
+		
+	/** 
+	 *	Login Service Method
+	 *
+	 *	Authenticates a user with Brickset and returns a hash.
+	 *	The hash is then stored as a meta value with the key of 'brickset_user_hash'
+	 *	in the *_usersmeta table.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@since		0.1
+	 *	@updated	1.0
+	 *
+	 *	@param	int 	$user_id
+	 *	@param	string 	$username
+	 *	@param	string	$password
+	 *
+	 *	@return	array	$response (if there is an error, a WP_Error array is returned)
+	 */
+	protected function brickset_login( $user_id, $username, $password )
+	{
+		// Which user is this?
+		$user = get_userdata( $user_id );
+		
+		// Build the parameters
+		$params = 'u='.$username.'&p='.$password;
+		
+		// Send it off
+		$response = $this->remote_request( 'get', 'login', $params );
+		
+		if( is_wp_error( $response ) )
+		{
+			return $response;
+		}
+		else
+		{
+			$user_hash = new SimpleXMLElement( $response );
+
+			update_user_meta( $user->ID, 'brickset_user_hash',  (string) $user_hash[0] );
+		}
+	}
+
+	protected function get_api_key()
 	{
 		$settings = (array) get_option( 'brickset-api-settings' );
 		
@@ -21,7 +121,7 @@ class BricksetAPIUtilities
 	*
 	*	@return		string	$user_hash
 	*/
-	public function get_user_hash( $user_id )
+	protected function get_user_hash( $user_id )
 	{
 		return get_user_meta( $user_id, 'brickset_user_hash', true );
 	}
@@ -39,7 +139,7 @@ class BricksetAPIUtilities
 	*
 	*	@return		array	$params
 	*/
-	public function build_bs_query( $args = '' )
+	protected function build_bs_query( $args = '' )
 	{
 		$defaults = array(
 			'user_id'	=>	'',
@@ -89,7 +189,7 @@ class BricksetAPIUtilities
 	*
 	*	@return		string	$set_number
 	*/
-	public function validate_set_number( $set_number )
+	protected function validate_set_number( $set_number )
 	{
 		// If no set is passed, get out
 		if( empty( $set_number ) )
@@ -136,7 +236,7 @@ class BricksetAPIUtilities
 	*	@return		object	WP_Error (if not a user or an int)
 	*	@return		bool	true (if a valid user and an int)
 	*/
-	public function validate_user( $user_id )
+	protected function validate_user( $user_id )
 	{
 		// Is there a user?
 		if( empty( $user_id ) )
@@ -149,6 +249,11 @@ class BricksetAPIUtilities
 		// Does the user_id specified exist on this site?
 		if( !get_user_by( 'id', $user_id ) )
 			return new WP_Error( 'not-valid-user', __( 'The user ID passed is not a valid user.', 'bs_api' ) );
+		
+		$user_hash = $this->get_user_hash( $user_id );
+			
+		if( empty( $user_hash ) )
+			return new WP_Error( 'no-user-hash', __( 'The user ID passed does not have a Brickset API identifier on file.', 'bs_api' ) );	
 	}
 	
 	/** 
@@ -165,7 +270,7 @@ class BricksetAPIUtilities
 	*
 	*	@return		object	WP_Error
 	*/
-	public function validate_owned_wanted( $owned = false, $wanted = false )
+	protected function validate_owned_wanted( $owned = false, $wanted = false )
 	{
 		if( !is_bool( $owned ) )
 			return new WP_Error( 'no-boolean', __( 'Owned is not a true or false value.', 'bs_api' ) );
@@ -187,7 +292,7 @@ class BricksetAPIUtilities
 	*
 	*	@return		object	WP_Error
 	*/
-	public function validate_theme_subtheme( $theme = '', $subtheme = '' )
+	protected function validate_theme_subtheme( $theme = '', $subtheme = '' )
 	{
 		if( !is_string( $theme ) || !is_string( $subtheme ) )
 			return new WP_Error( 'invalid-string', __( 'The theme or subtheme requested is not a valid string.', 'bs_api' ) );
@@ -206,7 +311,7 @@ class BricksetAPIUtilities
 	*
 	*	@return		object	WP_Error
 	*/
-	public function validate_set_id( $set_id )
+	protected function validate_set_id( $set_id )
 	{
 		// Is there a setID?
 		if( empty( $set_id ) )
@@ -228,7 +333,7 @@ class BricksetAPIUtilities
 	*
 	*	@param		string|int	$year
 	*/
-	public function validate_year( $years )
+	protected function validate_year( $years )
 	{
 		// Get set numbers into an array
 		$years = explode( ',', $years );
