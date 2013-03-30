@@ -43,7 +43,7 @@ The plugin has a shortcode you may use in your posts and pages to display inform
 The plugin has one widget you can activate to display a list of all themes on Brickset with a link to browse each theme on Brickset.com
 
 = Advanced Use =
-This example shows how to get the data about a specific set.
+This example shows how to get the data about a specific set. You can find the developer docs [here](https://github.com/NateJacobs/Brickset-API/wiki).
 
 1. Instantiate the class.
 `
@@ -71,9 +71,11 @@ else {
 1. Template tags to display sets specific to a user.
 2. Allow admins to set which currency to show on set listing in template tags
 
+You can follow all the open feature requests and enhancements on [GitHub](https://github.com/NateJacobs/Brickset-API/issues?milestone=&page=1&state=open).
+
 == Installation ==
 
-1. Upload the entire `bricset-api` folder to the `wp-content/plugins/` directory of your WordPress installation
+1. Upload the entire `brickset-api` folder to the `wp-content/plugins/` directory of your WordPress installation or download from the Plugin Repository
 2. Activate the plugin through the Plugins menu in WordPress
 3. Add your Brickset.com API key to the Brickset settings page which can be found as a submenu under the Settings menu
 3. Either add a Brickset link (url) to a set or theme in a post or page, or add a template tag to a theme file, or for advanced use instantiate the class and create your own display method.
@@ -81,7 +83,7 @@ else {
 == Frequently Asked Questions ==
 
 = Can I add sets to my set list on Brickset with this plugin? =
-Not yet, but functions like that are on the way.
+Yes you can, but it requires writing custom code using the API functions of the plugin.
 
 = Does this plugin require an API Key from Brickset = 
 To display more than twenty sets from a search query an API key is required. You can obtain one by contacting Brickset on this [page](http://brickset.com/contact/)
