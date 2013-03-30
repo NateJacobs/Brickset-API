@@ -1,6 +1,6 @@
 <?php
 
-class BricksetAPISearch
+class BricksetAPISearch extends BricksetAPIUtilities
 {	
 	/** 
 	*	Construct
@@ -16,105 +16,6 @@ class BricksetAPISearch
 	public function __construct()
 	{
 		
-	}
-
-	/** 
-	 *	Remote Request
-	 *
-	 *	Send the api request to Brickset. Returns an XML formatted response.
-	 *
-	 *	@author		Nate Jacobs
-	 *	@since		0.1
-	 *	@updated	1.0
-	 *
-	 *	@param		string	$extra_url (url needed after base url)
-	 *	@param		string	$params (query parameters)
-	 *
-	 *	@return		object	WP_Error
-	 *	@return		array	$response_body
-	 */
-	protected function remote_request( $type, $extra_url, $params = '' )
-	{
-		$api_url = 'http://www.brickset.com/webservices/brickset.asmx';	
-
-		if( 'get' == $type )
-		{
-//wp_die( $api_url.'/'.$extra_url.'?'.$params );
-			$response = wp_remote_get( $api_url.'/'.$extra_url.'?'.$params );
-		}
-		elseif( 'post' == $type )
-		{
-			$response = wp_remote_post( $api_url.'/'.$extra_url, $params );
-		}
-		else
-		{
-			return new WP_Error( 'no-type-specified', __( 'Specify a type of request: get or post', 'bs_api') );
-		}
-		
-		// Did the HTTP request fail?
-		if( is_wp_error( $response ) )
-			return $response;
-		
-		$response_code = wp_remote_retrieve_response_code( $response );
-		$response_message = wp_remote_retrieve_response_message( $response );
-		$response_body = wp_remote_retrieve_body( $response );
-
-		if( 200 != $response_code && ! empty( $response_message ) )
-		{
-			return new WP_Error( $response_code, __( 'Don\'t Panic! Something went wrong and Brickset didn\'t reply.', 'bs_api' ) );
-		}
-		elseif( 200 != $response_code )
-		{
-			return new WP_Error( $response_code, __( 'Unknown error occurred', 'bs_api') );
-		}
-		elseif( $extra_url != 'login' && 300 > strlen( $response_body ) && $type == 'get' )
-		{
-				return new WP_Error( 'brickset-no-data', __( 'Sorry, no sets were found for that query', 'bs_api' ) );
-		}
-		else
-		{
-			return $response_body;
-		}
-	}
-	
-	/** 
-	 *	Login Service Method
-	 *
-	 *	Authenticates a user with Brickset and returns a hash.
-	 *	The hash is then stored as a meta value with the key of 'brickset_user_hash'
-	 *	in the *_usersmeta table.
-	 *
-	 *	@author		Nate Jacobs
-	 *	@since		0.1
-	 *	@updated	1.0
-	 *
-	 *	@param	int 	$user_id
-	 *	@param	string 	$username
-	 *	@param	string	$password
-	 *
-	 *	@return	array	$response (if there is an error, a WP_Error array is returned)
-	 */
-	public function brickset_login( $user_id, $username, $password )
-	{
-		// Which user is this?
-		$user = get_userdata( $user_id );
-		
-		// Build the parameters
-		$params = 'u='.$username.'&p='.$password;
-		
-		// Send it off
-		$response = $this->remote_request( 'get', 'login', $params );
-		
-		if( is_wp_error( $response ) )
-		{
-			return $response;
-		}
-		else
-		{
-			$user_hash = new SimpleXMLElement( $response );
-
-			update_user_meta( $user->ID, 'brickset_user_hash',  (string) $user_hash[0] );
-		}
 	}
 	
 	/** 
@@ -167,7 +68,7 @@ class BricksetAPISearch
 	public function get_subthemes( $theme )
 	{
 		// Is it a valid string	
-		if( is_wp_error( $validate_theme = BrickSetAPIUtilities::validate_theme_subtheme( $theme ) ) )	
+		if( is_wp_error( $validate_theme = $this->validate_theme_subtheme( $theme ) ) )	
 			return $validate_theme;
 		
 		$theme = sanitize_text_field( strtolower( $theme ) );
@@ -180,7 +81,7 @@ class BricksetAPISearch
 		{
 			$args = array( 'theme' => $theme );
 			
-			$params = BrickSetAPIUtilities::build_bs_query( $args );
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'get', 'listSubthemes', $params );
 
 			if( is_wp_error( $response ) )
@@ -211,7 +112,7 @@ class BricksetAPISearch
 	public function get_theme_years( $theme )
 	{	
 		// Is it a valid string	
-		if( is_wp_error( $validate_theme = BrickSetAPIUtilities::validate_theme_subtheme( $theme ) ) )	
+		if( is_wp_error( $validate_theme = $this->validate_theme_subtheme( $theme ) ) )	
 			return $validate_theme;
 		
 		$theme = sanitize_text_field( strtolower( $theme ) );
@@ -224,7 +125,7 @@ class BricksetAPISearch
 		{
 			$args = array( 'theme' => $theme );
 
-			$params = BrickSetAPIUtilities::build_bs_query( $args );
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'get', 'listYears', $params );
 
 			if( is_wp_error( $response ) )
@@ -294,7 +195,7 @@ class BricksetAPISearch
 			return new WP_Error( 'not-a-date-format', __( 'The date is not formatted correctly.', 'bs_api' ) );
 		
 		// Is it a valid year	
-		if( is_wp_error( $validate_year = BrickSetAPIUtilities::validate_year( $exploded_date[2] ) ) )	
+		if( is_wp_error( $validate_year = $this->validate_year( $exploded_date[2] ) ) )	
 			return $validate_year;
 		
 		$transient_date = str_replace( '/', '', $date );
@@ -304,7 +205,7 @@ class BricksetAPISearch
 		// Have we stored a transient?
 		if( false === get_transient( $transient ) )
 		{
-			$params = 'apiKey='.BrickSetAPIUtilities::get_api_key().'&sinceDate='.$date;
+			$params = 'apiKey='.$this->get_api_key().'&sinceDate='.$date;
 			$response = $this->remote_request( 'get', 'updatedSince', $params );
 
 			if( is_wp_error( $response ) )
@@ -349,7 +250,7 @@ class BricksetAPISearch
 			return new WP_Error( 'no-set-number', __( 'No set number requested.', 'bs_api' ) );
 		
 		// Check on the number for variants
-		if( is_wp_error( $sets = BrickSetAPIUtilities::validate_set_number( $number ) ) )
+		if( is_wp_error( $sets = $this->validate_set_number( $number ) ) )
 			return $sets;
 		
 		$args['set_number'] = $sets;
@@ -406,7 +307,7 @@ class BricksetAPISearch
 		// Is there a user?
 		if( empty( $user_id ) )
 			return new WP_Error( 'no-user-specified', __( 'No user specified.', 'bs_api' ) );
-		
+	
 		$args['user_id'] = $user_id;
 		$args['owned'] = true;
 		
@@ -550,7 +451,7 @@ class BricksetAPISearch
 			return new WP_Error( 'no-set-id', __( 'No set ID requested.', 'bs_api' ) );
 		
 		// Is the string numeric
-		if( is_wp_error( $validate_set_id = BrickSetAPIUtilities::validate_set_id( $set_id ) ) )	
+		if( is_wp_error( $validate_set_id = $this->validate_set_id( $set_id ) ) )	
 			return $validate_set_id;
 		
 		$transient = 'bs_instructions'.$set_id;
@@ -594,7 +495,7 @@ class BricksetAPISearch
 			return new WP_Error( 'no-set-id', __( 'No set ID requested.', 'bs_api' ) );
 		
 		// Is the string numeric
-		if( is_wp_error( $validate_set_id = BrickSetAPIUtilities::validate_set_id( $set_id ) ) )	
+		if( is_wp_error( $validate_set_id = $this->validate_set_id( $set_id ) ) )	
 			return $validate_set_id;
 			
 		$transient = 'bs_set_id_search_'.$set_id;
@@ -648,21 +549,21 @@ class BricksetAPISearch
 		// Is it a valid year	
 		if( !empty( $args['year'] ) )
 		{
-			if( is_wp_error( $validate_year = BrickSetAPIUtilities::validate_year( $args['year'] ) ) )	
+			if( is_wp_error( $validate_year = $this->validate_year( $args['year'] ) ) )	
 				return $validate_year;
 		}
 		
 		// Is it a valid user_id?
 		if( !empty( $args['user_id'] ) )
 		{
-			if( is_wp_error( $validate_user = BrickSetAPIUtilities::validate_user( $args['user_id'] ) ) )
+			if( is_wp_error( $validate_user = $this->validate_user( $args['user_id'] ) ) )
 				return $validate_user;
 		}
 		
 		// Is it a valid string
 		if( !empty( $args['theme'] ) || !empty( $args['subtheme'] ) )
 		{	
-			if( is_wp_error( $validate_string = BrickSetAPIUtilities::validate_theme_subtheme( $args['theme'], $args['subtheme'] ) ) )	
+			if( is_wp_error( $validate_string = $this->validate_theme_subtheme( $args['theme'], $args['subtheme'] ) ) )	
 				return $validate_string;
 		}
 		
@@ -674,10 +575,10 @@ class BricksetAPISearch
 		}
 		
 		// Was a true or false passed for owned and wanted?
-		if( is_wp_error( $validate_owned_wanted = BrickSetAPIUtilities::validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
+		if( is_wp_error( $validate_owned_wanted = $this->validate_owned_wanted( $args['owned'], $args['wanted'] ) ) )
 			return $validate_owned_wanted;
 		
-		if( is_wp_error( $sets = BrickSetAPIUtilities::validate_set_number( $args['set_number'] ) ) )
+		if( is_wp_error( $sets = $this->validate_set_number( $args['set_number'] ) ) )
 			return $sets;
 			
 		$args['set_number'] = $sets;
@@ -696,7 +597,7 @@ class BricksetAPISearch
 
 		if( false === get_transient( $transient ) )
 		{
-			$params = BrickSetAPIUtilities::build_bs_query( $args );
+			$params = $this->build_bs_query( $args );
 			$response = $this->remote_request( 'get', 'search', $params );
 
 			if( is_wp_error( $response ) )
@@ -738,7 +639,7 @@ class BricksetAPISearch
 		$args = wp_parse_args( $args, $defaults );
 		
 		// Is it a valid user?
-		if( is_wp_error( $validate_user = BricksetAPIUtilities::validate_user( $user_id ) ) )	
+		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )	
 			return $validate_user;
 		
 		// Is it a valid string?
@@ -751,14 +652,14 @@ class BricksetAPISearch
 		// Was a true or false passed for owned?
 		if( !empty( $args['owned'] ) )
 		{
-			if( is_wp_error( $validate_owned = BrickSetAPIUtilities::validate_owned_wanted( $args['owned'] ) ) )
+			if( is_wp_error( $validate_owned = $this->validate_owned_wanted( $args['owned'] ) ) )
 				return $validate_owned;
 		}
 		
 		// Was a true or false passed for wanted?
 		if( !empty( $args['wanted'] ) )
 		{
-			if( is_wp_error( $validate_wanted = BrickSetAPIUtilities::validate_owned_wanted( $args['wanted'] ) ) )
+			if( is_wp_error( $validate_wanted = $this->validate_owned_wanted( $args['wanted'] ) ) )
 				return $validate_wanted;
 		}
 		
@@ -772,7 +673,7 @@ class BricksetAPISearch
 		{
 			$params = array( 
 				'body' => array( 
-					'userHash' => BrickSetAPIUtilities::get_user_hash( $user_id ), 
+					'userHash' => $this->get_user_hash( $user_id ), 
 					'query' => sanitize_text_field( $args['query'] ), 
 					'owned' => $args['owned'], 
 					'wanted' => $args['wanted'] 

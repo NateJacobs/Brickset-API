@@ -1,6 +1,6 @@
 <?php
 
-class BricksetAPIUpdate extends BricksetAPISearch
+class BricksetAPIUpdate extends BricksetAPIUtilities
 {
 	/** 
 	*	Construct
@@ -36,18 +36,18 @@ class BricksetAPIUpdate extends BricksetAPISearch
 	public function update_own( $set_id, $user_id, $own )
 	{
 		// Is it a valid user?
-		if( is_wp_error( $validate_user = BricksetAPIUtilities::validate_user( $user_id ) ) )	
+		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )	
 			return $validate_user;
 		
 		// Is the string numeric?
-		if( is_wp_error( $validate_set_id = BricksetAPIUtilities::validate_set_id( $set_id ) ) )	
+		if( is_wp_error( $validate_set_id = $this->validate_set_id( $set_id ) ) )	
 			return $validate_set_id;
 
 		// Is it a valid boolean?
-		if( is_wp_error( $validate_own = BricksetAPIUtilities::validate_owned_wanted( $own ) ) )
+		if( is_wp_error( $validate_own = $this->validate_owned_wanted( $own ) ) )
 			return $validate_own;
 		
-		$params = array( 'body' => array( 'userHash' => BricksetAPIUtilities::get_user_hash( $user_id ), 'setID' => $set_id, 'own' => $own ) );
+		$params = array( 'body' => array( 'userHash' => $this->get_user_hash( $user_id ), 'setID' => $set_id, 'own' => $own ) );
 		
 		$response = $this->remote_request( 'post', 'updateOwn', $params );
 		
@@ -82,18 +82,18 @@ class BricksetAPIUpdate extends BricksetAPISearch
 	public function update_want( $set_id, $user_id, $want )
 	{
 		// Is it a valid user?
-		if( is_wp_error( $validate_user = BricksetAPIUtilities::validate_user( $user_id ) ) )	
+		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )	
 			return $validate_user;
 		
 		// Is the string numeric?
-		if( is_wp_error( $validate_set_id = BricksetAPIUtilities::validate_set_id( $set_id ) ) )	
+		if( is_wp_error( $validate_set_id = $this->validate_set_id( $set_id ) ) )	
 			return $validate_set_id;
 		
 		// Is it a valid boolean?
-		if( is_wp_error( $validate_want = BricksetAPIUtilities::validate_owned_wanted( $want ) ) )
+		if( is_wp_error( $validate_want = $this->validate_owned_wanted( $want ) ) )
 			return $validate_want;
 		
-		$params = array( 'body' => array( 'userHash' => BricksetAPIUtilities::get_user_hash( $user_id ), 'setID' => $set_id, 'want' => $want ) );
+		$params = array( 'body' => array( 'userHash' => $this->get_user_hash( $user_id ), 'setID' => $set_id, 'want' => $want ) );
 		
 		$response = $this->remote_request( 'post', 'updateWant', $params );
 		
@@ -128,11 +128,11 @@ class BricksetAPIUpdate extends BricksetAPISearch
 	public function update_quantity( $set_id, $user_id, $quantity )
 	{
 		// Is it a valid user?
-		if( is_wp_error( $validate_user = BricksetAPIUtilities::validate_user( $user_id ) ) )	
+		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )	
 			return $validate_user;
 		
 		// Is the string numeric?
-		if( is_wp_error( $validate_set_id = BricksetAPIUtilities::validate_set_id( $set_id ) ) )	
+		if( is_wp_error( $validate_set_id = $this->validate_set_id( $set_id ) ) )	
 			return $validate_set_id;
 		
 		// Is a quantity value present?
@@ -143,7 +143,7 @@ class BricksetAPIUpdate extends BricksetAPISearch
 		if( !is_int( $quantity ) )
 			return new WP_Error( 'quantity-not-integer', __( 'The quantity is not an integer.', 'bs_api' ) );
 		
-		$params = array( 'body' => array( 'userHash' => BricksetAPIUtilities::get_user_hash( $user_id ), 'setID' => $set_id, 'qty' => $quantity ) );
+		$params = array( 'body' => array( 'userHash' => $this->get_user_hash( $user_id ), 'setID' => $set_id, 'qty' => $quantity ) );
 		
 		$response = $this->remote_request( 'post', 'updateQtyOwned', $params );
 		
@@ -178,14 +178,14 @@ class BricksetAPIUpdate extends BricksetAPISearch
 	public function update_notes( $set_id, $user_id, $notes = '' )
 	{
 		// Is it a valid user?
-		if( is_wp_error( $validate_user = BricksetAPIUtilities::validate_user( $user_id ) ) )	
+		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )	
 			return $validate_user;
 		
 		// Is the string numeric?
-		if( is_wp_error( $validate_set_id = BricksetAPIUtilities::validate_set_id( $set_id ) ) )	
+		if( is_wp_error( $validate_set_id = $this->validate_set_id( $set_id ) ) )	
 			return $validate_set_id;
 		
-		$params = array( 'body' => array( 'userHash' => BricksetAPIUtilities::get_user_hash( $user_id ), 'setID' => $set_id, 'notes' => sanitize_text_field( $notes ) ) );
+		$params = array( 'body' => array( 'userHash' => $this->get_user_hash( $user_id ), 'setID' => $set_id, 'notes' => sanitize_text_field( $notes ) ) );
 		
 		$response = $this->remote_request( 'post', 'updateUserNotes', $params );
 		
@@ -223,7 +223,7 @@ class BricksetAPIUpdate extends BricksetAPISearch
 			return new WP_Error( 'no-minifig-number', __( 'No minifig number specified.', 'bs_api' ) );
 			
 		// Is it a valid user?
-		if( is_wp_error( $validate_user = BricksetAPIUtilities::validate_user( $user_id ) ) )	
+		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )	
 			return $validate_user;
 		
 		// Is a quantity value present?
@@ -234,7 +234,7 @@ class BricksetAPIUpdate extends BricksetAPISearch
 		if( !is_int( $quantity ) )
 			return new WP_Error( 'quantity-not-integer', __( 'The quantity is not an integer.', 'bs_api' ) );
 		
-		$params = array( 'body' => array( 'userHash' => BricksetAPIUtilities::get_user_hash( $user_id ), 'minifigNumber' => sanitize_text_field( $minifig_id ), 'qty' => $quantity ) );
+		$params = array( 'body' => array( 'userHash' => $this->get_user_hash( $user_id ), 'minifigNumber' => sanitize_text_field( $minifig_id ), 'qty' => $quantity ) );
 		
 		$response = $this->remote_request( 'post', 'updateMinifigQtyOwned', $params );
 		
@@ -273,14 +273,14 @@ class BricksetAPIUpdate extends BricksetAPISearch
 			return new WP_Error( 'no-minifig-number', __( 'No minifig number specified.', 'bs_api' ) );
 			
 		// Is it a valid user?
-		if( is_wp_error( $validate_user = BricksetAPIUtilities::validate_user( $user_id ) ) )	
+		if( is_wp_error( $validate_user = $this->validate_user( $user_id ) ) )	
 			return $validate_user;
 		
 		// Is it a valid boolean?
-		if( is_wp_error( $validate_want = BricksetAPIUtilities::validate_owned_wanted( $want ) ) )
+		if( is_wp_error( $validate_want = $this->validate_owned_wanted( $want ) ) )
 			return $validate_want;
 		
-		$params = array( 'body' => array( 'userHash' => BricksetAPIUtilities::get_user_hash( $user_id ), 'minifigNumber' => sanitize_text_field( $minifig_id ), 'want' => $want ) );
+		$params = array( 'body' => array( 'userHash' => $this->get_user_hash( $user_id ), 'minifigNumber' => sanitize_text_field( $minifig_id ), 'want' => $want ) );
 		
 		$response = $this->remote_request( 'post', 'updateMinifigWanted', $params );
 		
