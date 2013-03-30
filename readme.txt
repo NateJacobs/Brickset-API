@@ -12,7 +12,7 @@ Display your favorite LEGO® set information on your website using the Brickset 
 
 == Description ==
 
-This plugin is an implementation of the Brickset Webservice. It includes methods to get LEGO® set and theme data from Brickset as well as pre-formated methods to display set data. The set data requested is cached daily to reduce HTTP requests and page load time. Please visit [Brickset](http://brickset.com/ for more information on the [webservice](http://www.brickset.com/webservices). You can obtain an API key from [Brickset](http://brickset.com/contact/).
+This plugin is an implementation of the Brickset Webservice. It includes methods to get LEGO® set and theme data from Brickset as well as pre-formated methods to display set data. The set data requested is cached daily to reduce HTTP requests and page load time. Please visit [Brickset](http://brickset.com/) for more information on the [webservice](http://www.brickset.com/webservices). You can obtain an API key from [Brickset](http://brickset.com/contact/).
 
 The main development is all happening on [GitHub](https://github.com/NateJacobs/Brickset-API).
 
