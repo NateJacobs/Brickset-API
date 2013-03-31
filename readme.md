@@ -98,6 +98,9 @@ To display more than twenty sets from a search query an API key is required. You
 
 ## Changelog ##
 
+### Version 1.2 ###
+*	Removed anonymous function from class-widgets.php
+
 ### Version 1.1 ###
 *	Add ability to update wanted and owned sets
 *	Add ability to update the quantity owned of a set
