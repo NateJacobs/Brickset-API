@@ -1,7 +1,23 @@
 <?php
 
 //hook into the 'widgets_init' action to load the widget
-add_action( 'widgets_init', function(){	return register_widget( 'BricksetThemeWidget' ); });
+add_action( 'widgets_init', 'brickset_register_widget' );
+
+/** 
+*	Register Widget
+*
+*	Registers the widget
+*
+*	@author		Nate Jacobs
+*	@date		3/31/13
+*	@since		1.2
+*
+*	@param		null
+*/
+function brickset_register_widget()
+{
+	register_widget( 'BricksetThemeWidget' );
+}
 
 /** 
  *	Brickset Theme Widget
