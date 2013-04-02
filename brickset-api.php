@@ -40,7 +40,7 @@ class BricksetAPILoad
 	 */
 	public function constants() 
 	{
-		define( 'BRICKSET_API_VERSION', '1.0' );
+		define( 'BRICKSET_API_VERSION', '1.2' );
 		define( 'BRICKSET_API_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 		define( 'BRICKSET_API_URI', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 		define( 'BRICKSET_API_INCLUDES', BRICKSET_API_DIR . trailingslashit( 'inc' ) );
