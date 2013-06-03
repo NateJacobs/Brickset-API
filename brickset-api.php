@@ -119,6 +119,18 @@ class BricksetAPILoad
 				$settings['currency'] = 'us';
 				update_option( 'brickset-api-settings', $settings );
 			}
+			
+			if( !isset( $settings['currency_unknown'] ) )
+			{
+				$settings['currency_unknown'] = 'us';
+				update_option( 'brickset-api-settings', $settings );
+			}
+			
+			if( !isset( $settings['bricklink_link'] ) )
+			{
+				$settings['bricklink_link'] = 'us';
+				update_option( 'brickset-api-settings', $settings );
+			}
 		}
 	}
 }
