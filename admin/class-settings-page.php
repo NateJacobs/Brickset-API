@@ -94,7 +94,15 @@ class BricksetAPISettingsPage
 			'brickset-api-options', 
 			'bs-template-settings'
 		);
-
+		
+		add_settings_field( 
+			'bs-bricklink', 
+			__( 'Display link to Bricklink?', 'bs_api' ), 
+			array( $this, 'bricklink_callback' ), 
+			'brickset-api-options', 
+			'bs-template-settings'
+		);
+		
 		register_setting( 
 			'bs_api_options', 
 			'brickset-api-settings'
@@ -139,7 +147,7 @@ class BricksetAPISettingsPage
 	 */
 	public function template_settings_callback()
 	{
-		echo __( 'These settings control what is displayed when you use the provided template tags or shortcodes.', 'bs_api' );
+		echo __( 'These settings control what is displayed when you use the provided template tags, shortcodes and oembed.', 'bs_api' );
 
 	}
 	
@@ -154,12 +162,32 @@ class BricksetAPISettingsPage
 	{
  		$settings = (array) get_option( 'brickset-api-settings' );
 		$currency = isset( $settings['currency'] ) ? esc_attr( $settings['currency'] ) : '';
+		$currency_unk = isset( $settings['currency_unknown'] ) ? esc_attr( $settings['currency_unknown'] ) : '';
 		
 		echo "<input type='radio' class='radio' name='brickset-api-settings[currency]' value='us' ".checked( $currency, 'us', false )."/><label for='brickset-api-settings[us]'>".__( 'US Dollar', 'bs_api' )."</label>";
 		echo "<br><input type='radio' class='radio' name='brickset-api-settings[currency]' value='ca' ".checked( $currency, 'ca', false )." /><label for='brickset-api-settings[ca]'>".__( 'CA Dollar', 'bs_api' )."</label>";
 		echo "<br><input type='radio' class='radio' name='brickset-api-settings[currency]' value='uk' ".checked( $currency, 'uk', false )." /><label for='brickset-api-settings[uk]'>".__( 'UK Pound Sterling', 'bs_api' )."</label>";
+		echo "<br><br>". __( 'If no retail price is available for the currency selected the plugin should', 'bs_api' ).":";
+		echo "<br><br><input type='radio' name='brickset-api-settings[currency_unknown]' value='unk' ".checked( $currency_unk, 'unk', false )." /><label for='brickset-api-settings[currency_unknown]'>". __( 'Display the word Unknown', 'bs_api' )."</label>";
+		echo "<br><input type='radio' name='brickset-api-settings[currency_unknown]' value='us' ".checked( $currency_unk, 'us', false )." /><label for='brickset-api-settings[currency_unknown]'>". __( 'Display the US retail price', 'bs_api' )."</label>";
 		echo "<br><br><span>".__( 'Brickset provides retail prices in US dollars, CA dollars, and UK pound sterling ', 'bs_api' )."</span>";
 		
+ 	}
+ 	
+ 	/** 
+ 	 *	Control if the Bricklink link should be appended to the set display
+ 	 *
+ 	 *	@author		Nate Jacobs
+ 	 *	@date		6/2/13
+ 	 *	@since		1.3
+ 	 */
+ 	public function bricklink_callback()
+ 	{
+ 		$settings = (array) get_option( 'brickset-api-settings' );
+		$bricklink = isset( $settings['bricklink_link'] ) ? esc_attr( $settings['bricklink_link'] ) : '';
+		
+		echo "<input type='radio' class='radio' name='brickset-api-settings[bricklink_link]' value='1' ".checked( (bool) $bricklink, true, false )."/><label for='brickset-api-settings[bricklink_link]'>".__( 'Yes', 'bs_api' )."</label>";
+		echo "<br><input type='radio' class='radio' name='brickset-api-settings[bricklink_link]' value='0' ".checked( (bool) $bricklink, false, false )." /><label for='brickset-api-settings[bricklink_link]'>".__( 'No', 'bs_api' )."</label>";
  	}
 }
 
