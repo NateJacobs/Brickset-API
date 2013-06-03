@@ -323,16 +323,14 @@ class BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Validate Year
-	*
-	*	Checks if the year passed as a string is a valid year
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/22/13
-	*	@since		1.0
-	*
-	*	@param		string|int	$year
-	*/
+	 *	Checks if the year passed as a string is a valid year
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/22/13
+	 *	@since		1.0
+	 *
+	 *	@param		string|int	the year to check
+	 */
 	protected function validate_year( $years )
 	{
 		// Get set numbers into an array
@@ -355,4 +353,34 @@ class BricksetAPIUtilities
 		// Get rid of the space between commas
 		return substr(str_replace(' ','',$total_years), 0, -1);	
 	}
+	
+	/** 
+	 *	
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		6/2/13
+	 *	@since		1.3
+	 *
+	 *	@return		array	the currency settings as dictated by the plugin settings
+	 */
+	public function get_settings_rules()
+	{
+		$settings = (array) get_option( 'brickset-api-settings' );
+		$currency = isset( $settings['currency'] ) ? strtoupper( esc_attr( $settings['currency'] ) ) : '';
+		$bricklink = isset( $settings['bricklink_link'] ) ? (bool) esc_attr( $settings['bricklink_link'] ) : true;
+				
+		$currency_symbol = ( 'UK' === $currency ) ? '&#163;' : '&#36;';
+		
+		$settings_array = array( 
+			'currency' 			=> $currency, 
+			'currency_key' 		=> $currency.'RetailPrice', 
+			'currency_symbol' 	=> $currency_symbol, 
+			'currency_unknown' 	=> $settings['currency_unknown'],
+			'bricklink'			=> $bricklink 
+		);
+		
+		return $settings_array;
+	}
 }
+
+$GLOBALS['brickset_api_utilities'] = new BricksetAPIUtilities();
