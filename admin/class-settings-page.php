@@ -103,6 +103,16 @@ class BricksetAPISettingsPage
 			'bs-template-settings'
 		);
 		
+/*
+		add_settings_field( 
+			'bs-transient', 
+			__( 'How long should the data from Brickset be cached?', 'bs_api' ), 
+			array( $this, 'transient_callback' ), 
+			'brickset-api-options', 
+			'bs-template-settings'
+		);
+*/
+		
 		register_setting( 
 			'bs_api_options', 
 			'brickset-api-settings'
@@ -188,6 +198,24 @@ class BricksetAPISettingsPage
 		
 		echo "<input type='radio' class='radio' name='brickset-api-settings[bricklink_link]' value='1' ".checked( (bool) $bricklink, true, false )."/><label for='brickset-api-settings[bricklink_link]'>".__( 'Yes', 'bs_api' )."</label>";
 		echo "<br><input type='radio' class='radio' name='brickset-api-settings[bricklink_link]' value='0' ".checked( (bool) $bricklink, false, false )." /><label for='brickset-api-settings[bricklink_link]'>".__( 'No', 'bs_api' )."</label>";
+ 	}
+ 	
+ 	/** 
+ 	 *	Control how long the transient is kept for
+ 	 *
+ 	 *	@author		Nate Jacobs
+ 	 *	@date		6/3/13
+ 	 *	@since		1.3
+ 	 */
+ 	public function transient_callback()
+ 	{
+ 		$settings = (array) get_option( 'brickset-api-settings' );
+		$transient = isset( $settings['transient'] ) ? esc_attr( $settings['transient'] ) : '';
+		
+		echo "<input type='radio' class='radio' name='brickset-api-settings[transient]' value='day' ".checked( $transient, 'day', false )."/><label for='brickset-api-settings[transient]'>".__( 'One Day', 'bs_api' )."</label>";
+		echo "<br><input type='radio' class='radio' name='brickset-api-settings[transient]' value='week' ".checked( $transient, 'week', false )." /><label for='brickset-api-settings[transient]'>".__( 'One Week', 'bs_api' )."</label>";
+		echo "<br><input type='radio' class='radio' name='brickset-api-settings[transient]' value='month' ".checked( $transient, 'month', false )." /><label for='brickset-api-settings[transient]'>".__( 'One Month', 'bs_api' )."</label>";
+		echo "<br><br><span>".__( 'The plugin uses the WordPress Transient API to store the data returned from Brickset to reduce page load times. By increasing the time the data is stored it requires fewer requests to Brickset. However, if the data changes frequently then your site will display out-of-date data until the cache expires.', 'bs_api' )."</span>";
  	}
 }
 

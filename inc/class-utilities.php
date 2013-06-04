@@ -355,19 +355,37 @@ class BricksetAPIUtilities
 	}
 	
 	/** 
-	 *	
+	 *	Returns all the settings set by the administrator in the plugin settings
 	 *
 	 *	@author		Nate Jacobs
 	 *	@date		6/2/13
 	 *	@since		1.3
 	 *
-	 *	@return		array	the currency settings as dictated by the plugin settings
+	 *	@return		array	the template settings as dictated by the plugin settings
 	 */
 	public function get_settings_rules()
 	{
 		$settings = (array) get_option( 'brickset-api-settings' );
 		$currency = isset( $settings['currency'] ) ? strtoupper( esc_attr( $settings['currency'] ) ) : '';
 		$bricklink = isset( $settings['bricklink_link'] ) ? (bool) esc_attr( $settings['bricklink_link'] ) : true;
+		$transient = isset( $settings['transient'] ) ? esc_attr( $settings['transient'] ) : '';
+		
+		if( 'month' === $transient )
+		{
+			$transient = WEEK_IN_SECONDS*4;
+		}
+		elseif( 'day' === $transient )
+		{
+			$transient = DAY_IN_SECONDS;
+		}
+		elseif( 'week' === $transient )
+		{
+			$transient = WEEK_IN_SECONDS;
+		}
+		else
+		{
+			$transient = DAY_IN_SECONDS;
+		}
 				
 		$currency_symbol = ( 'UK' === $currency ) ? '&#163;' : '&#36;';
 		
@@ -376,7 +394,8 @@ class BricksetAPIUtilities
 			'currency_key' 		=> $currency.'RetailPrice', 
 			'currency_symbol' 	=> $currency_symbol, 
 			'currency_unknown' 	=> $settings['currency_unknown'],
-			'bricklink'			=> $bricklink 
+			'bricklink'			=> $bricklink,
+			'transient'			=> $transient
 		);
 		
 		return $settings_array;

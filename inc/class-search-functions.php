@@ -3,16 +3,12 @@
 class BricksetAPISearch extends BricksetAPIUtilities
 {	
 	/** 
-	*	Construct
-	*
-	*	Start things off when class is instantiated
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/22/13
-	*	@since		1.0
-	*
-	*	@param		null
-	*/
+	 *	Start things off when class is instantiated
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/22/13
+	 *	@since		1.0
+	 */
 	public function __construct()
 	{
 		
@@ -28,12 +24,16 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@return		object	$themes
+	 *	@return		object	a listing of all the themes
 	 */
 	public function get_themes()
 	{
 		$transient = 'bs_theme_list';
-	
+/*
+		$settings = $this->get_settings_rules();
+		$transient_time = $settings['transient'];
+*/
+		
 		// Have we stored a transient?
 		if( false === get_transient( $transient ) )
 		{
