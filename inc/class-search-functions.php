@@ -61,9 +61,9 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param		string	$theme
+	 *	@param		string
 	 *
-	 *	@return		object	$subthemes
+	 *	@return		object
 	 */
 	public function get_subthemes( $theme )
 	{
@@ -105,9 +105,9 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param		string	$theme
+	 *	@param		string
 	 *
-	 *	@return		object	$years
+	 *	@return		object
 	 */
 	public function get_theme_years( $theme )
 	{	
@@ -150,7 +150,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@return		object	$searches
+	 *	@return		object
 	 */
 	public function get_popular_searches()
 	{
@@ -182,9 +182,9 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param		string	$date (use format of 'mm/dd/yyyy')
+	 *	@param		string	use format of 'mm/dd/yyyy'
 	 *
-	 *	@return		object	$updated
+	 *	@return		object
 	 */
 	public function get_updated_since( $date )
 	{
@@ -230,12 +230,12 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param		string	$number (set number)
-	 *	@param		int 	$user_id (user_id)
-	 *	@param		bool	$wanted (true = return wanted)
-	 *	@param		bool	$owned (true = return owned)
+	 *	@param		string	set number
+	 *	@param		int 	user_id
+	 *	@param		bool	true = return wanted
+	 *	@param		bool	true = return owned
 	 *
-	 *	@return		object 	$setData
+	 *	@return		object
 	 */
 	public function get_by_number( $number = '', $args = '' )
 	{
@@ -271,9 +271,9 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *	@since		0.2
 	 *	@updated	1.0
 	 *
-	 *	@param		int 	$user_id (user_id)
+	 *	@param		int 	user ID
 	 *
-	 *	@return		object 	$setData
+	 *	@return		object
 	 */
 	public function get_wanted( $user_id = '' )
 	{
@@ -298,9 +298,9 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *	@since		0.3
 	 *	@updated	1.0
 	 *
-	 *	@param		int 	$user_id (user_id)
+	 *	@param		int 	user_id
 	 *
-	 *	@return		object 	$setData
+	 *	@return		object
 	 */
 	public function get_owned( $user_id = '' )
 	{
@@ -326,13 +326,13 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param		string	$theme
-	 *	@param		array	$args (user_id, owned, wanted)
-	 *	@param		int 	$user_id
-	 *	@param		bool	$owned
-	 *	@param		bool	$wanted
+	 *	@param		string
+	 *	@param		array	user_id, owned, wanted
+	 *	@param		int
+	 *	@param		bool
+	 *	@param		bool
 	 *
-	 *	@return		object 	$setData
+	 *	@return		object
 	 */
 	public function get_by_theme( $theme = '', $args = '' )
 	{
@@ -364,13 +364,13 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param		int		$subtheme
-	 *	@param		array	$args (user_id, owned, wanted)
-	 *	@param		int 	$user_id
-	 *	@param		int		$owned
-	 *	@param		int		$wanted
+	 *	@param		int
+	 *	@param		array	(user_id, owned, wanted)
+	 *	@param		int
+	 *	@param		int
+	 *	@param		int
 	 *
-	 *	@return		object	$setData
+	 *	@return		object
 	 */
 	public function get_by_subtheme( $subtheme = '', $args = '' )
 	{
@@ -402,13 +402,13 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param		int	$year
-	 *	@param		array	$args (user_id, owned, wanted)
-	 *	@param		int 	$user_id
-	 *	@param		int		$owned
-	 *	@param		int		$wanted
+	 *	@param		int
+	 *	@param		array	user_id, owned, wanted
+	 *	@param		int
+	 *	@param		int
+	 *	@param		int
 	 *
-	 *	@return		object 	$setData
+	 *	@return		object
 	 */
 	public function get_by_year( $year = '', $args = '' )
 	{
@@ -430,20 +430,20 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Get Instructions
-	*
-	*	Retrieve instructions link by Brickset set ID.
-	*	Returns the instructionsData response
-	*	See webservice-definition.json for all the fields returned.
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/22/13
-	*	@since		1.1
-	*
-	*	@param		string	$set_id
-	*
-	*	@return		object 	$instructionData
-	*/
+	 *	Get Instructions
+	 *
+	 *	Retrieve instructions link by Brickset set ID.
+	 *	Returns the instructionsData response
+	 *	See webservice-definition.json for all the fields returned.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/22/13
+	 *	@since		1.1
+	 *
+	 *	@param		string
+	 *
+	 *	@return		object
+	 */
 	public function get_instructions( $set_id = '' )
 	{
 		// Is there a setID?
@@ -474,20 +474,20 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Get by Set ID
-	*
-	*	Retrieves a single set by Brickset internal set ID
-	*	Returns the setData response
-	*	See webservice-definition.json for all the fields returned.
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/24/13
-	*	@since		1.1
-	*
-	*	@param		string	$set_id
-	*	
-	*	@return		object 	$setData
-	*/
+	 *	Get by Set ID
+	 *
+	 *	Retrieves a single set by Brickset internal set ID
+	 *	Returns the setData response
+	 *	See webservice-definition.json for all the fields returned.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/24/13
+	 *	@since		1.1
+	 *
+	 *	@param		string
+	 *	
+	 *	@return		object
+	 */
 	public function get_by_set_id( $set_id )
 	{
 		// Is there a setID?
@@ -526,6 +526,10 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *
+	 *	@param		array	theme, subtheme, set number, year, owned, wanted, query, user id
+	 *
+	 *	@return		object
 	 */
 	public function search( $args = '' )
 	{
@@ -611,20 +615,23 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Get Minifig Collection
-	*
-	*	Retrieve a list of all minifigs owned or wanted by a user that optionally match a query. 
-	*	Leave owned and wanted blank to retrieve those owned and wanted, or set one of them to '1' to get just owned or just wanted. 
-	*	Query can be a complete minifig number (e.g. 'hp001'), or just a prefix (e.g. 'hp'). Leave blank to retrieve all.
-	*	Returns the minifigCollectionData response
-	*	See webservice-definition.json for all the fields returned.
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/28/13
-	*	@since		1.1
-	*
-	*	@param		
-	*/
+	 *	Get Minifig Collection
+	 *
+	 *	Retrieve a list of all minifigs owned or wanted by a user that optionally match a query. 
+	 *	Leave owned and wanted blank to retrieve those owned and wanted, or set one of them to '1' to get just owned or just wanted. 
+	 *	Query can be a complete minifig number (e.g. 'hp001'), or just a prefix (e.g. 'hp'). Leave blank to retrieve all.
+	 *	Returns the minifigCollectionData response
+	 *	See webservice-definition.json for all the fields returned.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/28/13
+	 *	@since		1.1
+	 *
+	 *	@param		int
+	 *	@param		array	query, owned, wanted
+	 *
+	 *	@return		object
+	 */
 	public function get_minifig_collection( $user_id, $args = '' )
 	{
 		$defaults = array(

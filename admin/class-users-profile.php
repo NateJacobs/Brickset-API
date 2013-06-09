@@ -1,28 +1,22 @@
 <?php
 
 /** 
-*	Brickset API User Profile
-*
-*	Display necessary fields on the user profile page to allow a user to authenticate themselves with Brickset.
-*	Take the user hash and save it in the usermeta table.
-*
-*	@author		Nate Jacobs
-*	@date		2/2/13
-*	@since		1.0
-*/
+ *	Display necessary fields on the user profile page to allow a user to authenticate themselves with Brickset.
+ *	Take the user hash and save it in the usermeta table.
+ *
+ *	@author		Nate Jacobs
+ *	@date		2/2/13
+ *	@since		1.0
+ */
 class BricksetAPIUserProfile extends BricksetAPIUtilities
 {
 	/** 
-	*	Construct Method
-	*
-	*	
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/2/13
-	*	@since		1.0
-	*
-	*	@param		
-	*/
+	 *	Start things off
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/2/13
+	 *	@since		1.0
+	 */
 	public function __construct()
 	{
 		add_action( 'show_user_profile', array( $this, 'add_user_profile_fields' ) );
@@ -32,17 +26,14 @@ class BricksetAPIUserProfile extends BricksetAPIUtilities
 	}
 
 	/** 
-	*	Add Brickset Login Fields
-	*
-	*	Add Brickset username, password, and userHash fields to the profile page.
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/3/13
-	*	@since		1.0
-	*
-	*	@param		object	$user
-	*	@return		null
-	*/
+	 *	Add Brickset username, password, and userHash fields to the profile page.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/3/13
+	 *	@since		1.0
+	 *
+	 *	@param		object	WP_User
+	 */
 	public function add_user_profile_fields( $user)
 	{
 		$user_hash = $this->get_user_hash( $user->ID );
@@ -67,17 +58,14 @@ class BricksetAPIUserProfile extends BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Save User Profile Fields
-	*
-	*	Takes the entered Brickset username and password and gets the userHash.
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/6/13
-	*	@since		1.0
-	*
-	*	@param		int	$user_id
-	*	@return		null
-	*/
+	 *	Takes the entered Brickset username and password and gets the userHash.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/6/13
+	 *	@since		1.0
+	 *
+	 *	@param		int	
+	 */
 	public function set_brickset_user_hash( $user_id )
 	{
 		if ( !current_user_can( 'edit_user' ) )

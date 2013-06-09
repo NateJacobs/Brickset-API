@@ -1,29 +1,23 @@
 <?php
 
 /** 
-*	Brickset Oembed
-*
-*	Add oembed support for Brickset theme and set links
-*	Thanks to Lee Willis for the tutorial and code base to work from
-*	https://github.com/leewillis77/wp-wpdotorg-embed
-*
-*	@author		Nate Jacobs
-*	@date		3/9/13
-*	@since		1.0
-*/
+ *	Add oembed support for Brickset theme and set links
+ *	Thanks to Lee Willis for the tutorial and code base to work from
+ *	https://github.com/leewillis77/wp-wpdotorg-embed
+ *
+ *	@author		Nate Jacobs
+ *	@date		3/9/13
+ *	@since		1.0
+ */
 class BricksetOembed extends BricksetAPISearch
 {
 	/** 
-	*	Construct Method
-	*
-	*	Start things off
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/9/13
-	*	@since		1.0
-	*
-	*	@param		null
-	*/
+	 *	Start things off
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/9/13
+	 *	@since		1.0
+	 */
 	public function __construct()
 	{
 		add_action( 'init', array ( $this, 'register_oembed' ) );
@@ -31,16 +25,12 @@ class BricksetOembed extends BricksetAPISearch
 	}
 
 	/** 
-	*	Register Oembed
-	*
-	*	Register the two URLS that support will be created for
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/9/13
-	*	@since		1.0
-	*
-	*	@param		null
-	*/
+	 *	Register the two URLS that support will be created for
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/9/13
+	 *	@since		1.0
+	 */
 	public function register_oembed()
 	{
 		$oembed_url = home_url();
@@ -53,18 +43,14 @@ class BricksetOembed extends BricksetAPISearch
 	}
 	
 	/** 
-	*	Get Key
-	*
-	*	Create a random key to prevent hijacking
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/10/13
-	*	@since		1.0
-	*
-	*	@param		null
-	*
-	*	@return		string	$key
-	*/
+	 *	Create a random key to prevent hijacking
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/10/13
+	 *	@since		1.0
+	 *
+	 *	@return		string
+	 */
 	private function get_key() 
 	{
 
@@ -80,16 +66,12 @@ class BricksetOembed extends BricksetAPISearch
 	}
 	
 	/** 
-	*	Maybe Handle Oembed
-	*
-	*	Test if the correct key is present in the URL passed
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/10/13
-	*	@since		1.0
-	*
-	*	@param		null
-	*/
+	 *	Test if the correct key is present in the URL passed
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/10/13
+	 *	@since		1.0
+	 */
 	public function maybe_handle_oembed() 
 	{
 		// If the query argument is there hand
@@ -101,16 +83,12 @@ class BricksetOembed extends BricksetAPISearch
 	}
 	
 	/** 
-	*	Handle Oembed
-	*
-	*	Takes care of formating the URL to call the Brickset API
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/10/13
-	*	@since		1.0
-	*
-	*	@param		null
-	*/	
+	 *	Takes care of formating the URL to call the Brickset API
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/10/13
+	 *	@since		1.0
+	 */	
 	public function handle_oembed() 
 	{  
 		// Did we get here by mistake?
@@ -174,16 +152,14 @@ class BricksetOembed extends BricksetAPISearch
     }
     
     /** 
-    *	Oembed Set URL
-    *
-    *	Takes a set number from the Brickset URL and displays information about the set
-    *
-    *	@author		Nate Jacobs
-    *	@date		3/10/13
-    *	@since		1.0
-    *
-    *	@param		string	$set_number
-    */
+     *	Takes a set number from the Brickset URL and displays information about the set
+     *
+     *	@author		Nate Jacobs
+     *	@date		3/10/13
+     *	@since		1.0
+     *
+     *	@param		string	the set number to display information about
+     */
     public function oembed_set( $set_number )
     {
     	// Call the API function
@@ -260,16 +236,14 @@ class BricksetOembed extends BricksetAPISearch
     }
     
     /** 
-    *	Oembed Theme URL
-    *
-    *	Takes a theme name from the Brickset URL and displays information about all the sets in that theme in a table
-    *
-    *	@author		Nate Jacobs
-    *	@date		3/10/13
-    *	@since		1.0
-    *
-    *	@param		string	$theme_name
-    */
+     *	Takes a theme name from the Brickset URL and displays information about all the sets in that theme in a table
+     *
+     *	@author		Nate Jacobs
+     *	@date		3/10/13
+     *	@since		1.0
+     *
+     *	@param		string	the theme to display
+     */
     public function oembed_theme( $theme )
     {
 		// Call the API function

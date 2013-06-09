@@ -37,6 +37,8 @@ function brickset_themes()
  *	@author		Nate Jacobs
  *	@date		2/2/13
  *	@since		1.0
+ *
+ *	@param		string
  */
 function brickset_subthemes( $theme )
 {
@@ -73,6 +75,8 @@ function brickset_subthemes( $theme )
  *	@author		Nate Jacobs
  *	@date		2/2/13
  *	@since		1.0
+ *
+ *	@param		string
  */
 function brickset_theme_years( $theme )
 {
@@ -138,6 +142,8 @@ function brickset_popular_searches()
  *	@author		Nate Jacobs
  *	@date		2/2/13
  *	@since		1.0
+ *
+ *	@param		string
  */	
 function brickset_updated_since( $date )
 {

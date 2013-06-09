@@ -3,19 +3,17 @@
 class BricksetAPIUtilities
 {
 	/** 
-	 *	Remote Request
-	 *
 	 *	Send the api request to Brickset. Returns an XML formatted response.
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param		string	$extra_url (url needed after base url)
-	 *	@param		string	$params (query parameters)
+	 *	@param		string	url needed after base url
+	 *	@param		string	query parameters
 	 *
 	 *	@return		object	WP_Error
-	 *	@return		array	$response_body
+	 *	@return		array
 	 */
 	protected function remote_request( $type, $extra_url, $params = '' )
 	{
@@ -63,8 +61,6 @@ class BricksetAPIUtilities
 
 		
 	/** 
-	 *	Login Service Method
-	 *
 	 *	Authenticates a user with Brickset and returns a hash.
 	 *	The hash is then stored as a meta value with the key of 'brickset_user_hash'
 	 *	in the *_usersmeta table.
@@ -73,11 +69,11 @@ class BricksetAPIUtilities
 	 *	@since		0.1
 	 *	@updated	1.0
 	 *
-	 *	@param	int 	$user_id
-	 *	@param	string 	$username
-	 *	@param	string	$password
+	 *	@param	int
+	 *	@param	string
+	 *	@param	string
 	 *
-	 *	@return	array	$response (if there is an error, a WP_Error array is returned)
+	 *	@return	array	if there is an error, a WP_Error array is returned
 	 */
 	protected function brickset_login( $user_id, $username, $password )
 	{
@@ -101,7 +97,16 @@ class BricksetAPIUtilities
 			update_user_meta( $user->ID, 'brickset_user_hash',  (string) $user_hash[0] );
 		}
 	}
-
+	
+	/** 
+	 *	Retrieves the API key from the database
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		6/9/13
+	 *	@since		1.0
+	 *
+	 *	@return		string
+	 */
 	protected function get_api_key()
 	{
 		$settings = (array) get_option( 'brickset-api-settings' );
@@ -109,36 +114,32 @@ class BricksetAPIUtilities
 		return (isset( $settings['api_key'] ) ? $settings['api_key'] : '');
 	}
 	/** 
-	*	Get UserHash
-	*
-	*	Returns the Brickset userHash from user_meta
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/9/13
-	*	@since		1.0
-	*
-	*	@param		int	$user_id
-	*
-	*	@return		string	$user_hash
-	*/
+	 *	Returns the Brickset userHash from user_meta
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/9/13
+	 *	@since		1.0
+	 *
+	 *	@param		int
+	 *
+	 *	@return		string
+	 */
 	protected function get_user_hash( $user_id )
 	{
 		return get_user_meta( $user_id, 'brickset_user_hash', true );
 	}
 		
 	/** 
-	*	Build Brickset Query
-	*
-	*	Takes an array of search criteria and returns a urlencoded query string
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/22/13
-	*	@since		1.0
-	*
-	*	@param		array	$args
-	*
-	*	@return		array	$params
-	*/
+	 *	Takes an array of search criteria and returns a urlencoded query string
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/22/13
+	 *	@since		1.0
+	 *
+	 *	@param		array
+	 *
+	 *	@return		array
+	 */
 	protected function build_bs_query( $args = '' )
 	{
 		$defaults = array(
@@ -176,19 +177,17 @@ class BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Validate Set Number
-	*
-	*	Checks if the set number passed has a variant, if not, one is added
-	*	The search query requires sets in the format of 9999-9
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/9/13
-	*	@since		1.0
-	*
-	*	@param		string	$set_number
-	*
-	*	@return		string	$set_number
-	*/
+	 *	Checks if the set number passed has a variant, if not, one is added
+	 *	The search query requires sets in the format of 9999-9
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/9/13
+	 *	@since		1.0
+	 *
+	 *	@param		string
+	 *
+	 *	@return		string
+	 */
 	protected function validate_set_number( $set_number )
 	{
 		// If no set is passed, get out
@@ -223,19 +222,17 @@ class BricksetAPIUtilities
 	}
 		
 	/** 
-	*	Validate User ID
-	*
-	*	Takes a user ID and determines if it is an integer and is a valid user in the site
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/22/13
-	*	@since		1.0
-	*
-	*	@param		int	$user_id
-	*
-	*	@return		object	WP_Error (if not a user or an int)
-	*	@return		bool	true (if a valid user and an int)
-	*/
+	 *	Takes a user ID and determines if it is an integer and is a valid user in the site
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/22/13
+	 *	@since		1.0
+	 *
+	 *	@param		int
+	 *
+	 *	@return		object	WP_Error (if not a user or an int)
+	 *	@return		bool	true (if a valid user and an int)
+	 */
 	protected function validate_user( $user_id )
 	{
 		// Is there a user?
@@ -257,19 +254,17 @@ class BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Validate Owned and Wanted
-	*
-	*	Determines if the owned and wanted passed values are true or false
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/22/13
-	*	@since		1.0
-	*
-	*	@param		bool	$owned
-	*	@param		bool	$wanted
-	*
-	*	@return		object	WP_Error
-	*/
+	 *	Determines if the owned and wanted passed values are true or false
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/22/13
+	 *	@since		1.0
+	 *
+	 *	@param		bool
+	 *	@param		bool
+	 *
+	 *	@return		object	WP_Error
+	 */
 	protected function validate_owned_wanted( $owned = false, $wanted = false )
 	{
 		if( !is_bool( $owned ) )
@@ -280,18 +275,16 @@ class BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Validate Theme or Subtheme
-	*
-	*	Checks and ensures the theme or subtheme passed is a valid string
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/22/13
-	*	@since		1.0
-	*
-	*	@param		string	$string
-	*
-	*	@return		object	WP_Error
-	*/
+	 *	Checks and ensures the theme or subtheme passed is a valid string
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/22/13
+	 *	@since		1.0
+	 *
+	 *	@param		string
+	 *
+	 *	@return		object	WP_Error
+	 */
 	protected function validate_theme_subtheme( $theme = '', $subtheme = '' )
 	{
 		if( !is_string( $theme ) || !is_string( $subtheme ) )
@@ -299,18 +292,16 @@ class BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Validate Set ID
-	*
-	*	Ensures the string passed is numeric and is not empty
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/24/13
-	*	@since		1.1
-	*
-	*	@param		string	$set_id
-	*
-	*	@return		object	WP_Error
-	*/
+	 *	Ensures the string passed is numeric and is not empty
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/24/13
+	 *	@since		1.1
+	 *
+	 *	@param		string
+	 *
+	 *	@return		object	WP_Error
+	 */
 	protected function validate_set_id( $set_id )
 	{
 		// Is there a setID?

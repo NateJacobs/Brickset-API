@@ -4,24 +4,20 @@
 add_action( 'widgets_init', 'brickset_register_widget' );
 
 /** 
-*	Register Widget
-*
-*	Registers the widget
-*
-*	@author		Nate Jacobs
-*	@date		3/31/13
-*	@since		1.2
-*
-*	@param		null
-*/
+ *	Registers the widget
+ *
+ *	@author		Nate Jacobs
+ *	@date		3/31/13
+ *	@since		1.2
+ *
+ *	@param		null
+ */
 function brickset_register_widget()
 {
 	register_widget( 'BricksetThemeWidget' );
 }
 
 /** 
- *	Brickset Theme Widget
- *
  *	Creates a widget that generates a list of themes as maintained 
  *	by Brickset.com. The list is returned as links pointing back to the theme page
  *	on Brickset.
@@ -32,8 +28,6 @@ function brickset_register_widget()
 class BricksetThemeWidget extends WP_Widget
 {
 	/** 
-	 *	Plugin Load
-	 *
 	 *	Generate options for the widget display in the admin dashboard.
 	 *
 	 *	@author		Nate Jacobs
@@ -46,14 +40,14 @@ class BricksetThemeWidget extends WP_Widget
 	}
 	
 	/** 
-	 *	Create Widget Form
-	 *
 	 *	Create the necessary form to customize the widget.
 	 *
 	 *	@uses		title	@since 0.1
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *
+	 *	@param		array
 	 */
 	public function form( $instance )
 	{
@@ -68,12 +62,13 @@ class BricksetThemeWidget extends WP_Widget
 	}
 	
 	/** 
-	 *	Update Widget Options
-	 *
 	 *	Updates any options used to customize the widget.
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *
+	 *	@param		array
+	 *	@param		array
 	 */
 	public function update( $new_instance, $old_instance )
 	{
@@ -83,12 +78,13 @@ class BricksetThemeWidget extends WP_Widget
 	}
 	
 	/** 
-	 *	Create Brickset Theme Widget
-	 *
 	 *	Generates the widget that displays the themes as a list of links.
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *
+	 *	@param		array
+	 *	@param		array
 	 */
 	public function widget( $args, $instance )
 	{

@@ -3,16 +3,12 @@
 class BricksetAPIShortcode extends BricksetAPISearch
 {
 	/** 
-	*	Construct
-	*
-	*	Start things off right
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/15/13
-	*	@since		1.0
-	*
-	*	@param		
-	*/
+	 *	Start things off right
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/15/13
+	 *	@since		1.0
+	 */
 	public function __construct()
 	{
 		add_shortcode( 'bs_set', array( $this, 'get_set' ) );
@@ -21,18 +17,18 @@ class BricksetAPIShortcode extends BricksetAPISearch
 	}
 	
 	/** 
-	*	Get Set
-	*
-	*	Displays details for the sets specified.
-	*	More than one set can be specified by seperating set numbers by a comma.
-	*	e.g. 1380,10240
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/15/13
-	*	@since		1.0
-	*
-	*	@param		array	$atts
-	*/
+	 *	Get Set
+	 *
+	 *	Displays details for the sets specified.
+	 *	More than one set can be specified by seperating set numbers by a comma.
+	 *	e.g. 1380,10240
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/15/13
+	 *	@since		1.0
+	 *
+	 *	@param		array
+	 */
 	public function get_set( $atts )
 	{
 		extract( shortcode_atts( array( 
@@ -99,17 +95,15 @@ class BricksetAPIShortcode extends BricksetAPISearch
 	}
 	
 	/** 
-	*	My Wanted
-	*
-	*	Returns a table with the post authors wanted sets
-	*	Not functional yet.
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/16/13
-	*	@since		1.0
-	*
-	*	@param		
-	*/
+	 *	My Wanted
+	 *
+	 *	Returns a table with the post authors wanted sets
+	 *	Not functional yet.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/16/13
+	 *	@since		1.0
+	 */
 	public function my_wanted()
 	{
 		global $post;
@@ -134,17 +128,15 @@ class BricksetAPIShortcode extends BricksetAPISearch
 	}
 	
 	/** 
-	*	My Owned
-	*
-	*	Returns a table with the post authors owned sets
-	*	Not functional yet.
-	*
-	*	@author		Nate Jacobs
-	*	@date		2/16/13
-	*	@since		1.0
-	*
-	*	@param		
-	*/
+	 *	My Owned
+	 *
+	 *	Returns a table with the post authors owned sets
+	 *	Not functional yet.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		2/16/13
+	 *	@since		1.0
+	 */
 	public function my_owned()
 	{
 		global $post;
