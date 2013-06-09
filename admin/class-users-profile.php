@@ -80,7 +80,7 @@ class BricksetAPIUserProfile extends BricksetAPIUtilities
 	*/
 	public function set_brickset_user_hash( $user_id )
 	{
-		if ( !current_user_can( 'edit_user', $user_id ) )
+		if ( !current_user_can( 'edit_user' ) )
 			return false;
 		
 		if( !empty( $_POST['bs_user_name'] ) && !empty( $_POST['bs_password'] ) )
