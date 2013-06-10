@@ -157,7 +157,7 @@ class BricksetAPISettingsPage
 	 */
 	public function template_settings_callback()
 	{
-		echo __( 'These settings control what is displayed when you use the provided template tags, shortcodes and oembed.', 'bs_api' );
+		echo __( 'These settings control what is displayed when you use the provided template tags, shortcodes, widgets and oembed.', 'bs_api' );
 
 	}
 	
