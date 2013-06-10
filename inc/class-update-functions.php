@@ -3,36 +3,32 @@
 class BricksetAPIUpdate extends BricksetAPIUtilities
 {
 	/** 
-	*	Construct
-	*
-	*	Get things started
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/27/13
-	*	@since		1.1
-	*
-	*	@param		
-	*/
+	 *	Get things started
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/27/13
+	 *	@since		1.1
+	 */
 	public function __construct()
 	{
 		
 	}
 	/** 
-	*	Update Owned Set
-	*
-	*	Takes a setID, a userHash, and a 1 or 0 to specify whether the user owns the set or not. 
-	*	If successful a 1 is returned.
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/24/13
-	*	@since		1.1
-	*
-	*	@param		string	$set_id
-	*	@param		int		$user_id
-	*	@param		bool	$own
-	*
-	*	@return		bool|object	true|WP_Error
-	*/
+	 *	Update Owned Set
+	 *
+	 *	Takes a setID, a userHash, and a 1 or 0 to specify whether the user owns the set or not. 
+	 *	If successful a 1 is returned.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/24/13
+	 *	@since		1.1
+	 *
+	 *	@param		string
+	 *	@param		int
+	 *	@param		bool
+	 *
+	 *	@return		bool|object	true|WP_Error
+	 */
 	public function update_own( $set_id, $user_id, $own )
 	{
 		// Is it a valid user?
@@ -64,21 +60,21 @@ class BricksetAPIUpdate extends BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Update Want
-	*
-	*	Takes a setID, a userHash, and a 1 or 0 to specify whether the user wants the set or not. 
-	*	If successful a 1 is returned.
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/27/13
-	*	@since		1.1
-	*
-	*	@param		string	$set_id
-	*	@param		int		$user_id
-	*	@param		bool	$want
-	*
-	*	@return		bool|object	true|WP_Error		
-	*/
+	 *	Update Want
+	 *
+	 *	Takes a setID, a userHash, and a 1 or 0 to specify whether the user wants the set or not. 
+	 *	If successful a 1 is returned.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/27/13
+	 *	@since		1.1
+	 *
+	 *	@param		string
+	 *	@param		int
+	 *	@param		bool
+	 *
+	 *	@return		bool|object	true|WP_Error		
+	 */
 	public function update_want( $set_id, $user_id, $want )
 	{
 		// Is it a valid user?
@@ -110,21 +106,21 @@ class BricksetAPIUpdate extends BricksetAPIUtilities
 	}
 
 	/** 
-	*	Update Quantity
-	*
-	*	Takes a setID, a userHash, and a integer value to specify how many of the set the user owns. 
-	*	If successful a 1 is returned.
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/27/13
-	*	@since		1.1
-	*
-	*	@param		string	$set_id
-	*	@param		int		$user_id
-	*	@param		int		$quantity
-	*
-	*	@return		bool|object	true|WP_Error		
-	*/
+	 *	Update Quantity
+	 *
+	 *	Takes a setID, a userHash, and a integer value to specify how many of the set the user owns. 
+	 *	If successful a 1 is returned.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/27/13
+	 *	@since		1.1
+	 *
+	 *	@param		string
+	 *	@param		int
+ 	 *	@param		int
+	 *
+	 *	@return		bool|object	true|WP_Error		
+	 */
 	public function update_quantity( $set_id, $user_id, $quantity )
 	{
 		// Is it a valid user?
@@ -160,21 +156,21 @@ class BricksetAPIUpdate extends BricksetAPIUtilities
 	}
 
 	/** 
-	*	Update Notes
-	*
-	*	Takes a setID, a userHash, and a string, which will replace the user's notes for the set. 
-	*	If successful a 1 is returned.
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/27/13
-	*	@since		1.1
-	*
-	*	@param		string	$set_id
-	*	@param		int		$user_id
-	*	@param		string	$notes
-	*
-	*	@return		bool|object	true|WP_Error		
-	*/
+	 *	Update Notes
+	 *
+	 *	Takes a setID, a userHash, and a string, which will replace the user's notes for the set. 
+	 *	If successful a 1 is returned.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/27/13
+	 *	@since		1.1
+	 *
+	 *	@param		string
+	 *	@param		int
+	 *	@param		string
+	 *
+	 *	@return		bool|object	true|WP_Error		
+	 */
 	public function update_notes( $set_id, $user_id, $notes = '' )
 	{
 		// Is it a valid user?
@@ -202,20 +198,20 @@ class BricksetAPIUpdate extends BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Update Minifig Quantity
-	*
-	*	Used to set the quantity of loose minifigs a user has. If successful a 1 is returned.
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/27/13
-	*	@since		1.1
-	*
-	*	@param		string	$minifig_id
-	*	@param		int		$user_id
-	*	@param		int		$quantity
-	*
-	*	@return		bool|object	true|WP_Error		
-	*/
+	 *	Update Minifig Quantity
+	 *
+	 *	Used to set the quantity of loose minifigs a user has. If successful a 1 is returned.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/27/13
+	 *	@since		1.1
+	 *
+	 *	@param		string
+	 *	@param		int
+	 *	@param		int
+	 *
+	 *	@return		bool|object	true|WP_Error		
+	 */
 	public function update_minifig_quantity( $minifig_id, $user_id, $quantity )
 	{
 		// Is the minifig_id a string
@@ -251,21 +247,21 @@ class BricksetAPIUpdate extends BricksetAPIUtilities
 	}
 	
 	/** 
-	*	Update Minifig Want
-	*
-	*	Used to set whether the user wants a minifig. Currently users can't simultaneously own and want the same minifig, so setting a fig as wanted will clear the quantity owned. 
-	*	If successful a 1 is returned.
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/27/13
-	*	@since		1.1
-	*
-	*	@param		string	$minifig_id
-	*	@param		int		$user_id
-	*	@param		bool	$want
-	*
-	*	@return		bool|object	true|WP_Error		
-	*/
+	 *	Update Minifig Want
+	 *
+	 *	Used to set whether the user wants a minifig. Currently users can't simultaneously own and want the same minifig, so setting a fig as wanted will clear the quantity owned. 
+	 *	If successful a 1 is returned.
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/27/13
+	 *	@since		1.1
+	 *
+	 *	@param		string
+	 *	@param		int
+	 *	@param		bool
+	 *
+	 *	@return		bool|object	true|WP_Error		
+	 */
 	public function update_minifig_want( $minifig_id, $user_id, $want )
 	{
 		// Is the minifig_id a string

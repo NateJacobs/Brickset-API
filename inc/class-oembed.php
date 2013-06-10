@@ -1,29 +1,23 @@
 <?php
 
 /** 
-*	Brickset Oembed
-*
-*	Add oembed support for Brickset theme and set links
-*	Thanks to Lee Willis for the tutorial and code base to work from
-*	https://github.com/leewillis77/wp-wpdotorg-embed
-*
-*	@author		Nate Jacobs
-*	@date		3/9/13
-*	@since		1.0
-*/
+ *	Add oembed support for Brickset theme and set links
+ *	Thanks to Lee Willis for the tutorial and code base to work from
+ *	https://github.com/leewillis77/wp-wpdotorg-embed
+ *
+ *	@author		Nate Jacobs
+ *	@date		3/9/13
+ *	@since		1.0
+ */
 class BricksetOembed extends BricksetAPISearch
 {
 	/** 
-	*	Construct Method
-	*
-	*	Start things off
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/9/13
-	*	@since		1.0
-	*
-	*	@param		null
-	*/
+	 *	Start things off
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/9/13
+	 *	@since		1.0
+	 */
 	public function __construct()
 	{
 		add_action( 'init', array ( $this, 'register_oembed' ) );
@@ -31,16 +25,12 @@ class BricksetOembed extends BricksetAPISearch
 	}
 
 	/** 
-	*	Register Oembed
-	*
-	*	Register the two URLS that support will be created for
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/9/13
-	*	@since		1.0
-	*
-	*	@param		null
-	*/
+	 *	Register the two URLS that support will be created for
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/9/13
+	 *	@since		1.0
+	 */
 	public function register_oembed()
 	{
 		$oembed_url = home_url();
@@ -53,18 +43,14 @@ class BricksetOembed extends BricksetAPISearch
 	}
 	
 	/** 
-	*	Get Key
-	*
-	*	Create a random key to prevent hijacking
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/10/13
-	*	@since		1.0
-	*
-	*	@param		null
-	*
-	*	@return		string	$key
-	*/
+	 *	Create a random key to prevent hijacking
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/10/13
+	 *	@since		1.0
+	 *
+	 *	@return		string
+	 */
 	private function get_key() 
 	{
 
@@ -80,16 +66,12 @@ class BricksetOembed extends BricksetAPISearch
 	}
 	
 	/** 
-	*	Maybe Handle Oembed
-	*
-	*	Test if the correct key is present in the URL passed
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/10/13
-	*	@since		1.0
-	*
-	*	@param		null
-	*/
+	 *	Test if the correct key is present in the URL passed
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/10/13
+	 *	@since		1.0
+	 */
 	public function maybe_handle_oembed() 
 	{
 		// If the query argument is there hand
@@ -101,16 +83,12 @@ class BricksetOembed extends BricksetAPISearch
 	}
 	
 	/** 
-	*	Handle Oembed
-	*
-	*	Takes care of formating the URL to call the Brickset API
-	*
-	*	@author		Nate Jacobs
-	*	@date		3/10/13
-	*	@since		1.0
-	*
-	*	@param		null
-	*/	
+	 *	Takes care of formating the URL to call the Brickset API
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		3/10/13
+	 *	@since		1.0
+	 */	
 	public function handle_oembed() 
 	{  
 		// Did we get here by mistake?
@@ -174,16 +152,14 @@ class BricksetOembed extends BricksetAPISearch
     }
     
     /** 
-    *	Oembed Set URL
-    *
-    *	Takes a set number from the Brickset URL and displays information about the set
-    *
-    *	@author		Nate Jacobs
-    *	@date		3/10/13
-    *	@since		1.0
-    *
-    *	@param		string	$set_number
-    */
+     *	Takes a set number from the Brickset URL and displays information about the set
+     *
+     *	@author		Nate Jacobs
+     *	@date		3/10/13
+     *	@since		1.0
+     *
+     *	@param		string	the set number to display information about
+     */
     public function oembed_set( $set_number )
     {
     	// Call the API function
@@ -205,20 +181,50 @@ class BricksetOembed extends BricksetAPISearch
 		}
 		else
 		{
+			global $brickset_api_utilities;
+			$settings = $brickset_api_utilities->get_settings_rules();
+			
+			$number = '';
+			$numberVariant = '';
+			
+			if( true === $settings['bricklink'] )
+			{
+				$bricklink = '<strong>'.__( 'BrickLink', 'bs_api' ).': </strong><a href=http://www.bricklink.com/catalogItem.asp?S='.$number.'-'.$numberVariant.'>BrickLink</a><br><hr>';
+			}
+			elseif( false === $settings['bricklink'] )
+			{
+				$bricklink = '';
+			}
+			
 			// Loop through and display the set information
 			foreach( $brickset as $result )
 			{
+				$number = sanitize_text_field( $result->number );
+				$numberVariant = sanitize_text_field( $result->numberVariant );
+				
+				if( empty( $result->$settings['currency_key'] ) && 'unk' === $settings['currency_unknown'] )
+				{
+					$result->$settings['currency_key'] = __( ' Unknown', 'bs_api' );
+				}
+				
+				if( empty( $result->$settings['currency_key'] ) && 'us' === $settings['currency_unknown'] )
+				{
+					$settings['currency'] = 'US';
+					$settings['currency_key'] = 'USRetailPrice';
+					$settings['currency_symbol'] = '&#36;';
+				}
+				
 				$response->html .= '<img src="'.$result->imageURL.'"><br>';
-				$response->html .= '<strong>'.__( 'Set Name', 'bs_api' ).': </strong>'.$result->setName.'<br>';
-				$response->html .= '<strong>'.__( 'Set Number', 'bs_api' ).': </strong>'.$result->number.'-'.$result->numberVariant.'<br>';
-				$response->html .= '<strong>'.__( 'Year', 'bs_api' ).': </strong>'.$result->year.'<br>';
-				$response->html .= '<strong>'.__( 'Theme', 'bs_api' ).': </strong>'.$result->theme.'<br>';
-				$response->html .= '<strong>'.__( 'Subtheme', 'bs_api' ).': </strong>'.$result->subtheme.'<br>';
-				$response->html .= '<strong>'.__( 'US Retail Price', 'bs_api' ).': </strong>$'.$result->USRetailPrice.'<br>';
-				$response->html .= '<strong>'.__( 'Pieces', 'bs_api' ).': </strong>'.$result->pieces.'<br>';
-				$response->html .= '<strong>'.__( 'Minifigs', 'bs_api' ).': </strong>'.$result->minifigs.'<br>';
-				$response->html .= '<strong>'.__( 'Set Guide', 'bs_api' ).': </strong><a href='.$result->bricksetURL.'>Brickset</a><br>';
-				$response->html .= '<strong>'.__( 'BrickLink', 'bs_api' ).': </strong><a href=http://www.bricklink.com/catalogItem.asp?S='.$result->number.'-'.$result->numberVariant.'>BrickLink</a><br><hr>';
+				$response->html .= '<strong>'.__( 'Set Name', 'bs_api' ).': </strong>'.sanitize_text_field( $result->setName ).'<br>';
+				$response->html .= '<strong>'.__( 'Set Number', 'bs_api' ).': </strong>'.$number.'-'.$numberVariant.'<br>';
+				$response->html .= '<strong>'.__( 'Year', 'bs_api' ).': </strong>'.sanitize_text_field( $result->year ).'<br>';
+				$response->html .= '<strong>'.__( 'Theme', 'bs_api' ).': </strong>'.sanitize_text_field( $result->theme ).'<br>';
+				$response->html .= '<strong>'.__( 'Subtheme', 'bs_api' ).': </strong>'.sanitize_text_field( $result->subtheme ).'<br>';
+				$response->html .= '<strong>'.sprintf( __( '%s Retail Price', 'bs_api' ), $settings['currency'] ).': </strong>'.$settings['currency_symbol'].sanitize_text_field( $result->$settings['currency_key'] ).'<br>';
+				$response->html .= '<strong>'.__( 'Pieces', 'bs_api' ).': </strong>'.sanitize_text_field( $result->pieces ).'<br>';
+				$response->html .= '<strong>'.__( 'Minifigs', 'bs_api' ).': </strong>'.sanitize_text_field( $result->minifigs ).'<br>';
+				$response->html .= '<strong>'.__( 'Set Guide', 'bs_api' ).': </strong><a href='.esc_url( $result->bricksetURL ).'>Brickset</a><br>';
+				$response->html .= $bricklink;
 			}
 		}
 		
@@ -230,16 +236,14 @@ class BricksetOembed extends BricksetAPISearch
     }
     
     /** 
-    *	Oembed Theme URL
-    *
-    *	Takes a theme name from the Brickset URL and displays information about all the sets in that theme in a table
-    *
-    *	@author		Nate Jacobs
-    *	@date		3/10/13
-    *	@since		1.0
-    *
-    *	@param		string	$theme_name
-    */
+     *	Takes a theme name from the Brickset URL and displays information about all the sets in that theme in a table
+     *
+     *	@author		Nate Jacobs
+     *	@date		3/10/13
+     *	@since		1.0
+     *
+     *	@param		string	the theme to display
+     */
     public function oembed_theme( $theme )
     {
 		// Call the API function

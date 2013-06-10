@@ -37,6 +37,8 @@ function brickset_themes()
  *	@author		Nate Jacobs
  *	@date		2/2/13
  *	@since		1.0
+ *
+ *	@param		string
  */
 function brickset_subthemes( $theme )
 {
@@ -73,6 +75,8 @@ function brickset_subthemes( $theme )
  *	@author		Nate Jacobs
  *	@date		2/2/13
  *	@since		1.0
+ *
+ *	@param		string
  */
 function brickset_theme_years( $theme )
 {
@@ -138,6 +142,8 @@ function brickset_popular_searches()
  *	@author		Nate Jacobs
  *	@date		2/2/13
  *	@since		1.0
+ *
+ *	@param		string
  */	
 function brickset_updated_since( $date )
 {
@@ -164,17 +170,18 @@ function brickset_updated_since( $date )
 }
 
 /** 
-*	Display a list of all sets specified
-*
-*	Brickset returns the setData response.
-*	See webservice-definition.json for all the fields returned.
-*
-*	@author		Nate Jacobs
-*	@date		2/15/13
-*	@since		1.0
-*
-*	@param		string	$set
-*/
+ *	Display a list of all sets specified
+ *
+ *	Brickset returns the setData response.
+ *	See webservice-definition.json for all the fields returned.
+ *
+ *	@author		Nate Jacobs
+ *	@date		2/15/13
+ *	@since		1.0
+ *
+ *	@param		string	the set number	
+ *	@param		array	[owned, wanted, user_id] pass a 1 for the owned or wanted value to return the owned or wanted sets for the specified owner
+ */
 function brickset_set_number( $set, $args = '' )
 {
 	$brickset = new BricksetAPISearch();
@@ -186,18 +193,49 @@ function brickset_set_number( $set, $args = '' )
 	}
 	else
 	{
+		global $brickset_api_utilities;
+		$settings = $brickset_api_utilities->get_settings_rules();
+		
+		$number = '';
+		$numberVariant = '';
+		
+		if( true === $settings['bricklink'] )
+		{
+			$bricklink = '<strong>'.__( 'BrickLink', 'bs_api' ).': </strong><a href=http://www.bricklink.com/catalogItem.asp?S='.$number.'-'.$numberVariant.'>BrickLink</a><br><hr>';
+		}
+		elseif( false === $settings['bricklink'] )
+		{
+			$bricklink = '';
+		}
+		
 		foreach( $brickset as $result )
 		{
+			$number = sanitize_text_field( $result->number );
+			$numberVariant = sanitize_text_field( $result->numberVariant );
+			
+			if( empty( $result->$settings['currency_key'] ) && 'unk' === $settings['currency_unknown'] )
+			{
+				$result->$settings['currency_key'] = __( ' Unknown', 'bs_api' );
+			}
+			
+			if( empty( $result->$settings['currency_key'] ) && 'us' === $settings['currency_unknown'] )
+			{
+				$settings['currency'] = 'US';
+				$settings['currency_key'] = 'USRetailPrice';
+				$settings['currency_symbol'] = '&#36;';
+			}
+			
 			echo '<img src="'.$result->imageURL.'"><br>';
-			echo '<strong>'.__( 'Set Name', 'bs_api' ).': </strong>'.$result->setName.'<br>';
-			echo '<strong>'.__( 'Set Number', 'bs_api' ).': </strong>'.$result->number.'-'.$result->numberVariant.'<br>';
-			echo '<strong>'.__( 'Year', 'bs_api' ).': </strong>'.$result->year.'<br>';
-			echo '<strong>'.__( 'Theme', 'bs_api' ).': </strong>'.$result->theme.'<br>';
-			echo '<strong>'.__( 'Subtheme', 'bs_api' ).': </strong>'.$result->subtheme.'<br>';
-			echo '<strong>'.__( 'US Retail Price', 'bs_api' ).': </strong>$'.$result->USRetailPrice.'<br>';
-			echo '<strong>'.__( 'Pieces', 'bs_api' ).': </strong>'.$result->pieces.'<br>';
-			echo '<strong>'.__( 'Minifigs', 'bs_api' ).': </strong>'.$result->minifigs.'<br>';
-			echo '<p><a href='.$result->bricksetURL.'>Brickset</a> <a href=http://www.bricklink.com/catalogItem.asp?S='.$result->number.'-'.$result->numberVariant.'>BrickLink</a></p><hr>';
+			echo '<strong>'.__( 'Set Name', 'bs_api' ).': </strong>'.sanitize_text_field( $result->setName ).'<br>';
+			echo '<strong>'.__( 'Set Number', 'bs_api' ).': </strong>'.$number.'-'.$numberVariant.'<br>';
+			echo '<strong>'.__( 'Year', 'bs_api' ).': </strong>'.sanitize_text_field( $result->year ).'<br>';
+			echo '<strong>'.__( 'Theme', 'bs_api' ).': </strong>'.sanitize_text_field( $result->theme ).'<br>';
+			echo '<strong>'.__( 'Subtheme', 'bs_api' ).': </strong>'.sanitize_text_field( $result->subtheme ).'<br>';
+			echo '<strong>'.sprintf( __( '%s Retail Price', 'bs_api' ), $settings['currency'] ).': </strong>'.$settings['currency_symbol'].sanitize_text_field( $result->$settings['currency_key'] ).'<br>';
+			echo '<strong>'.__( 'Pieces', 'bs_api' ).': </strong>'.sanitize_text_field( $result->pieces ).'<br>';
+			echo '<strong>'.__( 'Minifigs', 'bs_api' ).': </strong>'.sanitize_text_field( $result->minifigs ).'<br>';
+			echo '<strong>'.__( 'Set Guide', 'bs_api' ).': </strong><a href='.esc_url( $result->bricksetURL ).'>Brickset</a><br>';
+			echo $bricklink;
 		}
 	}
 }
