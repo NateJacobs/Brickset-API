@@ -3,8 +3,8 @@
 Contributors: NateJacobs 
 Tags: brickset, lego, brick
 Requires at least: 3.5
-Tested up to: 3.5.1
-Stable tag: 1.2
+Tested up to: 3.6
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,7 +40,7 @@ The plugin has a shortcode you may use in your posts and pages to display inform
 *	`[bs_set number='XXX']` outputs information about a specific set. Thumbnail, set name, set number, pieces, theme, subtheme and year. You can display multiple sets by seperating the set numbers with a comma.
 
 = Widgets =
-The plugin has one widget you can activate to display a list of all themes on Brickset with a link to browse each theme on Brickset.com
+The plugin has two widgets you can activate in your theme. One to display a list of all themes on Brickset with a link to browse each theme on Brickset.com and the second to display the details about a specific set.
 
 = Advanced Use =
 This example shows how to get the data about a specific set. You can find the developer docs [here](https://github.com/NateJacobs/Brickset-API/wiki).
@@ -69,7 +69,8 @@ else {
 `
 == Road Map ==
 1. Template tags to display sets specific to a user.
-2. Allow admins to set which currency to show on set listing in template tags
+2. Allow administrators to set time of cache for set and theme data.
+3. Caching of images
 
 You can follow all the open feature requests and enhancements on [GitHub](https://github.com/NateJacobs/Brickset-API/issues?milestone=&page=1&state=open).
 
@@ -86,7 +87,7 @@ You can follow all the open feature requests and enhancements on [GitHub](https:
 Yes you can, but it requires writing custom code using the API functions of the plugin.
 
 = Does this plugin require an API Key from Brickset = 
-To display more than twenty sets from a search query an API key is required. You can obtain one by contacting Brickset on this [page](http://brickset.com/contact/)
+To display more than twenty sets from a search query an API key is required. You can obtain one by contacting Brickset on this [page](http://brickset.com/contact/).
 
 == Screenshots ==
 1. Individual Set Display
@@ -94,6 +95,12 @@ To display more than twenty sets from a search query an API key is required. You
 3. Sets in space theme
 
 == Changelog ==
+
+= Version 1.3 =
+*	Add a new widget to display set details
+*	Add current_user_can check to user profile settings
+*	Administrators can now select which currency (US dollar, CA dollar, UK pound) is displayed when using the built in template tags, shortcode and oembed set data
+*	Administrators can choose if the Bricklink link is displayed in template tags, shortcode and oembed set data
 
 = Version 1.2 =
 *	Removed anonymous function from class-widgets.php
