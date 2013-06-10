@@ -55,7 +55,8 @@ class BricksetAPILoad
 		require_once( BRICKSET_API_INCLUDES . 'class-utilities.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-search-functions.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-oembed.php' );
-		require_once( BRICKSET_API_INCLUDES . 'class-widgets.php' );
+		require_once( BRICKSET_API_INCLUDES . 'class-theme-widget.php' );
+		require_once( BRICKSET_API_INCLUDES . 'class-set-widget.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-template-tags.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-shortcodes.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-update-functions.php' );
