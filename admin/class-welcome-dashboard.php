@@ -99,30 +99,30 @@ class BricksetWelcome {
 	 *	@date	9/12/13
 	 *	@since 	1.4.0
 	 */
-	public function about_screen() {
-		list( $display_version ) = explode( '-', BRICKSET_API_VERSION );
+	public function about_screen() 
+	{
 		?>
 		<div class="wrap about-wrap">
-			<h1><?php printf( __( 'Welcome to Brickset API %s', 'bs_api' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Brickset API helps you display and manage your LEGO&#174; collection right from your WordPress site.', 'bs_api' ), $display_version ); ?></div>
+			<h1><?php printf( __( 'Welcome to Brickset API %s', 'bs_api' ), BRICKSET_API_VERSION ); ?></h1>
+			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Brickset API helps you display and manage your LEGO&#174; collection right from your WordPress site.', 'bs_api' ), BRICKSET_API_VERSION ); ?></div>
 
 			<h2 class="nav-tab-wrapper">
 				<a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bs-about' ), 'index.php' ) ) ); ?>">
-					<?php _e( "What's New", 'bs_api' ); ?>
+					<?php printf( __( "What's New in %s", 'bs_api' ), BRICKSET_API_VERSION ); ?>
 				</a><a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bs-credits' ), 'index.php' ) ) ); ?>">
 					<?php _e( 'Credits', 'bs_api' ); ?>
 				</a>
 			</h2>
 
 			<div class="changelog">
-				<h3><?php _e( 'Item Quantities', 'bs_api' );?></h3>
+				<h3><?php _e( 'New Widgets', 'bs_api' );?></h3>
 
 				<div class="feature-section">
 
-					<img src="<?php echo BRICKSET_API_URI . 'assets/images/17quantities.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo BRICKSET_API_URI . 'assets/images/owned-minifig-widget.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Selling Licenses or Multiple Copies at Once?','bs_api' );?></h4>
-					<p><?php _e( 'With the new item quantities feature, your customers can choose how many of an item they wish to purchase at one time.', 'bs_api' );?></p>
+					<h4><?php _e( 'Count of Owned Minifigs','bs_api' );?></h4>
+					<p><?php _e( 'Show off the total count of all the minifigs you own.', 'bs_api' );?></p>
 
 					<h4><?php _e( 'Makes Bulk Purchases Simple', 'bs_api' );?></h4>
 					<p><?php _e( 'No longer is purchasing many copies of the same item difficult or tedious. Simply enter the quantity and complete the purchase.', 'bs_api' );?></p>
@@ -187,16 +187,16 @@ class BricksetWelcome {
 	 *	@date	9/12/13
 	 *	@since 	1.4.0
 	 */
-	public function credits_screen() {
-		list( $display_version ) = explode( '-', BRICKSET_API_VERSION );
+	public function credits_screen() 
+	{
 		?>
 		<div class="wrap about-wrap">
-			<h1><?php printf( __( 'Welcome to Brickset API %s', 'bs_api' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Brickset API helps you display and manage your LEGO&#174; collection right from your WordPress site.', 'bs_api' ), $display_version ); ?></div>
+			<h1><?php printf( __( 'Welcome to Brickset API %s', 'bs_api' ), BRICKSET_API_VERSION ); ?></h1>
+			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Brickset API helps you display and manage your LEGO&#174; collection right from your WordPress site.', 'bs_api' ), BRICKSET_API_VERSION ); ?></div>
 
 			<h2 class="nav-tab-wrapper">
 				<a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bs-about' ), 'index.php' ) ) ); ?>">
-					<?php _e( "What's New", 'bs_api' ); ?>
+					<?php printf( __( "What's New in %s", 'bs_api' ), BRICKSET_API_VERSION ); ?>
 				</a><a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bs-credits' ), 'index.php' ) ) ); ?>">
 					<?php _e( 'Credits', 'bs_api' ); ?>
 				</a>
