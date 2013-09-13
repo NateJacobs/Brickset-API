@@ -142,9 +142,6 @@ class BricksetThemeYearsWidget extends WP_Widget
 				echo '<br>';
 				echo __( 'Number of Sets', 'bs_api' ).': <a href='.$url.'>'.$year->setCount.'</a>';
 				echo '<hr>';
-				
-				//echo "<a href='http://www.brickset.com/browse/themes/?theme=$theme->theme'>".$theme->theme.'</a>';
-				//echo '<br>';
 			}
 				
 			echo $after_widget;
