@@ -3,8 +3,8 @@
 Contributors: NateJacobs 
 Tags: brickset, lego, brick
 Requires at least: 3.5
-Tested up to: 3.6
-Stable tag: 1.3
+Tested up to: 3.6.1
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,8 +69,7 @@ else {
 `
 == Road Map ==
 1. Template tags to display sets specific to a user.
-2. Allow administrators to set time of cache for set and theme data.
-3. Caching of images
+2. Caching of images
 
 You can follow all the open feature requests and enhancements on [GitHub](https://github.com/NateJacobs/Brickset-API/issues?milestone=&page=1&state=open).
 
@@ -95,6 +94,11 @@ To display more than twenty sets from a search query an API key is required. You
 3. Sets in space theme
 
 == Changelog ==
+
+= Version 1.4.0 =
+*	New owned minifig widget - display how many minifigs you own
+*	Introduce filters to enable overwriting the default cache time of 24 hours for Brickset data
+*	Add third parameter to shortcode functions
 
 = Version 1.3 =
 *	Add a new widget to display set details
