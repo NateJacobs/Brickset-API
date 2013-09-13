@@ -4,7 +4,7 @@
  *	Plugin Name: Brickset API
  *	Plugin URI: https://github.com/NateJacobs/Brickset-API
  *	Description: Implementation of the Brickset Webservice. Includes methods to get set data from Brickset as well as pre-formated methods to display set data. This is not an official Brickset.com offering. For more information on the webservice please visit <a href="http://www.brickset.com/webservices/">Brickset.com</a>.
- *	Version: 1.3
+ *	Version: 1.4.0
  *	License: GPL V2
  *	Author: Nate Jacobs <nate@natejacobs.org>
  *	Author URI: http://natejacobs.org
@@ -25,8 +25,9 @@ class BricksetAPILoad
 		add_action( 'plugins_loaded', array( $this, 'constants' ), 2 );
 		add_action( 'plugins_loaded', array( $this, 'includes' ), 3 );
 		add_action( 'plugins_loaded', array( $this, 'admin' ), 4 );
-		add_action( 'plugins_loaded', array( $this, 'upgrade' ), 5 );
-		add_filter( 'http_request_timeout', array ( $this, 'http_request_timeout' ) );
+		add_filter( 'http_request_timeout', array( $this, 'http_request_timeout' ) );
+		
+		register_activation_hook( __FILE__, array( $this, 'install' ) );
 	}
 	
 	/** 
@@ -37,7 +38,7 @@ class BricksetAPILoad
 	 */
 	public function constants() 
 	{
-		define( 'BRICKSET_API_VERSION', '1.3' );
+		define( 'BRICKSET_API_VERSION', '1.4.0' );
 		define( 'BRICKSET_API_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 		define( 'BRICKSET_API_URI', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 		define( 'BRICKSET_API_INCLUDES', BRICKSET_API_DIR . trailingslashit( 'inc' ) );
@@ -74,6 +75,7 @@ class BricksetAPILoad
 		{
 			require_once( BRICKSET_API_ADMIN . 'class-settings-page.php' );
 			require_once( BRICKSET_API_ADMIN . 'class-users-profile.php' );
+			require_once( BRICKSET_API_ADMIN . 'class-welcome-dashboard.php' );
 		}
 	}
 	
@@ -103,36 +105,41 @@ class BricksetAPILoad
 	}
 	
 	/** 
-	 *	Ensure the currency option is set. The default will be US dollars
+	 *	Ensure the currency and Bricklink options are set. 
+	 *	The default will be US dollars and yes.
 	 *
 	 *	@author		Nate Jacobs
-	 *	@date		6/2/13
-	 *	@since		1.3	
+	 *	@date		9/12/13
+	 *	@since		1.4
 	 */
-	public function upgrade()
+	public function install()
 	{
-		if( '1.3' == BRICKSET_API_VERSION )
+		$settings = (array) get_option( 'brickset-api-settings' );
+			
+		if( !isset( $settings['currency'] ) )
 		{
-			$settings = (array) get_option( 'brickset-api-settings' );
-			
-			if( !isset( $settings['currency'] ) )
-			{
-				$settings['currency'] = 'us';
-				update_option( 'brickset-api-settings', $settings );
-			}
-			
-			if( !isset( $settings['currency_unknown'] ) )
-			{
-				$settings['currency_unknown'] = 'us';
-				update_option( 'brickset-api-settings', $settings );
-			}
-			
-			if( !isset( $settings['bricklink_link'] ) )
-			{
-				$settings['bricklink_link'] = 'us';
-				update_option( 'brickset-api-settings', $settings );
-			}
+			$settings['currency'] = 'us';
+			update_option( 'brickset-api-settings', $settings );
 		}
+		
+		if( !isset( $settings['currency_unknown'] ) )
+		{
+			$settings['currency_unknown'] = 'us';
+			update_option( 'brickset-api-settings', $settings );
+		}
+		
+		if( !isset( $settings['bricklink_link'] ) )
+		{
+			$settings['bricklink_link'] = '1';
+			update_option( 'brickset-api-settings', $settings );
+		}
+		
+		// Bail if activating from network, or bulk
+		if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
+			return;
+	
+		// Add the transient to redirect
+		set_transient( '_bs_api_activation_redirect', true, 30 );
 	}
 }
 
