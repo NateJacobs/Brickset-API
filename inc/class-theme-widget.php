@@ -1,7 +1,7 @@
 <?php
 
 //hook into the 'widgets_init' action to load the widget
-add_action( 'widgets_init', 'brickset_register_widget' );
+add_action( 'widgets_init', 'brickset_register_theme_widget' );
 
 /** 
  *	Registers the widget
@@ -12,7 +12,7 @@ add_action( 'widgets_init', 'brickset_register_widget' );
  *
  *	@param		null
  */
-function brickset_register_widget()
+function brickset_register_theme_widget()
 {
 	register_widget( 'BricksetThemeWidget' );
 }
