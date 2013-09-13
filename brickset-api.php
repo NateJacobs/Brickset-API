@@ -38,7 +38,7 @@ class BricksetAPILoad
 	 */
 	public function constants() 
 	{
-		define( 'BRICKSET_API_VERSION', '1.4.0' );
+		define( 'BRICKSET_API_VERSION', '1.4' );
 		define( 'BRICKSET_API_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 		define( 'BRICKSET_API_URI', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 		define( 'BRICKSET_API_INCLUDES', BRICKSET_API_DIR . trailingslashit( 'inc' ) );
@@ -58,6 +58,7 @@ class BricksetAPILoad
 		require_once( BRICKSET_API_INCLUDES . 'class-oembed.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-theme-widget.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-set-widget.php' );
+		require_once( BRICKSET_API_INCLUDES . 'class-minifig-owned-widget.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-template-tags.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-shortcodes.php' );
 		require_once( BRICKSET_API_INCLUDES . 'class-update-functions.php' );
