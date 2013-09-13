@@ -9,8 +9,6 @@ add_action( 'widgets_init', 'brickset_register_minifig_owned_widget' );
  *	@author		Nate Jacobs
  *	@date		9/12/13
  *	@since		1.4
- *
- *	@param		null
  */
 function brickset_register_minifig_owned_widget()
 {
@@ -18,9 +16,7 @@ function brickset_register_minifig_owned_widget()
 }
 
 /** 
- *	Creates a widget that generates a list of themes as maintained 
- *	by Brickset.com. The list is returned as links pointing back to the theme page
- *	on Brickset.
+ *	Creates a widget that displays the total count of minifigs owned by the specified user.
  *
  *	@author		Nate Jacobs
  *	@since		1.4
@@ -102,7 +98,7 @@ class BricksetMinifigOwnedWidget extends WP_Widget
 		echo $before_widget;
 		if ( $title )
 			echo $before_title . $title . $after_title;
-		//call functions class and use get method to retrieve list of themes
+		//call functions class and use get method to retrieve list of minifigs
 		$brickset = new BricksetAPISearch;
 		$minifigs = $brickset->get_minifig_collection( (int) $instance['user_id'], array( 'owned' => true ) );
 		
