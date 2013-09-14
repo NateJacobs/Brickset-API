@@ -78,13 +78,7 @@ class BricksetWelcome {
 		?>
 		<style type="text/css" media="screen">
 		/*<![CDATA[*/
-		.about-wrap .edd-badge {
-			position: absolute;
-			top: 0;
-			right: 0;
-		}
-
-		.edd-welcome-screenshots {
+		.bs-welcome-screenshots {
 			float: right;
 			margin-left: 10px!important;
 		}
@@ -116,16 +110,13 @@ class BricksetWelcome {
 
 			<div class="changelog">
 				<h3><?php _e( 'New Widgets', 'bs_api' );?></h3>
-
 				<div class="feature-section">
-
-					<img src="<?php echo BRICKSET_API_URI . 'assets/images/owned-minifig-widget.png'; ?>" class="edd-welcome-screenshots"/>
-
+					<img src="<?php echo BRICKSET_API_URI . 'assets/images/theme-years-widget.png'; ?>" class="bs-welcome-screenshots"/>
 					<h4><?php _e( 'Count of Owned Minifigs','bs_api' );?></h4>
 					<p><?php _e( 'Show off the total count of all the minifigs you own.', 'bs_api' );?></p>
 
-					<h4><?php _e( 'Makes Bulk Purchases Simple', 'bs_api' );?></h4>
-					<p><?php _e( 'No longer is purchasing many copies of the same item difficult or tedious. Simply enter the quantity and complete the purchase.', 'bs_api' );?></p>
+					<h4><?php _e( 'Years a Theme was Available', 'bs_api' );?></h4>
+					<p><?php _e( 'Display how many sets were made each year a theme was available. A link is included to the theme page on Brickset.com', 'bs_api' );?></p>
 
 
 				</div>
@@ -135,7 +126,7 @@ class BricksetWelcome {
 				<h3><?php _e( 'For the Developers', 'bs_api' );?></h3>
 				<div class="feature-section">
 					<h4><?php _e( 'Transient Filters', 'bs_api' );?></h4>
-					<p><?php _e( 'You can now override the default caching of the Brickset API using add_filter. By default the plugin caches Brickset data for 24 hours reduce page load times. By increasing the time the data is stored it requires fewer requests to Brickset. However, if the data changes frequently then your site will display out-of-date data until the cache expires.', 'bs_api' );?></p>
+					<p><?php _e( 'You can now override the default caching of the Brickset API using add_filter. By default the plugin caches Brickset data for 24 hours to reduce page load times. By increasing the time the data is stored it requires fewer requests to Brickset. However, if the data changes frequently then your site will display out-of-date data until the cache expires.', 'bs_api' );?></p>
 					<code>add_filter('bs_get_themes_transient', 'bs_api_change_theme_cache_time');</code>
 
 					<h4><?php _e( 'Filter Shortcodes', 'bs_api' );?></h4>
@@ -143,37 +134,6 @@ class BricksetWelcome {
 
 				</div>
 			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Additional Updates', 'bs_api' );?></h3>
-
-				<div class="feature-section col three-col">
-					<div>
-						<h4><?php _e( 'Brought Back [download_history]', 'bs_api' );?></h4>
-						<p><?php _e( 'The return of the [download_history] short code was one of our most common user requests since it was removed. We listened and it is back!', 'bs_api' );?></p>
-
-						<h4><?php _e( 'Full Retina Support', 'bs_api' );?></h4>
-						<p><?php _e( 'Every image and icon used in Easy Digital Downloads has been remade with complete support for high resolution / retina displays.', 'bs_api' );?></p>
-					</div>
-
-					<div>
-						<h4><?php _e( 'Customer Reports Search', 'bs_api' );?></h4>
-						<p><?php _e( 'Want to find out how much a customer has spent, or how many customers you have with a specific domain\'s email address? Now you can.', 'bs_api' );?></p>
-
-						<h4><?php _e( 'Better Admin Notifications', 'bs_api' );?></h4>
-						<p><?php _e( 'The admin sale notification emails can now be completely customized in the same way as purchase receipts. Want to know all details of the customer? Now you can.', 'bs_api' );?></p>
-					</div>
-
-					<div class="last-feature">
-						<h4><?php _e( 'Settings Import / Export', 'bs_api' );?></h4>
-						<p><?php _e( 'The ability to export and import all store settings makes the process of moving sites from development to live a lot easier.' ,'bs_api' );?></p>
-
-						<h4><?php _e( 'Improved Performance','bs_api' );?></h4>
-						<p><?php _e( 'Several key areas (such as Payment History) of Easy Digital Downloads have been dramatically improved in terms of performance to make your site run better and faster.', 'bs_api' );?></p>
-					</div>
-				</div>
-			</div>
-
 			<div class="return-to-dashboard">
 				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'brickset-api-options' ), 'options-general.php' ) ) ); ?>"><?php _e( 'Go to the Brickset API Settings', 'bs_api' ); ?></a>
 			</div>
@@ -270,14 +230,12 @@ class BricksetWelcome {
 	}
 
 	/**
-	 * Sends user to the Welcome page on first activation of EDD as well as each
-	 * time EDD is upgraded to a new version
+	 * Sends user to the Welcome page on first activation and upgrade
 	 *
 	 *	@date	9/12/13
 	 *	@since 	1.4.0
 	 */
 	public function welcome() {
-		global $edd_options;
 
 		// Bail if no activation redirect
 		if ( ! get_transient( '_bs_api_activation_redirect' ) )
