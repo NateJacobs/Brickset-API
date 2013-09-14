@@ -1,6 +1,6 @@
 # Brickset API #
 
-Version 1.4.0
+Version 1.4
 
 Works with WordPress v3.5+
 
