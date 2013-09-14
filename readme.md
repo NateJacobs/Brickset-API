@@ -1,6 +1,6 @@
 # Brickset API #
 
-Version 1.3
+Version 1.4
 
 Works with WordPress v3.5+
 
@@ -36,7 +36,7 @@ The plugin has a shortcode you may use in your posts and pages to display inform
 *	`[bs_set number='XXX']` outputs information about a specific set. Thumbnail, set name, set number, pieces, theme, subtheme and year. You can display multiple sets by seperating the set numbers with a comma.
 
 ## Widgets ##
-The plugin has two widgets you can activate in your theme. One to display a list of all themes on Brickset with a link to browse each theme on Brickset.com and the second to display the details about a specific set.
+The plugin has four widgets you can activate in your theme. The first displays a list of all themes on Brickset with a link to browse each theme on Brickset.com and the second to display the details about a specific set. The third allows you to show off the total count of your minifigs. The last widget displays a count of sets produced in each year for a given theme.
 
 ## Advanced Use ##
 This example shows how to get the data about a specific set. You can find the developer docs [here](https://github.com/NateJacobs/Brickset-API/wiki).
@@ -66,8 +66,7 @@ else {
 
 ## Road Map ##
 1. Template tags to display sets specific to a user.
-2. Allow administrators to set time of cache for set and theme data.
-3. Caching of images
+2. Caching of images
 
 You can follow all the open feature requests and enhancements on [GitHub](https://github.com/NateJacobs/Brickset-API/issues?milestone=&page=1&state=open).
 
@@ -98,6 +97,12 @@ To display more than twenty sets from a search query an API key is required. You
 
 
 ## Changelog ##
+
+### Version 1.4.0 ###
+*	New owned minifig widget - display how many minifigs you own
+*	New theme years widget - display how many sets were produced for a given theme in a given year
+*	Introduce filters to enable overwriting the default cache time of 24 hours for Brickset data
+*	Add third parameter to shortcode functions
 
 ### Version 1.3 ###
 *	Add a new widget to display set details
