@@ -1,14 +1,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bs_api\n"
-"POT-Creation-Date: 2013-06-09 22:10-0700\n"
-"PO-Revision-Date: 2013-06-09 22:10-0700\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2013-09-13 22:43-0700\n"
+"PO-Revision-Date: 2013-09-13 22:43-0700\n"
+"Last-Translator: Nate Jacobs <nate@natejacobs.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.5.7\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
 "X-Poedit-Basepath: ../\n"
 "X-Poedit-SearchPath-0: admin\n"
@@ -135,65 +135,161 @@ msgstr ""
 msgid "Brickset Identifier"
 msgstr ""
 
-#: inc/class-oembed.php:192 inc/class-set-widget.php:119
-#: inc/class-shortcodes.php:54 inc/class-template-tags.php:204
+#: admin/class-welcome-dashboard.php:53 admin/class-welcome-dashboard.php:54
+#: admin/class-welcome-dashboard.php:61 admin/class-welcome-dashboard.php:62
+msgid "Welcome to Brickset API"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:100 admin/class-welcome-dashboard.php:154
+#, php-format
+msgid "Welcome to Brickset API %s"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:101 admin/class-welcome-dashboard.php:155
+msgid ""
+"Thank you for updating to the latest version! Brickset API helps you display "
+"and manage your LEGO&#174; collection right from your WordPress site."
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:105 admin/class-welcome-dashboard.php:159
+#, php-format
+msgid "What's New in %s"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:107 admin/class-welcome-dashboard.php:161
+msgid "Credits"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:112
+msgid "New Widgets"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:115
+msgid "Count of Owned Minifigs"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:116
+msgid "Show off the total count of all the minifigs you own."
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:118
+msgid "Years a Theme was Available"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:119
+msgid ""
+"Display how many sets were made each year a theme was available. A link is "
+"included to the theme page on Brickset.com"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:126
+msgid "For the Developers"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:128
+msgid "Transient Filters"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:129
+msgid ""
+"You can now override the default caching of the Brickset API using "
+"add_filter. By default the plugin caches Brickset data for 24 hours to "
+"reduce page load times. By increasing the time the data is stored it "
+"requires fewer requests to Brickset. However, if the data changes frequently "
+"then your site will display out-of-date data until the cache expires."
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:132
+msgid "Filter Shortcodes"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:133
+msgid ""
+"The plugin now takes advantage of the feature added in WordPress 3.6 to "
+"enable filtering of the shortcode attributes. You can learn more by reading"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:133
+msgid "this article"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:133
+msgid "by WordPress lead developer Mark Jaquith."
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:138
+msgid "Go to the Brickset API Settings"
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:165
+msgid "The Brickset API Plugin is created by the following developers."
+msgstr ""
+
+#: admin/class-welcome-dashboard.php:191
+#, php-format
+msgid "View %s"
+msgstr ""
+
+#: inc/class-oembed.php:192 inc/class-shortcodes.php:54
+#: inc/class-template-tags.php:204 inc/widgets/class-set-widget.php:119
 msgid "BrickLink"
 msgstr ""
 
-#: inc/class-oembed.php:207 inc/class-set-widget.php:132
-#: inc/class-shortcodes.php:70 inc/class-template-tags.php:218
+#: inc/class-oembed.php:207 inc/class-shortcodes.php:70
+#: inc/class-template-tags.php:218 inc/widgets/class-set-widget.php:132
 msgid " Unknown"
 msgstr ""
 
 #: inc/class-oembed.php:218 inc/class-oembed.php:269
-#: inc/class-set-widget.php:143 inc/class-shortcodes.php:81
-#: inc/class-template-tags.php:159 inc/class-template-tags.php:229
+#: inc/class-shortcodes.php:81 inc/class-template-tags.php:159
+#: inc/class-template-tags.php:229 inc/widgets/class-set-widget.php:143
 msgid "Set Name"
 msgstr ""
 
 #: inc/class-oembed.php:219 inc/class-oembed.php:269
-#: inc/class-set-widget.php:55 inc/class-set-widget.php:59
-#: inc/class-set-widget.php:144 inc/class-shortcodes.php:82
-#: inc/class-template-tags.php:159 inc/class-template-tags.php:230
+#: inc/class-shortcodes.php:82 inc/class-template-tags.php:159
+#: inc/class-template-tags.php:230 inc/widgets/class-set-widget.php:55
+#: inc/widgets/class-set-widget.php:59 inc/widgets/class-set-widget.php:144
 msgid "Set Number"
 msgstr ""
 
 #: inc/class-oembed.php:220 inc/class-oembed.php:269
-#: inc/class-set-widget.php:145 inc/class-shortcodes.php:83
-#: inc/class-template-tags.php:93 inc/class-template-tags.php:231
+#: inc/class-shortcodes.php:83 inc/class-template-tags.php:93
+#: inc/class-template-tags.php:231 inc/widgets/class-set-widget.php:145
+#: inc/widgets/class-theme-years-widget.php:141
 msgid "Year"
 msgstr ""
 
-#: inc/class-oembed.php:221 inc/class-set-widget.php:146
-#: inc/class-shortcodes.php:84 inc/class-template-tags.php:232
+#: inc/class-oembed.php:221 inc/class-shortcodes.php:84
+#: inc/class-template-tags.php:232 inc/widgets/class-set-widget.php:146
 msgid "Theme"
 msgstr ""
 
-#: inc/class-oembed.php:222 inc/class-set-widget.php:147
-#: inc/class-shortcodes.php:85 inc/class-template-tags.php:55
-#: inc/class-template-tags.php:233
+#: inc/class-oembed.php:222 inc/class-shortcodes.php:85
+#: inc/class-template-tags.php:55 inc/class-template-tags.php:233
+#: inc/widgets/class-set-widget.php:147
 msgid "Subtheme"
 msgstr ""
 
-#: inc/class-oembed.php:223 inc/class-set-widget.php:148
-#: inc/class-shortcodes.php:86 inc/class-template-tags.php:234
+#: inc/class-oembed.php:223 inc/class-shortcodes.php:86
+#: inc/class-template-tags.php:234 inc/widgets/class-set-widget.php:148
 #, php-format
 msgid "%s Retail Price"
 msgstr ""
 
 #: inc/class-oembed.php:224 inc/class-oembed.php:269
-#: inc/class-set-widget.php:149 inc/class-shortcodes.php:87
-#: inc/class-template-tags.php:235
+#: inc/class-shortcodes.php:87 inc/class-template-tags.php:235
+#: inc/widgets/class-set-widget.php:149
 msgid "Pieces"
 msgstr ""
 
-#: inc/class-oembed.php:225 inc/class-set-widget.php:150
-#: inc/class-shortcodes.php:88 inc/class-template-tags.php:236
+#: inc/class-oembed.php:225 inc/class-shortcodes.php:88
+#: inc/class-template-tags.php:236 inc/widgets/class-set-widget.php:150
 msgid "Minifigs"
 msgstr ""
 
-#: inc/class-oembed.php:226 inc/class-set-widget.php:151
-#: inc/class-shortcodes.php:89 inc/class-template-tags.php:237
+#: inc/class-oembed.php:226 inc/class-shortcodes.php:89
+#: inc/class-template-tags.php:237 inc/widgets/class-set-widget.php:151
 msgid "Set Guide"
 msgstr ""
 
@@ -201,57 +297,47 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: inc/class-search-functions.php:195
+#: inc/class-search-functions.php:191
 msgid "The date is not formatted correctly."
 msgstr ""
 
-#: inc/class-search-functions.php:250
+#: inc/class-search-functions.php:246
 msgid "No set number requested."
 msgstr ""
 
-#: inc/class-search-functions.php:282 inc/class-search-functions.php:309
+#: inc/class-search-functions.php:278 inc/class-search-functions.php:305
 #: inc/class-utilities.php:240 inc/class-utilities.php:244
 msgid "No user specified."
 msgstr ""
 
-#: inc/class-search-functions.php:347
+#: inc/class-search-functions.php:343
 msgid "No theme requested."
 msgstr ""
 
-#: inc/class-search-functions.php:385
+#: inc/class-search-functions.php:381
 msgid "No subtheme requested."
 msgstr ""
 
-#: inc/class-search-functions.php:423
+#: inc/class-search-functions.php:419
 msgid "No year requested."
 msgstr ""
 
-#: inc/class-search-functions.php:451 inc/class-search-functions.php:495
+#: inc/class-search-functions.php:447 inc/class-search-functions.php:491
 #: inc/class-utilities.php:309
 msgid "No set ID requested."
 msgstr ""
 
-#: inc/class-search-functions.php:549
+#: inc/class-search-functions.php:545
 msgid "No search criteria specified."
 msgstr ""
 
-#: inc/class-search-functions.php:578 inc/class-search-functions.php:656
+#: inc/class-search-functions.php:574 inc/class-search-functions.php:652
 msgid "The query requested is not a valid string."
 msgstr ""
 
-#: inc/class-search-functions.php:644
+#: inc/class-search-functions.php:640
 msgid ""
 "You must include at least one of the following: query, owned, or wanted."
-msgstr ""
-
-#: inc/class-set-widget.php:40
-msgid ""
-"A widget that display the details of a particular set from the Brickset.com "
-"database."
-msgstr ""
-
-#: inc/class-set-widget.php:41
-msgid "Brickset Set Details"
 msgstr ""
 
 #: inc/class-template-tags.php:55 inc/class-template-tags.php:93
@@ -268,20 +354,6 @@ msgstr ""
 
 #: inc/class-template-tags.php:126
 msgid "Popular Searches on Brickset"
-msgstr ""
-
-#: inc/class-theme-widget.php:38
-msgid ""
-"A listing of all themes from Brickset sorted alphabetically with links to "
-"the theme pages on brickset.com."
-msgstr ""
-
-#: inc/class-theme-widget.php:39 inc/class-theme-widget.php:54
-msgid "Brickset Themes"
-msgstr ""
-
-#: inc/class-theme-widget.php:58
-msgid "Title"
 msgstr ""
 
 #: inc/class-update-functions.php:136 inc/class-update-functions.php:227
@@ -346,4 +418,67 @@ msgstr ""
 
 #: inc/class-utilities.php:340
 msgid "The year is not in the accepted range, 1950 to year +1."
+msgstr ""
+
+#: inc/widgets/class-minifig-owned-widget.php:35
+msgid "A count of all the minifigs owned from Brickset for a user."
+msgstr ""
+
+#: inc/widgets/class-minifig-owned-widget.php:36
+msgid "Brickset Owned Minifigs"
+msgstr ""
+
+#: inc/widgets/class-minifig-owned-widget.php:50
+msgid "Owned Minifigs"
+msgstr ""
+
+#: inc/widgets/class-minifig-owned-widget.php:55
+#: inc/widgets/class-theme-widget.php:58
+msgid "Title"
+msgstr ""
+
+#: inc/widgets/class-minifig-owned-widget.php:59
+msgid "Which user to display minifigs for?"
+msgstr ""
+
+#: inc/widgets/class-set-widget.php:40
+msgid ""
+"A widget that display the details of a particular set from the Brickset.com "
+"database."
+msgstr ""
+
+#: inc/widgets/class-set-widget.php:41
+msgid "Brickset Set Details"
+msgstr ""
+
+#: inc/widgets/class-theme-widget.php:38
+msgid ""
+"A listing of all themes from Brickset sorted alphabetically with links to "
+"the theme pages on Brickset.com."
+msgstr ""
+
+#: inc/widgets/class-theme-widget.php:39 inc/widgets/class-theme-widget.php:54
+msgid "Brickset Themes"
+msgstr ""
+
+#: inc/widgets/class-theme-years-widget.php:37
+msgid ""
+"A listing of all years a particular theme was available with links to the "
+"year/theme page on Brickset.com."
+msgstr ""
+
+#: inc/widgets/class-theme-years-widget.php:38
+msgid "Brickset Theme Years"
+msgstr ""
+
+#: inc/widgets/class-theme-years-widget.php:64
+msgid "Theme Name"
+msgstr ""
+
+#: inc/widgets/class-theme-years-widget.php:125
+msgid " Years Available"
+msgstr ""
+
+#: inc/widgets/class-theme-years-widget.php:143
+msgid "Number of Sets"
 msgstr ""
