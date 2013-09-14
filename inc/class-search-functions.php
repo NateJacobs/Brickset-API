@@ -22,17 +22,13 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
-	 *	@updated	1.0
+	 *	@updated		1.4
 	 *
 	 *	@return		object	a listing of all the themes
 	 */
 	public function get_themes()
 	{
 		$transient = 'bs_theme_list';
-/*
-		$settings = $this->get_settings_rules();
-		$transient_time = $settings['transient'];
-*/
 		
 		// Have we stored a transient?
 		if( false === get_transient( $transient ) )
@@ -43,7 +39,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 			{
 				return $response;
 			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, apply_filters( 'bs_get_themes_transient', DAY_IN_SECONDS ) );
 		}
 		
 		// Return a SimpleXML object
@@ -59,7 +55,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
-	 *	@updated	1.0
+	 *	@updated		1.0
 	 *
 	 *	@param		string
 	 *
@@ -88,7 +84,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 			{
 				return $response;
 			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, apply_filters( 'bs_get_subthemes_transient', DAY_IN_SECONDS ) );
 		}
 		
 		// Get it and return a SimpleXML object
@@ -132,7 +128,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 			{
 				return $response;
 			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, apply_filters( 'bs_get_theme_years_transient', DAY_IN_SECONDS ) );
 		}
 		
 		// Get it and return a SimpleXML object
@@ -165,7 +161,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 			{
 				return $response;
 			}
-			set_transient( $transient, $response, HOUR_IN_SECONDS );
+			set_transient( $transient, $response, apply_filters( 'bs_get_popular_searches_transient', HOUR_IN_SECONDS ) );
 		}
 		
 		// Get it and return a SimpleXML object
@@ -212,7 +208,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 			{
 				return $response;
 			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, apply_filters( 'bs_get_updated_since_transient', DAY_IN_SECONDS ) );
 		}
 		
 		// Get it and return a SimpleXML object
@@ -466,7 +462,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 			{
 				return $response;
 			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, apply_filters( 'bs_get_instructions_transient', DAY_IN_SECONDS ) );
 		}
 		
 		// Get it and return a SimpleXML object
@@ -510,7 +506,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 			{
 				return $response;
 			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, apply_filters( 'bs_get_by_set_id_transient', DAY_IN_SECONDS ) );
 		}
 		
 		// Get it and return a SimpleXML object
@@ -608,7 +604,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 			{
 				return $response;
 			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, apply_filters( 'bs_search_transient', DAY_IN_SECONDS ) );
 		}
 
 		return new SimpleXMLElement( get_transient( $transient ) );
@@ -693,7 +689,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 			{
 				return $response;
 			}
-			set_transient( $transient, $response, DAY_IN_SECONDS );
+			set_transient( $transient, $response, apply_filters( 'bs_get_minifig_collection_transient', DAY_IN_SECONDS ) );
 		}
 
 		return new SimpleXMLElement( get_transient( $transient ) );		

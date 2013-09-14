@@ -1,7 +1,7 @@
 <?php
 
 //hook into the 'widgets_init' action to load the widget
-add_action( 'widgets_init', 'brickset_register_widget' );
+add_action( 'widgets_init', 'brickset_register_theme_widget' );
 
 /** 
  *	Registers the widget
@@ -12,7 +12,7 @@ add_action( 'widgets_init', 'brickset_register_widget' );
  *
  *	@param		null
  */
-function brickset_register_widget()
+function brickset_register_theme_widget()
 {
 	register_widget( 'BricksetThemeWidget' );
 }
@@ -35,7 +35,7 @@ class BricksetThemeWidget extends WP_Widget
 	 */
 	public function __construct()
 	{
-		$options = array( 'description' => __( 'A listing of all themes from Brickset sorted alphabetically with links to the theme pages on brickset.com.', 'bs_api' ), 'classname' => 'brickset_theme' );
+		$options = array( 'description' => __( 'A listing of all themes from Brickset sorted alphabetically with links to the theme pages on Brickset.com.', 'bs_api' ), 'classname' => 'brickset_theme' );
 		parent::__construct('brickset_theme_widget', $name = __( 'Brickset Themes', 'bs_api' ), $options );
 	}
 	
