@@ -33,7 +33,7 @@ class BricksetAPIShortcode extends BricksetAPISearch
 	{
 		extract( shortcode_atts( array( 
 			'number' 		=> '',
-		), $atts ) );
+		), $atts, 'bs_set' ) );
 
 		$brickset = parent::get_by_number( $number );
 
