@@ -689,7 +689,7 @@ class BricksetAPISearch extends BricksetAPIUtilities
 			{
 				return $response;
 			}
-			set_transient( $transient, $response, apply_filters( 'bs_get_minifigs_transient', DAY_IN_SECONDS ) );
+			set_transient( $transient, $response, apply_filters( 'bs_get_minifig_collection_transient', DAY_IN_SECONDS ) );
 		}
 
 		return new SimpleXMLElement( get_transient( $transient ) );		
