@@ -114,18 +114,19 @@ class BricksetSetWidget extends WP_Widget
 			$number = '';
 			$numberVariant = '';
 			
-			if( true === $settings['bricklink'] )
-			{
-				$bricklink = '<strong>'.__( 'BrickLink', 'bs_api' ).': </strong><a href=http://www.bricklink.com/catalogItem.asp?S='.$number.'-'.$numberVariant.'>BrickLink</a><br><hr>';
-			}
-			elseif( false === $settings['bricklink'] )
-			{
-				$bricklink = '';
-			}
 			foreach( $set as $result )
 			{
 				$number = sanitize_text_field( $result->number );
 				$numberVariant = sanitize_text_field( $result->numberVariant );
+				
+				if( true === $settings['bricklink'] )
+				{
+					$bricklink = '<strong>'.__( 'BrickLink', 'bs_api' ).': </strong><a href=http://www.bricklink.com/catalogItem.asp?S='.$number.'-'.$numberVariant.'>BrickLink</a><br><hr>';
+				}
+				elseif( false === $settings['bricklink'] )
+				{
+					$bricklink = '';
+				}
 				
 				if( empty( $result->$settings['currency_key'] ) && 'unk' === $settings['currency_unknown'] )
 				{
