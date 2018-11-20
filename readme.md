@@ -1,8 +1,11 @@
 # Brickset API #
 
+**This version is outdated. The Brickset API is now on version 2.0 and this code will no longer work.**
+
 Version 1.4
 
 Works with WordPress v3.5+
+Works with Brickset API v2
 
 Display your favorite LEGO® set information on your website using the Brickset API. 
 
